@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="BahiKitab.Views.LeadsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BahiKitab.Views"
+             xmlns:core="clr-namespace:BahiKitab.Core"
+             xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <core:IdToButtonTextConverter x:Key="IdToButtonTextConverter"/>
+    </UserControl.Resources>
+    <Grid Margin="10">
+
+        <!-- Left Column: Leads List (DataGrid) -->
+        <StackPanel Margin="0,0,10,0">
+            <TextBlock Text="CRM Leads Management" Style="{StaticResource TitleStyle}" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <!-- Command Buttons for List -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Right">
+                <Button Command="{Binding LoadLeadsCommand}" Style="{StaticResource KlikButtonStyle}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <icon:PackIconFontAwesome Kind="RotateSolid" Height="12" Width="12" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="Refresh Leads" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Command="{Binding UpdateLeadCommand}" Style="{StaticResource KlikButtonStyle}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <icon:PackIconFontAwesome Kind="PencilSolid" Height="12" Width="12" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="Update Lead" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Command="{Binding NewLeadCommand}" Style="{StaticResource KlikButtonStyle}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <icon:PackIconFontAwesome Kind="PlusSolid" Height="12" Width="12" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="New Lead" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+
+            <!-- Data Grid to display Leads -->
+            <DataGrid ItemsSource="{Binding Leads}" 
+                  SelectedItem="{Binding SelectedLead, Mode=TwoWay}"
+                  AutoGenerateColumns="False"
+                  Height="450"
+                  SelectionMode="Single"
+                      ScrollViewer.CanContentScroll="True" 
+      ScrollViewer.VerticalScrollBarVisibility="Auto"
+      ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Company" Binding="{Binding Company}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Stage" Binding="{Binding Stage}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="1.5*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="1.5*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Lead Source" Binding="{Binding LeadSource}" Width="1.5*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Tags" Binding="{Binding Tags}" Width="1.5*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Label" Binding="{Binding Label}" Width="1.5*" IsReadOnly="True"/>
+                    <DataGridTemplateColumn Header="Actions">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Background="Transparent" Command="{Binding DataContext.DeleteLeadCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                    <icon:FontAwesome Kind="TrashSolid"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+
+        <!-- Right Column: Lead Details / CRUD Form -->
+
+    </Grid>
+</UserControl>

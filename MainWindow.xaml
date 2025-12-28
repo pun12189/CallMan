@@ -1,0 +1,158 @@
+﻿<Window x:Class="BahiKitab.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BahiKitab" xmlns:views="clr-namespace:BahiKitab.Views"
+        xmlns:vm="clr-namespace:BahiKitab.ViewModels"
+        xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        Title="KliKCRM" FontFamily="Segoe UI" Icon="/Assets/logo.png" WindowState="Maximized">
+    <Window.Resources>
+        <Style x:Key="TopMenuStyle" TargetType="Menu">
+            <Setter Property="Background" Value="#20b2aa"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="5,10"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <!-- icons set -->
+        <icon:FontAwesome Kind="ChartBarSolid" Height="14" x:Key="dashicon"/>
+        <icon:FontAwesome Kind="HardDriveSolid" Height="14" x:Key="followicon"/>
+        <icon:FontAwesome Kind="HardDriveSolid" Height="14" x:Key="leadicon"/>
+        <icon:FontAwesome Kind="UsersSolid" Height="14" x:Key="crmicon"/>
+        <icon:FontAwesome Kind="UserSolid" Height="14" x:Key="adminicon"/>
+        <icon:FontAwesome Kind="DiagramNextSolid" Height="14" x:Key="alleadsicon"/>
+        <icon:FontAwesome Kind="HexagonNodesSolid" Height="14" x:Key="allstatsicon"/>
+        <icon:FontAwesome Kind="FaceDizzySolid" Height="14" x:Key="deadicon"/>
+        <icon:FontAwesome Kind="SignatureSolid" Height="14" x:Key="matureicon"/>
+    </Window.Resources>
+    <Window.DataContext>
+        <!-- Set the DataContext to the Main Window ViewModel -->
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Image Source="/Assets/logo.png" Margin="5,0" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30" Stretch="Uniform" CacheMode="BitmapCache" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+
+            <Menu Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource TopMenuStyle}">
+
+                <MenuItem Header="Dashboard" Icon="{StaticResource dashicon}"/>
+
+                <MenuItem Header="Followups" Icon="{StaticResource followicon}" Command="{Binding NavigateCommand}" CommandParameter="Tasks"/>
+
+                <MenuItem Header="Leads" Icon="{StaticResource leadicon}">
+                    <MenuItem Header="All Leads" Icon="{StaticResource alleadsicon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Leads"/>
+                    <MenuItem Header="All Stats" Icon="{StaticResource allstatsicon}" Background="#20b2aa"/>
+                    <MenuItem Header="Dead Leads" Icon="{StaticResource deadicon}" Background="#20b2aa"/>
+                    <MenuItem Header="Mature Leads" Icon="{StaticResource matureicon}" Background="#20b2aa"/>
+                </MenuItem>
+
+                <MenuItem Header="CRM" Icon="{StaticResource crmicon}"/>
+
+                <MenuItem Header="Admin Settings" Icon="{StaticResource adminicon}" Command="{Binding NavigateCommand}" CommandParameter="Admin"/>
+
+            </Menu>
+        </Grid>
+
+        <Grid>
+            <Border Grid.Column="1" Padding="20">
+        <ContentControl Content="{Binding CurrentView}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type vm:LeadsViewModel}">
+                    <views:LeadsView/>
+                </DataTemplate>
+                 <!--Add DataTemplates for other ViewModels here (Tasks, Admin, etc.)-->
+
+                        <DataTemplate DataType="{x:Type vm:AdminSettingsViewModel}">
+                            <views:AdminSettingsView/>
+                        </DataTemplate>
+
+                    </ContentControl.Resources>
+        </ContentControl>
+    </Border>
+        </Grid>
+    </DockPanel>
+    <!--<Grid>
+        <Grid.ColumnDefinitions>
+            -->
+    <!-- Navigation Panel -->
+    <!--
+            <ColumnDefinition Width="200"/>
+            -->
+    <!-- Content Area -->
+    <!--
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        -->
+    <!-- Sidebar Navigation -->
+    <!--
+        <StackPanel Grid.Column="0" Background="{StaticResource LightBackgroundBrush}" Margin="10">
+            <TextBlock Text="CRM Modules" Style="{StaticResource TitleStyle}" FontSize="18" Margin="0,0,0,15"/>
+
+            <Button Content="Leads View" 
+                Command="{Binding NavigateCommand}" 
+                CommandParameter="Leads" 
+                Margin="0,5"
+                Style="{StaticResource SecondaryButtonStyle}"/>
+
+            -->
+    <!-- Placeholder for other modules -->
+    <!--
+            <Button Content="Tasks View" 
+                Command="{Binding NavigateCommand}" 
+                CommandParameter="Tasks" 
+                Margin="0,5"
+                Style="{StaticResource SecondaryButtonStyle}"/>
+
+            <Separator Margin="0,15"/>
+
+            <TextBlock Text="Settings" Style="{StaticResource TitleStyle}" FontSize="18" Margin="0,0,0,15"/>
+
+            <Button Content="Admin Settings" 
+                Command="{Binding NavigateCommand}" 
+                CommandParameter="Admin" 
+                Margin="0,5"
+                Style="{StaticResource SecondaryButtonStyle}"/>
+
+        </StackPanel>
+
+        -->
+    <!-- Main Content Area -->
+    <!--
+        <Border Grid.Column="1" Padding="20">
+            -->
+    <!-- ContentControl hosts the currently selected UserControl (View) -->
+    <!--
+            <ContentControl Content="{Binding CurrentView}">
+                <ContentControl.Resources>
+                    -->
+    <!-- Data Templates link ViewModels to Views for navigation -->
+    <!--
+                    <DataTemplate DataType="{x:Type vm:LeadsViewModel}">
+                        <views:LeadsView/>
+                    </DataTemplate>
+
+                    -->
+    <!-- Add DataTemplates for other ViewModels here (Tasks, Admin, etc.) -->
+
+    <!--<DataTemplate DataType="{x:Type vm:AdminViewModel}">
+                        <TextBlock Text="Admin Settings Content Placeholder" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="#666"/>
+                    </DataTemplate>-->
+    <!--
+                </ContentControl.Resources>
+            </ContentControl>
+        </Border>
+    </Grid>-->
+</Window>
