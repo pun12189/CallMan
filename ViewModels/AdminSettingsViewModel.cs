@@ -1,4 +1,5 @@
 ﻿using BahiKitab.Core;
+using BahiKitab.Helper;
 using BahiKitab.Views;
 using System;
 using System.Collections.Generic;
@@ -14,27 +15,20 @@ namespace BahiKitab.ViewModels
     {
         public ICommand NavigateCommand { get; }
 
+        public CommonSettingsViewModel CommonSettingsViewModel { get; }
+
         public AdminSettingsViewModel()
         {
-            NavigateCommand = new RelayCommand(Navigate);            
+            NavigateCommand = new RelayCommand(Navigate);
+            this.CommonSettingsViewModel = new CommonSettingsViewModel();
         }
 
         private void Navigate(object parameter)
         {
-            string viewName = parameter as string;
-
-            switch (viewName)
+            var viewName = (ViewsEnum)parameter;
+            if (viewName != null)
             {
-                case "Dept":
-                    var window = new Window();
-                    window.Content = new DepartmentView();
-                    window.Show();
-                    break;
-                case "OStage":
-                    var window1 = new Window();
-                    window1.Content = new OrderStagesView();
-                    window1.Show();
-                    break;               
+                this.CommonSettingsViewModel.DynamicViewCommand.Execute(viewName);
             }
         }
     }

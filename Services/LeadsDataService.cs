@@ -61,8 +61,19 @@ namespace BahiKitab.Services
                                 LeadSource = reader.IsDBNull(6) ? string.Empty : reader.GetString(6),
                                 Tags = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
                                 Label = reader.IsDBNull(8) ? string.Empty : reader.GetString(8),
-                                CreationDate = reader.IsDBNull(9) ? DateTime.MinValue : reader.GetDateTime(9),
-                                UpdationDate = reader.IsDBNull(10) ? DateTime.MinValue: reader.GetDateTime(10),
+                                Country = reader.IsDBNull(9) ? string.Empty : reader.GetString(9),
+                                State = reader.IsDBNull(10) ? string.Empty : reader.GetString(10),
+                                City = reader.IsDBNull(11) ? string.Empty : reader.GetString(11),
+                                District = reader.IsDBNull(12) ? string.Empty : reader.GetString(12),
+                                Pincode = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
+                                FirmName = reader.IsDBNull(14) ? string.Empty : reader.GetString(14),
+                                ImpDate = reader.IsDBNull(15) ? DateTime.MinValue : reader.GetDateTime(15),
+                                AltPhone = reader.IsDBNull(16) ? string.Empty : reader.GetString(16),
+                                CreationDate = reader.IsDBNull(17) ? DateTime.MinValue : reader.GetDateTime(17),
+                                UpdationDate = reader.IsDBNull(18) ? DateTime.MinValue: reader.GetDateTime(18),
+                                IsDead = reader.IsDBNull(19) ? false : reader.GetBoolean(19),
+                                IsFollowup = reader.IsDBNull(20) ? false : reader.GetBoolean(20),
+                                IsMatured = reader.IsDBNull(21) ? false : reader.GetBoolean(21),
                             };
                         }
 
@@ -112,8 +123,19 @@ namespace BahiKitab.Services
                                 LeadSource = reader.IsDBNull(6) ? string.Empty : reader.GetString(6),
                                 Tags = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
                                 Label = reader.IsDBNull(8) ? string.Empty : reader.GetString(8),
-                                CreationDate = reader.IsDBNull(9) ? DateTime.MinValue : reader.GetDateTime(9),
-                                UpdationDate = reader.IsDBNull(10) ? DateTime.MinValue : reader.GetDateTime(10),
+                                Country = reader.IsDBNull(9) ? string.Empty : reader.GetString(9),
+                                State = reader.IsDBNull(10) ? string.Empty : reader.GetString(10),
+                                City = reader.IsDBNull(11) ? string.Empty : reader.GetString(11),
+                                District = reader.IsDBNull(12) ? string.Empty : reader.GetString(12),
+                                Pincode = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
+                                FirmName = reader.IsDBNull(14) ? string.Empty : reader.GetString(14),
+                                ImpDate = reader.IsDBNull(15) ? DateTime.MinValue : reader.GetDateTime(15),
+                                AltPhone = reader.IsDBNull(16) ? string.Empty : reader.GetString(16),
+                                CreationDate = reader.IsDBNull(17) ? DateTime.MinValue : reader.GetDateTime(17),
+                                UpdationDate = reader.IsDBNull(18) ? DateTime.MinValue : reader.GetDateTime(18),
+                                IsDead = reader.IsDBNull(19) ? false : reader.GetBoolean(19),
+                                IsFollowup = reader.IsDBNull(20) ? false : reader.GetBoolean(20),
+                                IsMatured = reader.IsDBNull(21) ? false : reader.GetBoolean(21),
                             };
 
                             leads.Add(lead);
@@ -143,7 +165,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "insert into leads(name, company, email, phone, stage, leadSource, tags, label) values(@name, @company, @email, @phone, @stage, @leadSource, @tags, @label)";
+                    command.CommandText = "insert into leads(name, company, email, phone, stage, leadSource, tags, label, country, state, city, district, pincode, firm_name, imp_date, alternate_number, isDead, isFollowup, isMatured) values(@name, @company, @email, @phone, @stage, @leadSource, @tags, @label, @country, @state, @city, @district, @pincode, @firm_name, @imp_date, @alternate_number, @isDead, @isFollowup, @isMatured)";
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
                     command.Parameters.Add("@company", MySqlDbType.VarChar).Value = lead.Company;
                     command.Parameters.Add("@email", MySqlDbType.VarChar).Value = lead.Email;
@@ -152,6 +174,17 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@leadSource", MySqlDbType.VarChar).Value = lead.LeadSource;
                     command.Parameters.Add("@tags", MySqlDbType.VarChar).Value = lead.Tags;
                     command.Parameters.Add("@label", MySqlDbType.VarChar).Value = lead.Label;
+                    command.Parameters.Add("@country", MySqlDbType.VarChar).Value = lead.Country;
+                    command.Parameters.Add("@state", MySqlDbType.VarChar).Value = lead.State;
+                    command.Parameters.Add("@city", MySqlDbType.VarChar).Value = lead.City;
+                    command.Parameters.Add("@district", MySqlDbType.VarChar).Value = lead.District;
+                    command.Parameters.Add("@pincode", MySqlDbType.VarChar).Value = lead.Pincode;
+                    command.Parameters.Add("@firm_name", MySqlDbType.VarChar).Value = lead.FirmName;
+                    command.Parameters.Add("@imp_date", MySqlDbType.DateTime).Value = lead.ImpDate;
+                    command.Parameters.Add("@alternate_number", MySqlDbType.VarChar).Value = lead.AltPhone;
+                    command.Parameters.Add("@isDead", MySqlDbType.Byte).Value = lead.IsDead;
+                    command.Parameters.Add("@isFollowup", MySqlDbType.Byte).Value = lead.IsFollowup;
+                    command.Parameters.Add("@isMatured", MySqlDbType.Byte).Value = lead.IsMatured;
                     await command.ExecuteScalarAsync();
                 }
             }
@@ -177,7 +210,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "update leads set name=@name, company=@company, email=@email, phone=@phone, stage=@stage, leadSource=@leadSource, tags=@tags, label=@label, updated_date=@updated_date where id=@id";
+                    command.CommandText = "update leads set name=@name, company=@company, email=@email, phone=@phone, stage=@stage, leadSource=@leadSource, tags=@tags, label=@label, updated_date=@updated_date, country=@country, state=@state, city=@city, district=@district, pincode=@pincode, firm_name=@firm_name, imp_date=@imp_date, alternate_number=@alternate_number, isDead=@isDead, isFollowup=@isFollowup, isMatured=@isMatured where id=@id";
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = lead.Id;
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
                     command.Parameters.Add("@company", MySqlDbType.VarChar).Value = lead.Company;
@@ -188,6 +221,17 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@tags", MySqlDbType.VarChar).Value = lead.Tags;
                     command.Parameters.Add("@label", MySqlDbType.VarChar).Value = lead.Label;
                     command.Parameters.Add("@updated_date", MySqlDbType.DateTime).Value = DateTime.Now;
+                    command.Parameters.Add("@country", MySqlDbType.VarChar).Value = lead.Country;
+                    command.Parameters.Add("@state", MySqlDbType.VarChar).Value = lead.State;
+                    command.Parameters.Add("@city", MySqlDbType.VarChar).Value = lead.City;
+                    command.Parameters.Add("@district", MySqlDbType.VarChar).Value = lead.District;
+                    command.Parameters.Add("@pincode", MySqlDbType.VarChar).Value = lead.Pincode;
+                    command.Parameters.Add("@firm_name", MySqlDbType.VarChar).Value = lead.FirmName;
+                    command.Parameters.Add("@imp_date", MySqlDbType.DateTime).Value = lead.ImpDate;
+                    command.Parameters.Add("@alternate_number", MySqlDbType.VarChar).Value = lead.AltPhone;
+                    command.Parameters.Add("@isDead", MySqlDbType.Byte).Value = lead.IsDead;
+                    command.Parameters.Add("@isFollowup", MySqlDbType.Byte).Value = lead.IsFollowup;
+                    command.Parameters.Add("@isMatured", MySqlDbType.Byte).Value = lead.IsMatured;
                     await command.ExecuteScalarAsync();
                 }
             }

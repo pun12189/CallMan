@@ -1,16 +1,14 @@
 ﻿using BahiKitab.Core;
-using Org.BouncyCastle.Asn1.X509;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace BahiKitab.Models
 {
-    public class OrderStageModel : ObservableObject
+    public class LeadHistoryModel : ObservableObject
     {
         private int _id;
         public int Id
@@ -32,6 +30,13 @@ namespace BahiKitab.Models
         {
             get => _creationDate;
             set => Set(ref _creationDate, value, nameof(CreationDate));
+        }
+
+        private int _leadid;
+        public int LeadId
+        {
+            get => _leadid;
+            set => Set(ref _leadid, value, nameof(LeadId));
         }
     }
 }

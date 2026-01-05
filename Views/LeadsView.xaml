@@ -26,7 +26,7 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Button Command="{Binding UpdateLeadCommand}" Style="{StaticResource KlikButtonStyle}">
+                <Button Command="{Binding UpdateLeadCommand}" Style="{StaticResource KlikButtonStyle}" Visibility="Collapsed">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <icon:PackIconFontAwesome Kind="PencilSolid" Height="12" Width="12" VerticalAlignment="Center" Margin="0,0,5,0"/>
@@ -48,6 +48,7 @@
             <DataGrid ItemsSource="{Binding Leads}" 
                   SelectedItem="{Binding SelectedLead, Mode=TwoWay}"
                   AutoGenerateColumns="False"
+                      CanUserAddRows="False"
                   Height="450"
                   SelectionMode="Single"
                       ScrollViewer.CanContentScroll="True" 
@@ -66,9 +67,14 @@
                     <DataGridTemplateColumn Header="Actions">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Background="Transparent" Command="{Binding DataContext.DeleteLeadCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                                    <icon:FontAwesome Kind="TrashSolid"/>
-                                </Button>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Background="Transparent" Command="{Binding DataContext.UpdateLeadCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                        <icon:FontAwesome Kind="PencilSolid"/>
+                                    </Button>
+                                    <Button Background="Transparent" Command="{Binding DataContext.DeleteLeadCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                        <icon:FontAwesome Kind="TrashSolid"/>
+                                    </Button>
+                                </StackPanel>                                
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

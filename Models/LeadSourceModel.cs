@@ -1,16 +1,14 @@
 ﻿using BahiKitab.Core;
-using Org.BouncyCastle.Asn1.X509;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace BahiKitab.Models
 {
-    public class OrderStageModel : ObservableObject
+    public class LeadSourceModel : ObservableObject
     {
         private int _id;
         public int Id

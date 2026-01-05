@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BahiKitab.Views"
              xmlns:vm="clr-namespace:BahiKitab.ViewModels"
+             xmlns:helper="clr-namespace:BahiKitab.Helper"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -19,6 +20,17 @@
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Padding" Value="15,10"/>
+        </Style>
+        <Style TargetType="Button" x:Key="ButtonStyle2">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="BorderThickness" Value="0"/>
         </Style>
     </UserControl.Resources>
     <UserControl.DataContext>
@@ -43,8 +55,8 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Button Content="Staff" Grid.Column="0" Grid.Row="0" Style="{StaticResource ButtonStyle}"/>
-            <Button Content="Departments" Grid.Column="1" Grid.Row="0" Style="{StaticResource ButtonStyle}" Command="{Binding NavigateCommand}" CommandParameter="Dept"/>
-            <Button Content="Order Stages" Grid.Column="2" Grid.Row="0" Style="{StaticResource ButtonStyle}" Command="{Binding NavigateCommand}" CommandParameter="OStage"/>
+            <Button Content="Departments" Grid.Column="1" Grid.Row="0" Style="{StaticResource ButtonStyle}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.Departments}"/>
+            <Button Content="Order Stages" Grid.Column="2" Grid.Row="0" Style="{StaticResource ButtonStyle}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.OrderStages}"/>
             <Button Content="Connect Whatsapp" Grid.Column="3" Grid.Row="0" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Connect Email" Grid.Column="0" Grid.Row="2" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Categories" Grid.Column="1" Grid.Row="2" Style="{StaticResource ButtonStyle}"/>
@@ -63,12 +75,12 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Text="Lead Settings" FontSize="16" Foreground="Black" Grid.Row="0" Padding="10"/>
-            <TextBlock Text="Dead Reasons" FontSize="14" Foreground="Blue" Grid.Row="2" Padding="10"/>
-            <TextBlock Text="FollowUp Stages" FontSize="14" Foreground="Blue" Grid.Row="3" Padding="10"/>
-            <TextBlock Text="Mature Stages" FontSize="14" Foreground="Blue" Grid.Row="4" Padding="10"/>
-            <TextBlock Text="Lead Tag" FontSize="14" Foreground="Blue" Grid.Row="5" Padding="10"/>
-            <TextBlock Text="Lead Source" FontSize="14" Foreground="Blue" Grid.Row="6" Padding="10"/>
-            <TextBlock Text="Lead Label" FontSize="14" Foreground="Blue" Grid.Row="7" Padding="10"/>
+            <Button Content="Dead Reasons" Grid.Row="2" Style="{StaticResource ButtonStyle2}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.DeadReason}"/>
+            <Button Content="FollowUp Stages" Grid.Row="3" Style="{StaticResource ButtonStyle2}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.FollowUpStages}"/>
+            <Button Content="Mature Stages" Grid.Row="4" Style="{StaticResource ButtonStyle2}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.MatureStages}"/>
+            <Button Content="Lead Tag" Grid.Row="5" Style="{StaticResource ButtonStyle2}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.LeadTags}"/>
+            <Button Content="Lead Source" Grid.Row="6" Style="{StaticResource ButtonStyle2}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.LeadSource}"/>
+            <Button Content="Lead Label" Grid.Row="7" Style="{StaticResource ButtonStyle2}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.LeadLabels}"/>
         </Grid>
     </Grid>
 </UserControl>

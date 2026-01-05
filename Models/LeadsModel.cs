@@ -76,6 +76,62 @@ namespace BahiKitab.Models
             set => Set(ref _label, value, nameof(Label));
         }
 
+        private string _country; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public string Country
+        {
+            get => _country;
+            set => Set(ref _country, value, nameof(Country));
+        }
+
+        private string _state; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public string State
+        {
+            get => _state;
+            set => Set(ref _state, value, nameof(State));
+        }
+
+        private string _city; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public string City
+        {
+            get => _city;
+            set => Set(ref _city, value, nameof(City));
+        }
+
+        private string _district; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public string District
+        {
+            get => _district;
+            set => Set(ref _district, value, nameof(District));
+        }
+
+        private string _pincode; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public string Pincode
+        {
+            get => _pincode;
+            set => Set(ref _pincode, value, nameof(Pincode));
+        }
+
+        private string _firmname; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public string FirmName
+        {
+            get => _firmname;
+            set => Set(ref _firmname, value, nameof(FirmName));
+        }
+
+        private DateTime _impdate; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public DateTime ImpDate
+        {
+            get => _impdate;
+            set => Set(ref _impdate, value, nameof(ImpDate));
+        }
+
+        private string _altphone; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public string AltPhone
+        {
+            get => _altphone;
+            set => Set(ref _altphone, value, nameof(AltPhone));
+        }        
+
         private DateTime _creationDate = DateTime.Now;
         public DateTime CreationDate
         {
@@ -88,6 +144,27 @@ namespace BahiKitab.Models
         {
             get => _updationDate;
             set => Set(ref _updationDate, value, nameof(UpdationDate));
+        }
+
+        private bool _isdead = false;
+        public bool IsDead
+        {
+            get => _isdead;
+            set => Set(ref _isdead, value, nameof(IsDead));
+        }
+
+        private bool _isfollowup = false;
+        public bool IsFollowup
+        {
+            get => _isfollowup;
+            set => Set(ref _isfollowup, value, nameof(IsFollowup));
+        }
+
+        private bool _ismatured = false;
+        public bool IsMatured
+        {
+            get => _ismatured;
+            set => Set(ref _ismatured, value, nameof(IsMatured));
         }
 
         public Lead Clone() { return (Lead)this.MemberwiseClone(); }
