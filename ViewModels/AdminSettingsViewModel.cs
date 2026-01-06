@@ -28,6 +28,7 @@ namespace BahiKitab.ViewModels
             var viewName = (ViewsEnum)parameter;
             if (viewName != null)
             {
+                this.CommonSettingsViewModel.DynamicLoadViewCommand.Execute(viewName);
                 this.CommonSettingsViewModel.DynamicViewCommand.Execute(viewName);
             }
         }
