@@ -109,7 +109,7 @@ namespace BahiKitab.ViewModels
             var window = new Window();
             window.Title = "Add Lead";
             window.Content = view;
-            window.Width = 400;
+            window.Width = 600;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             window.Show();
         }
@@ -123,7 +123,7 @@ namespace BahiKitab.ViewModels
             var window = new Window();
             window.Title = "Update Lead";
             window.Content = view;
-            window.Width = 400;
+            window.Width = 600;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             window.Show();
         }
@@ -150,10 +150,17 @@ namespace BahiKitab.ViewModels
                     existingLead.Company = CurrentLead.Company;
                     existingLead.Email = CurrentLead.Email;
                     existingLead.Phone = CurrentLead.Phone;
-                    existingLead.Stage = CurrentLead.Stage;
+                    existingLead.Status = CurrentLead.Status;
                     existingLead.LeadSource = CurrentLead.LeadSource;
                     existingLead.Tags = CurrentLead.Tags;
                     existingLead.Label = CurrentLead.Label;
+                    existingLead.City = CurrentLead.City;
+                    existingLead.State = CurrentLead.State;
+                    existingLead.District = CurrentLead.District;
+                    existingLead.Pincode = CurrentLead.Pincode;
+                    existingLead.Country = CurrentLead.Country;
+                    existingLead.ImpDate = CurrentLead.ImpDate;
+                    existingLead.AltPhone = CurrentLead.AltPhone;
                 }
                 MessageBox.Show($"Lead {CurrentLead.Id} updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }

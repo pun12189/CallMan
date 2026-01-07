@@ -25,6 +25,7 @@ namespace BahiKitab.ViewModels
         private readonly LeadTagsDataService _leadTagsDataService;
         private readonly OrderStagesDataService _orderStagesDataService;
         private readonly DepartmentsDataService _departmentsDataService;
+        private readonly LeadStatusDataService _leadStatusDataService;
         private string textBoxValue;
 
         // Dynamic Views Command call from Admin View Model
@@ -59,6 +60,7 @@ namespace BahiKitab.ViewModels
             this._leadTagsDataService = new LeadTagsDataService();
             this._departmentsDataService = new DepartmentsDataService();
             this._orderStagesDataService = new OrderStagesDataService();
+            this._leadStatusDataService = new LeadStatusDataService();
         }
 
         private async Task DynamicDeleteCommandExecute(object arg)
@@ -145,6 +147,15 @@ namespace BahiKitab.ViewModels
                         {
                             await this._orderStagesDataService.DeleteOrderStageAsync(orderStages);
                             this.Data.Remove(orderStages);
+                        }
+
+                        break;
+                    case ViewsEnum.LeadStatus:
+                        var leadStatus = this.SelectedData as LeadStatusModel;
+                        if (leadStatus != null)
+                        {
+                            await this._leadStatusDataService.DeleteLeadStatusAsync(leadStatus);
+                            this.Data.Remove(leadStatus);
                         }
 
                         break;
@@ -235,6 +246,15 @@ namespace BahiKitab.ViewModels
                     {
                         this.Data.Add(item);
                     }
+
+                    break;
+                case ViewsEnum.LeadStatus:
+                    var leadStatuses = await this._leadStatusDataService.GetAllLeadStatussAsync();
+                    if (leadStatuses != null)
+                        foreach (var item in leadStatuses)
+                        {
+                            this.Data.Add(item);
+                        }
 
                     break;
                 default:
@@ -442,6 +462,28 @@ namespace BahiKitab.ViewModels
                     {
                         var model = new OrderStageModel { Name = this.TextBoxValue.Trim() };
                         await this._orderStagesDataService.CreateOrderStageAsync(model);
+                        this.Data.Add(model);
+                    }
+                    break;
+                case ViewsEnum.LeadStatus:
+
+                    if (this.TextBoxValue.Contains(','))
+                    {
+                        var multival = this.TextBoxValue.Split(',');
+                        foreach (var item in multival)
+                        {
+                            if (!string.IsNullOrEmpty(item) || !string.IsNullOrWhiteSpace(item))
+                            {
+                                var model = new LeadStatusModel { Name = item.Trim() };
+                                await this._leadStatusDataService.CreateLeadStatusAsync(model);
+                                this.Data.Add(model);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var model = new LeadStatusModel { Name = this.TextBoxValue.Trim() };
+                        await this._leadStatusDataService.CreateLeadStatusAsync(model);
                         this.Data.Add(model);
                     }
                     break;

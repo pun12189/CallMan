@@ -26,7 +26,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "select * from lead_sources where id=@id";
+                    command.CommandText = "select * from lead_source where id=@id";
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
                     MySqlDataReader reader = command.ExecuteReader();
                     if (reader.HasRows)
@@ -69,7 +69,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "select * from lead_sources";
+                    command.CommandText = "select * from lead_source";
                     var reader = await command.ExecuteReaderAsync();
                     if (reader.HasRows)
                     {
@@ -110,7 +110,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "insert into lead_sources(name) values(@name)";
+                    command.CommandText = "insert into lead_source(name) values(@name)";
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
                     await command.ExecuteScalarAsync();
                 }
@@ -137,7 +137,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "update lead_sources set name=@name where id=@id";
+                    command.CommandText = "update lead_source set name=@name where id=@id";
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = lead.Id;
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
                     await command.ExecuteScalarAsync();
@@ -165,7 +165,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "delete from lead_sources where id=@id";
+                    command.CommandText = "delete from lead_source where id=@id";
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = lead.Id;
                     await command.ExecuteScalarAsync();
                 }

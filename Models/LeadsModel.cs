@@ -55,22 +55,29 @@ namespace BahiKitab.Models
             set => Set(ref _stage, value, nameof(Stage));
         }
 
-        private string _leadSource; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
-        public string LeadSource
+        private LeadStatusModel _status; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public LeadStatusModel Status
+        {
+            get => _status;
+            set => Set(ref _status, value, nameof(Status));
+        }
+
+        private LeadSourceModel _leadSource; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public LeadSourceModel LeadSource
         {
             get => _leadSource;
             set => Set(ref _leadSource, value, nameof(LeadSource));
         }
 
-        private string _tags; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
-        public string Tags
+        private LeadTagModel _tags; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public LeadTagModel Tags
         {
             get => _tags;
             set => Set(ref _tags, value, nameof(Tags));
         }
 
-        private string _label; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
-        public string Label
+        private LeadLabelsModel _label; // Corresponds to Lead Stages (e.g., New, Qualified, Contacted)
+        public LeadLabelsModel Label
         {
             get => _label;
             set => Set(ref _label, value, nameof(Label));

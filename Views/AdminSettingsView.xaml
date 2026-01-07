@@ -73,6 +73,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Text="Lead Settings" FontSize="16" Foreground="Black" Grid.Row="0" Padding="10"/>
             <Button Content="Dead Reasons" Grid.Row="2" Style="{StaticResource ButtonStyle2}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.DeadReason}"/>
@@ -81,6 +82,7 @@
             <Button Content="Lead Tag" Grid.Row="5" Style="{StaticResource ButtonStyle2}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.LeadTags}"/>
             <Button Content="Lead Source" Grid.Row="6" Style="{StaticResource ButtonStyle2}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.LeadSource}"/>
             <Button Content="Lead Label" Grid.Row="7" Style="{StaticResource ButtonStyle2}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.LeadLabels}"/>
+            <Button Content="Lead Status" Grid.Row="8" Style="{StaticResource ButtonStyle2}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.LeadStatus}"/>
         </Grid>
     </Grid>
 </UserControl>

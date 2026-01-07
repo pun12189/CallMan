@@ -88,24 +88,65 @@
                                     <icon:PackIconMaterial Kind="MapMarker" Grid.Row="3" Grid.Column="0" FontSize="14" FontWeight="Bold"/>
                                     <TextBlock Text="{Binding Phone}" Grid.Row="1" Grid.Column="2" FontSize="14"/>
                                     <TextBlock Text="{Binding Email}" Grid.Row="2" Grid.Column="2" FontSize="14"/>
-                                    <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="2">
-                                        <TextBlock Text="{Binding City, StringFormat='{}{0}\, '}" FontSize="12" Margin="2,0" />
-                                        <TextBlock Text="{Binding State, StringFormat='{}{0}\, '}" FontSize="12" Margin="2,0"/>
-                                        <TextBlock Text="{Binding District, StringFormat='{}{0}\, '}" FontSize="12" Margin="2,0"/>
-                                        <TextBlock Text="{Binding Pincode, StringFormat='{}{0}\, '}" FontSize="12" Margin="2,0"/>
-                                        <TextBlock Text="{Binding Country}" FontSize="12" Margin="2,0"/>
+                                    <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="2">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding City, StringFormat='{}{0}\, '}" FontSize="12" Margin="0" />
+                                            <TextBlock Text="{Binding District, StringFormat='{}{0}\, '}" FontSize="12" Margin="0"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding State, StringFormat='{}{0}\, '}" FontSize="12" Margin="0"/>
+                                            <TextBlock Text="{Binding Pincode, StringFormat='{}{0}\, '}" FontSize="12" Margin="0"/>
+                                        </StackPanel>                                        
+                                        <TextBlock Text="{Binding Country}" FontSize="12" Margin="0"/>
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Lead Source" Width="*" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding LeadSource.Name}" FontSize="12" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Tags" Width="*" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Tags.Name}" FontSize="12" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Labels" Width="*" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Label.Name}" FontSize="12" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Status" Width="*" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Status.Name}" FontSize="12" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Important Date" Width="*" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding ImpDate, StringFormat=D}" FontSize="12" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!--<DataGridTextColumn Header="Lead Source" Binding="{Binding LeadSource.Name}" Width="*" IsReadOnly="True"/>-->
+                    <!--<DataGridTextColumn Header="Tags" Binding="{Binding Tags.Name}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Label" Binding="{Binding Label.Name}" Width="*" IsReadOnly="True"/>-->
                     <!--<DataGridTextColumn Header="Company" Binding="{Binding Company}" Width="*" IsReadOnly="True"/>-->
-                    <DataGridTextColumn Header="Stage" Binding="{Binding Stage}" Width="*" IsReadOnly="True"/>
+                    <!--<DataGridTextColumn Header="Status" Binding="{Binding Status.Name}" Width="*" IsReadOnly="True"/>-->
                     <!--<DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="1.5*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="1.5*" IsReadOnly="True"/>-->
-                    <DataGridTextColumn Header="Lead Source" Binding="{Binding LeadSource}" Width="*" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Tags" Binding="{Binding Tags}" Width="*" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Label" Binding="{Binding Label}" Width="*" IsReadOnly="True"/>
+                    <!--<DataGridTextColumn Header="Important Date" Binding="{Binding ImpDate}" Width="*" IsReadOnly="True"/>-->
+                    
                     <DataGridTemplateColumn Header="Actions" Width="60">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

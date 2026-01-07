@@ -11,42 +11,76 @@
     </UserControl.Resources>
     <ScrollViewer>
         <Border Grid.Column="1" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="5" Padding="15">
-            <StackPanel>
-                <TextBlock Text="{Binding CurrentLead.Id, StringFormat='Lead Details ({0})'}" 
-               FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding CurrentLead.Id, StringFormat='Lead Details ({0})'}" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                <StackPanel Grid.Row="1" Grid.Column="0">                    
 
-                <!-- Form Fields (Bound to CurrentLead) -->
-                <TextBlock Text="Name" Margin="0,5,0,2"/>
-                <TextBox Text="{Binding CurrentLead.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+                    <!-- Form Fields (Bound to CurrentLead) -->
+                    <TextBlock Text="Name" Margin="0,5,0,2"/>
+                    <TextBox Text="{Binding CurrentLead.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
 
-                <TextBlock Text="Company" Margin="0,5,0,2"/>
-                <TextBox Text="{Binding CurrentLead.Company, Mode=TwoWay}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Company" Margin="0,5,0,2"/>
+                    <TextBox Text="{Binding CurrentLead.Company, Mode=TwoWay}" Margin="0,0,0,10"/>
 
-                <TextBlock Text="Email" Margin="0,5,0,2"/>
-                <TextBox Text="{Binding CurrentLead.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Email" Margin="0,5,0,2"/>
+                    <TextBox Text="{Binding CurrentLead.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
 
-                <TextBlock Text="Phone" Margin="0,5,0,2"/>
-                <TextBox Text="{Binding CurrentLead.Phone, Mode=TwoWay}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Phone" Margin="0,5,0,2"/>
+                    <TextBox Text="{Binding CurrentLead.Phone, Mode=TwoWay}" Margin="0,0,0,10"/>
 
-                <TextBlock Text="Lead Source" Margin="0,5,0,2"/>
-                <TextBox Text="{Binding CurrentLead.LeadSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Lead Source" Margin="0,5,0,2"/>
+                    <ComboBox x:Name="cbSource" SelectedItem="{Binding CurrentLead.LeadSource, Mode=TwoWay}" Margin="0,0,0,10" SelectedValuePath="Id" DisplayMemberPath="Name"/>
 
-                <TextBlock Text="Tags" Margin="0,5,0,2"/>
-                <TextBox Text="{Binding CurrentLead.Tags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Tags" Margin="0,5,0,2"/>
+                    <ComboBox x:Name="cbTags" SelectedItem="{Binding CurrentLead.Tags, Mode=TwoWay}" Margin="0,0,0,10" SelectedValuePath="Id" DisplayMemberPath="Name"/>
 
-                <TextBlock Text="Label" Margin="0,5,0,2"/>
-                <TextBox Text="{Binding CurrentLead.Label, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Label" Margin="0,5,0,2"/>
+                    <ComboBox x:Name="cbLabel" SelectedItem="{Binding CurrentLead.Label, Mode=TwoWay}" Margin="0,0,0,10" SelectedValuePath="Id" DisplayMemberPath="Name"/>
 
-                <TextBlock Text="Status" Margin="0,5,0,2"/>
-                <!-- Hardcoding for simplicity, would bind to a list from Admin Settings in a real app -->
-                <ComboBox x:Name="cbStatus" SelectedItem="{Binding CurrentLead.Stage, Mode=TwoWay}" Margin="0,0,0,20" SelectedValuePath="Content"/>
+                    <TextBlock Text="Status" Margin="0,5,0,2"/>
+                    <!-- Hardcoding for simplicity, would bind to a list from Admin Settings in a real app -->
+                    <ComboBox x:Name="cbStatus" SelectedItem="{Binding CurrentLead.Status, Mode=TwoWay}" Margin="0,0,0,20" SelectedValuePath="Id" DisplayMemberPath="Name"/>
+                    
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="2">
+                    <TextBlock Text="Pincode" Margin="0,5,0,2"/>
+                    <TextBox x:Name="tbPincode" Text="{Binding CurrentLead.Pincode, Mode=TwoWay}" PreviewTextInput="tb_PreviewTextInput" LostFocus="tbPincode_LostFocus" Margin="0,0,0,10"/>
+
+                    <!-- Form Fields (Bound to CurrentLead) -->
+                    <TextBlock Text="City" Margin="0,5,0,2"/>
+                    <TextBox x:Name="tbCity" Text="{Binding CurrentLead.City, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="State" Margin="0,5,0,2"/>
+                    <TextBox x:Name="tbState" Text="{Binding CurrentLead.State, Mode=TwoWay}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="District" Margin="0,5,0,2"/>
+                    <TextBox x:Name="tbDist" Text="{Binding CurrentLead.District, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Country" Margin="0,5,0,2"/>
+                    <TextBox x:Name="tbCountry" Text="{Binding CurrentLead.Country, Mode=TwoWay}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Alternate No." Margin="0,5,0,2"/>
+                    <TextBox Text="{Binding CurrentLead.AltPhone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Important Date" Margin="0,5,0,2"/>
+                    <DatePicker SelectedDateFormat="Long" SelectedDate="{Binding CurrentLead.ImpDate}" IsTodayHighlighted="True" FirstDayOfWeek="Monday"/>
+
+                </StackPanel>
                 <!-- CRUD Action Buttons -->
-                <Button Content="{Binding CurrentLead.Id, Converter={StaticResource IdToButtonTextConverter}}" 
-            Command="{Binding CreateUpdateLeadCommand}" 
-            Margin="0,10,0,5"
-            Style="{StaticResource KlikButtonStyle}"/>
+                <Button Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Center" Content="{Binding CurrentLead.Id, Converter={StaticResource IdToButtonTextConverter}}" Command="{Binding CreateUpdateLeadCommand}" Margin="0,10,0,5" Style="{StaticResource KlikButtonStyle}"/>
 
-            </StackPanel>
+            </Grid>
         </Border>
     </ScrollViewer>
 </UserControl>

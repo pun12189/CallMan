@@ -22,6 +22,8 @@ namespace BahiKitab.Helper
 
         Departments,
 
-        OrderStages
+        OrderStages,
+
+        LeadStatus
     }
 }
