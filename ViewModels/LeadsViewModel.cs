@@ -63,6 +63,7 @@ namespace BahiKitab.ViewModels
         public RelayCommand UpdateLeadCommand { get; private set; }
         public RelayCommand DeleteLeadCommand { get; private set; }
         public RelayCommand NewLeadCommand { get; private set; }
+        public RelayCommand UpdateInfoCommand { get; private set; }
 
         public LeadsViewModel()
         {
@@ -76,9 +77,23 @@ namespace BahiKitab.ViewModels
             UpdateLeadCommand = new RelayCommand(_ => UpdateNewLead());
             DeleteLeadCommand = new RelayCommand(async _ => await DeleteLeadAsync(), _ => SelectedLead != null);
             NewLeadCommand = new RelayCommand(_ => CreateNewLead());
+            UpdateInfoCommand = new RelayCommand(_ => UpdateInfoLead());
 
             // Load data immediately upon initialization
             LoadLeadsCommand.Execute(null);
+        }
+
+        private void UpdateInfoLead()
+        {
+            var view = new LeadStatusView();
+            view.DataContext = this;
+            var window = new Window();
+            window.Title = "Update Lead";
+            window.Content = view;
+            window.Width = 600;
+            window.SizeToContent = SizeToContent.Height;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Show();
         }
 
         private void UpdateCommandsCanExecute()
