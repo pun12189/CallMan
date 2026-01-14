@@ -1,10 +1,6 @@
 ﻿using BahiKitab.Core;
-using System;
-using System.Collections.Generic;
+using BahiKitab.Helper;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BahiKitab.Models
 {
@@ -30,6 +26,13 @@ namespace BahiKitab.Models
         {
             get => _creationDate;
             set => Set(ref _creationDate, value, nameof(CreationDate));
+        }
+
+        private LeadType _leadType;
+        public LeadType LeadType
+        {
+            get => _leadType;
+            set => Set(ref _leadType, value, nameof(LeadType));
         }
 
         private int _leadid;

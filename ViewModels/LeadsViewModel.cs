@@ -64,6 +64,7 @@ namespace BahiKitab.ViewModels
         public RelayCommand DeleteLeadCommand { get; private set; }
         public RelayCommand NewLeadCommand { get; private set; }
         public RelayCommand UpdateInfoCommand { get; private set; }
+        public RelayCommand ImportLeadsCommand { get; private set; }
 
         public LeadsViewModel()
         {
@@ -78,9 +79,30 @@ namespace BahiKitab.ViewModels
             DeleteLeadCommand = new RelayCommand(async _ => await DeleteLeadAsync(), _ => SelectedLead != null);
             NewLeadCommand = new RelayCommand(_ => CreateNewLead());
             UpdateInfoCommand = new RelayCommand(_ => UpdateInfoLead());
+            ImportLeadsCommand = new RelayCommand(async _ => await ImportLeadsCommandAsync());
 
             // Load data immediately upon initialization
             LoadLeadsCommand.Execute(null);
+        }
+
+        private async Task ImportLeadsCommandAsync()
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".csv";
+            dlg.Filter = "Excel files(*.csv, *.xls, *.xlsx) | *.csv; *.xls; *.xlsx | All files(*.*) | *.* ";
+
+            // Display OpenFileDialog by calling ShowDialog method 
+            bool? result = dlg.ShowDialog();
+
+            // Get the selected file name and display in a TextBox 
+            if (result == true)
+            {
+                // var dataTable = Helper.Helper.UpdateConvertCsvToDataTable(dlg.FileName);
+                // await Helper.Helper.BulkUpdateDataAsync(dataTable);
+            }
         }
 
         private void UpdateInfoLead()

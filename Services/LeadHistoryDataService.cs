@@ -1,11 +1,7 @@
-﻿using BahiKitab.Models;
+﻿using BahiKitab.Helper;
+using BahiKitab.Models;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BahiKitab.Services
@@ -39,6 +35,7 @@ namespace BahiKitab.Services
                                 Name = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
                                 CreationDate = reader.IsDBNull(2) ? DateTime.MinValue : reader.GetDateTime(2),
                                 LeadId = reader.GetInt32(3),
+                                LeadType = reader.IsDBNull(4) ? LeadType.New : Enum.Parse<LeadType>(reader.GetString(4), true),
                             };
                         }
 
@@ -83,6 +80,7 @@ namespace BahiKitab.Services
                                 Name = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
                                 CreationDate = reader.IsDBNull(2) ? DateTime.MinValue : reader.GetDateTime(2),
                                 LeadId = reader.GetInt32(3),
+                                LeadType = reader.IsDBNull(4) ? LeadType.New : Enum.Parse<LeadType>(reader.GetString(4), true),
                             };
 
                             leads.Add(lead);
@@ -112,9 +110,10 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "insert into lead_history(name, lead_id) values(@name, @lead_id)";
+                    command.CommandText = "insert into lead_history(name, lead_id, leadType) values(@name, @lead_id, @leadType)";
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
                     command.Parameters.Add("@lead_id", MySqlDbType.Int32).Value = lead.LeadId;
+                    command.Parameters.Add("@leadType", MySqlDbType.VarChar).Value = lead.LeadType;
                     await command.ExecuteScalarAsync();
                 }
             }
@@ -140,9 +139,10 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "update lead_history set name=@name where id=@id";
+                    command.CommandText = "update lead_history set name=@name, leadType=@leadType where id=@id";
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = lead.Id;
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
+                    command.Parameters.Add("@leadType", MySqlDbType.VarChar).Value = lead.LeadType;
                     await command.ExecuteScalarAsync();
                 }
             }

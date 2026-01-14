@@ -14,6 +14,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions> 
         <TextBlock Grid.Row="0" Text="Lead Update" FontSize="18" FontWeight="SemiBold" Margin="15"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
@@ -61,9 +62,15 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="Dead Reason" FontSize="12" FontWeight="SemiBold" Margin="5,10,0,0"/>
             <ComboBox x:Name="cbReason" Grid.Row="1" Margin="5,0" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+            <TextBox Grid.Row="2" AcceptsReturn="True" TextWrapping="Wrap" FontSize="14" Height="60" Margin="5,0"/>
         </Grid>
+
+        <Button Content="Update Status" Grid.Row="3" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Height="30">
+            
+        </Button>
     </Grid>
 </UserControl>
