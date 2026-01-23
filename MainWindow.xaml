@@ -27,6 +27,7 @@
         <icon:FontAwesome Kind="HexagonNodesSolid" Height="14" x:Key="allstatsicon"/>
         <icon:FontAwesome Kind="FaceDizzySolid" Height="14" x:Key="deadicon"/>
         <icon:FontAwesome Kind="SignatureSolid" Height="14" x:Key="matureicon"/>
+        <icon:FontAwesome Kind="EnvelopesBulkSolid" Height="14" x:Key="ordericon"/>
     </Window.Resources>
     <Window.DataContext>
         <!-- Set the DataContext to the Main Window ViewModel -->
@@ -47,18 +48,21 @@
 
             <Menu Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource TopMenuStyle}">
 
-                <MenuItem Header="Dashboard" Icon="{StaticResource dashicon}"/>
+                <MenuItem Header="Dashboard" Icon="{StaticResource dashicon}" Command="{Binding NavigateCommand}" CommandParameter="Dashboard"/>
 
                 <MenuItem Header="Followups" Icon="{StaticResource followicon}" Command="{Binding NavigateCommand}" CommandParameter="Tasks"/>
 
                 <MenuItem Header="Leads" Icon="{StaticResource leadicon}">
                     <MenuItem Header="All Leads" Icon="{StaticResource alleadsicon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Leads"/>
-                    <MenuItem Header="All Stats" Icon="{StaticResource allstatsicon}" Background="#20b2aa"/>
-                    <MenuItem Header="Dead Leads" Icon="{StaticResource deadicon}" Background="#20b2aa"/>
-                    <MenuItem Header="Mature Leads" Icon="{StaticResource matureicon}" Background="#20b2aa"/>
+                    <MenuItem Header="All Stats" Icon="{StaticResource allstatsicon}" Background="#20b2aa" Visibility="Collapsed"/>
+                    <MenuItem Header="Dead Leads" Icon="{StaticResource deadicon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Dead"/>
+                    <MenuItem Header="New Leads" Icon="{StaticResource matureicon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="New"/>
                 </MenuItem>
 
-                <MenuItem Header="CRM" Icon="{StaticResource crmicon}"/>
+                <MenuItem Header="CRM" Icon="{StaticResource crmicon}">
+                    <MenuItem Header="Customers" Icon="{StaticResource alleadsicon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Mature"/>
+                    <MenuItem Header="Orders" Icon="{StaticResource ordericon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Orders"/>
+                </MenuItem>
 
                 <MenuItem Header="Admin Settings" Icon="{StaticResource adminicon}" Command="{Binding NavigateCommand}" CommandParameter="Admin"/>
 
@@ -67,20 +71,32 @@
 
         <Grid>
             <Border Grid.Column="1" Padding="20">
-        <ContentControl Content="{Binding CurrentView}">
-            <ContentControl.Resources>
-                <DataTemplate DataType="{x:Type vm:LeadsViewModel}">
-                    <views:LeadsView/>
-                </DataTemplate>
-                 <!--Add DataTemplates for other ViewModels here (Tasks, Admin, etc.)-->
-
+                <ContentControl Content="{Binding CurrentView}">
+                    <ContentControl.Resources>
+                        <DataTemplate DataType="{x:Type vm:LeadsViewModel}">
+                            <views:LeadsView/>
+                        </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:AdminSettingsViewModel}">
                             <views:AdminSettingsView/>
                         </DataTemplate>
-
+                        <DataTemplate DataType="{x:Type vm:DeadLeadsViewModel}">
+                            <views:DeadLeadsView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:NewLeadsViewModel}">
+                            <views:NewLeadsView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:MatureLeadsViewModel}">
+                            <views:MatureLeadsView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+                            <views:DashboardView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:OrderViewModel}">
+                            <views:OrderView/>
+                        </DataTemplate>
                     </ContentControl.Resources>
-        </ContentControl>
-    </Border>
+                </ContentControl>
+            </Border>
         </Grid>
     </DockPanel>
     <!--<Grid>

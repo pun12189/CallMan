@@ -32,7 +32,7 @@ namespace BahiKitab.ViewModels
             NavigateCommand = new RelayCommand(Navigate);
 
             // Set initial view
-            CurrentView = new LeadsViewModel();
+            CurrentView = new DashboardViewModel();
         }
 
         private void Navigate(object parameter)
@@ -51,7 +51,27 @@ namespace BahiKitab.ViewModels
                 case "Admin":
                     CurrentView = new AdminSettingsViewModel(); // Placeholder for Admin Settings
                     //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
-                    break;               
+                    break;
+                case "Dead":
+                    CurrentView = new DeadLeadsViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "New":
+                    CurrentView = new NewLeadsViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "Mature":
+                    CurrentView = new MatureLeadsViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "Dashboard":
+                    CurrentView = new DashboardViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "Orders":
+                    CurrentView = new OrderViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using BahiKitab.Core;
+using BahiKitab.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -153,25 +154,25 @@ namespace BahiKitab.Models
             set => Set(ref _updationDate, value, nameof(UpdationDate));
         }
 
-        private bool _isdead = false;
-        public bool IsDead
+        private LeadType _leadType = LeadType.New;
+        public LeadType LeadType
         {
-            get => _isdead;
-            set => Set(ref _isdead, value, nameof(IsDead));
+            get => _leadType;
+            set => Set(ref _leadType, value, nameof(LeadType));
         }
 
-        private bool _isfollowup = false;
-        public bool IsFollowup
+        private LeadFollowUpModel _leadFollowUpModel;
+        public LeadFollowUpModel LeadFollowUpModel
         {
-            get => _isfollowup;
-            set => Set(ref _isfollowup, value, nameof(IsFollowup));
+            get => _leadFollowUpModel;
+            set => Set(ref _leadFollowUpModel, value, nameof(LeadFollowUpModel));
         }
 
-        private bool _ismatured = false;
-        public bool IsMatured
+        private LeadDeadModel _leadDeadModel;
+        public LeadDeadModel LeadDeadModel
         {
-            get => _ismatured;
-            set => Set(ref _ismatured, value, nameof(IsMatured));
+            get => _leadDeadModel;
+            set => Set(ref _leadDeadModel, value, nameof(LeadDeadModel));
         }
 
         public Lead Clone() { return (Lead)this.MemberwiseClone(); }

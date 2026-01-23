@@ -1,9 +1,11 @@
-﻿using BahiKitab.Models;
+﻿using BahiKitab.Helper;
+using BahiKitab.Models;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.X509;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -71,10 +73,10 @@ namespace BahiKitab.Services
                                 AltPhone = reader.IsDBNull(16) ? string.Empty : reader.GetString(16),
                                 CreationDate = reader.IsDBNull(17) ? DateTime.MinValue : reader.GetDateTime(17),
                                 UpdationDate = reader.IsDBNull(18) ? DateTime.MinValue : reader.GetDateTime(18),
-                                IsDead = reader.IsDBNull(19) ? false : reader.GetBoolean(19),
-                                IsFollowup = reader.IsDBNull(20) ? false : reader.GetBoolean(20),
-                                IsMatured = reader.IsDBNull(21) ? false : reader.GetBoolean(21),
-                                Status = reader.IsDBNull(22) ? null : JsonSerializer.Deserialize<LeadStatusModel>(reader.GetString(22)),
+                                Status = reader.IsDBNull(19) ? null : JsonSerializer.Deserialize<LeadStatusModel>(reader.GetString(19)),
+                                LeadType = reader.IsDBNull(20) ? LeadType.New : Enum.Parse<LeadType>(reader.GetString(20)),
+                                LeadFollowUpModel = reader.IsDBNull(21) ? null : JsonSerializer.Deserialize<LeadFollowUpModel>(reader.GetString(21)),
+                                LeadDeadModel = reader.IsDBNull(22) ? null : JsonSerializer.Deserialize<LeadDeadModel>(reader.GetString(22)),
                             };
                         }
 
@@ -134,10 +136,10 @@ namespace BahiKitab.Services
                                 AltPhone = reader.IsDBNull(16) ? string.Empty : reader.GetString(16),
                                 CreationDate = reader.IsDBNull(17) ? DateTime.MinValue : reader.GetDateTime(17),
                                 UpdationDate = reader.IsDBNull(18) ? DateTime.MinValue : reader.GetDateTime(18),
-                                IsDead = reader.IsDBNull(19) ? false : reader.GetBoolean(19),
-                                IsFollowup = reader.IsDBNull(20) ? false : reader.GetBoolean(20),
-                                IsMatured = reader.IsDBNull(21) ? false : reader.GetBoolean(21),
-                                Status = reader.IsDBNull(22) ? null : JsonSerializer.Deserialize<LeadStatusModel>(reader.GetString(22)),
+                                Status = reader.IsDBNull(19) ? null : JsonSerializer.Deserialize<LeadStatusModel>(reader.GetString(19)),
+                                LeadType = reader.IsDBNull(20) ? LeadType.New : Enum.Parse<LeadType>(reader.GetString(20)),
+                                LeadFollowUpModel = reader.IsDBNull(21) ? null : JsonSerializer.Deserialize<LeadFollowUpModel>(reader.GetString(21)),
+                                LeadDeadModel = reader.IsDBNull(22) ? null : JsonSerializer.Deserialize<LeadDeadModel>(reader.GetString(22)),
                             };
 
                             leads.Add(lead);
@@ -167,7 +169,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "insert into leads(name, company, email, phone, stage, leadSource, tags, label, country, state, city, district, pincode, firm_name, imp_date, alternate_number, isDead, isFollowup, isMatured, status) values(@name, @company, @email, @phone, @stage, @leadSource, @tags, @label, @country, @state, @city, @district, @pincode, @firm_name, @imp_date, @alternate_number, @isDead, @isFollowup, @isMatured, @status)";
+                    command.CommandText = "insert into leads(name, company, email, phone, stage, leadSource, tags, label, country, state, city, district, pincode, firm_name, imp_date, alternate_number, status, leadType, leadFollowup, leadDead) values(@name, @company, @email, @phone, @stage, @leadSource, @tags, @label, @country, @state, @city, @district, @pincode, @firm_name, @imp_date, @alternate_number, @status, @leadType, @leadFollowup, @leadDead)";
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
                     command.Parameters.Add("@company", MySqlDbType.VarChar).Value = lead.Company;
                     command.Parameters.Add("@email", MySqlDbType.VarChar).Value = lead.Email;
@@ -184,10 +186,10 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@firm_name", MySqlDbType.VarChar).Value = lead.FirmName;
                     command.Parameters.Add("@imp_date", MySqlDbType.DateTime).Value = lead.ImpDate;
                     command.Parameters.Add("@alternate_number", MySqlDbType.VarChar).Value = lead.AltPhone;
-                    command.Parameters.Add("@isDead", MySqlDbType.Byte).Value = lead.IsDead;
-                    command.Parameters.Add("@isFollowup", MySqlDbType.Byte).Value = lead.IsFollowup;
-                    command.Parameters.Add("@isMatured", MySqlDbType.Byte).Value = lead.IsMatured;
                     command.Parameters.Add("@status", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.Status);
+                    command.Parameters.Add("@leadType", MySqlDbType.VarChar).Value = lead.LeadType;
+                    command.Parameters.Add("@leadFollowup", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.LeadFollowUpModel);
+                    command.Parameters.Add("@leadDead", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.LeadDeadModel);
                     await command.ExecuteScalarAsync();
                 }
             }
@@ -213,7 +215,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "update leads set name=@name, company=@company, email=@email, phone=@phone, stage=@stage, leadSource=@leadSource, tags=@tags, label=@label, updated_date=@updated_date, country=@country, state=@state, city=@city, district=@district, pincode=@pincode, firm_name=@firm_name, imp_date=@imp_date, alternate_number=@alternate_number, isDead=@isDead, isFollowup=@isFollowup, isMatured=@isMatured, status=@status where id=@id";
+                    command.CommandText = "update leads set name=@name, company=@company, email=@email, phone=@phone, stage=@stage, leadSource=@leadSource, tags=@tags, label=@label, updated_date=@updated_date, country=@country, state=@state, city=@city, district=@district, pincode=@pincode, firm_name=@firm_name, imp_date=@imp_date, alternate_number=@alternate_number, status=@status, leadType=@leadType, leadFollowup=@leadFollowup, leadDead=@leadDead where id=@id";
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = lead.Id;
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
                     command.Parameters.Add("@company", MySqlDbType.VarChar).Value = lead.Company;
@@ -232,10 +234,10 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@firm_name", MySqlDbType.VarChar).Value = lead.FirmName;
                     command.Parameters.Add("@imp_date", MySqlDbType.DateTime).Value = lead.ImpDate;
                     command.Parameters.Add("@alternate_number", MySqlDbType.VarChar).Value = lead.AltPhone;
-                    command.Parameters.Add("@isDead", MySqlDbType.Byte).Value = lead.IsDead;
-                    command.Parameters.Add("@isFollowup", MySqlDbType.Byte).Value = lead.IsFollowup;
-                    command.Parameters.Add("@isMatured", MySqlDbType.Byte).Value = lead.IsMatured;
                     command.Parameters.Add("@status", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.Status);
+                    command.Parameters.Add("@leadType", MySqlDbType.VarChar).Value = lead.LeadType;
+                    command.Parameters.Add("@leadFollowup", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.LeadFollowUpModel);
+                    command.Parameters.Add("@leadDead", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.LeadDeadModel);
                     await command.ExecuteScalarAsync();
                 }
             }
@@ -269,6 +271,51 @@ namespace BahiKitab.Services
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
+            }
+        }
+
+        public async Task BulkInsertMySQL(DataTable table, string tableName)
+        {
+            try
+            {
+                using (MySqlConnection connection = GetConnection())
+                {
+                    connection.Open();
+
+                    using (MySqlTransaction tran = connection.BeginTransaction(IsolationLevel.Serializable))
+                    {
+                        using (MySqlCommand cmd = new MySqlCommand())
+                        {
+                            cmd.Connection = connection;
+                            cmd.Transaction = tran;
+                            cmd.CommandText = $"SELECT name, company, email, phone, leadType FROM " + tableName + " limit 0";
+
+                            try
+                            {
+                                using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                                {
+                                    adapter.UpdateBatchSize = 10000;
+                                    using (MySqlCommandBuilder cb = new MySqlCommandBuilder(adapter))
+                                    {
+                                        cb.SetAllValues = true;
+                                        adapter.Update(table);
+                                        await tran.CommitAsync();
+                                    }
+                                }
+                                ;
+                            }
+                            catch (MySqlException e)
+                            {
+                                MessageBox.Show("CSV File must have unique data", "Info");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                //Helper.Helper.BugReport(e);
             }
         }
     }

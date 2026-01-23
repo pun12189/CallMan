@@ -41,5 +41,19 @@ namespace BahiKitab.Models
             get => _leadid;
             set => Set(ref _leadid, value, nameof(LeadId));
         }
+
+        private string _lastMsg;
+        public string LastMsg
+        {
+            get => _lastMsg;
+            set => Set(ref _lastMsg, value, nameof(LastMsg));
+        }
+
+        private DateTime _nextFollowup;
+        public DateTime NextFollowUp
+        {
+            get => _nextFollowup;
+            set => Set(ref _nextFollowup, value, nameof(NextFollowUp));
+        }
     }
 }

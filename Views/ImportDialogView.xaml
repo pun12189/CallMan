@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="BahiKitab.Views.ImportDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BahiKitab.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height=".3*"/>
+            <RowDefinition/>
+            <RowDefinition Height=".3*"/>
+            <RowDefinition/>
+            <RowDefinition Height=".3*"/>
+            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Select Category" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Select Sub-Category" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Select Sub-Sub-Category" VerticalAlignment="Center"/>
+        <ComboBox x:Name="cbCateg" Grid.Row="0" Grid.Column="2" IsTextSearchEnabled="True" IsEditable="True" DisplayMemberPath="CategoryName" SelectedValuePath="Id"/>
+        <ComboBox x:Name="cbSCateg" Grid.Row="2" Grid.Column="2" IsTextSearchEnabled="True" IsEditable="True" DisplayMemberPath="CategoryName" SelectedValuePath="Id"/>
+        <ComboBox x:Name="cbSSCateg" Grid.Row="4" Grid.Column="2" IsTextSearchEnabled="True" IsEditable="True" DisplayMemberPath="CategoryName" SelectedValuePath="Id"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Upload file" VerticalAlignment="Center"/>
+        <Button Grid.Column="2" Grid.Row="6" Content="Choose File" VerticalAlignment="Center" Padding="6,5,6,5"/>
+        <TextBlock x:Name="fileNameTb" Grid.Row="7" Grid.Column="2" Text="No File Chosen" VerticalAlignment="Center" TextWrapping="Wrap"/>
+        <Button Grid.ColumnSpan="3" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Submit" Padding="20,8,20,8"/>
+    </Grid>
+</UserControl>

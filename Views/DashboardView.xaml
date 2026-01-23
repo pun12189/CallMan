@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="BahiKitab.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BahiKitab.Views"
+xmlns:core="clr-namespace:BahiKitab.Core"
+xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+xmlns:helper="clr-namespace:BahiKitab.Helper"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <core:IdToButtonTextConverter x:Key="IdToButtonTextConverter"/>
+        <Style x:Key="DataGridHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#20b2aa" />
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="DashBoard Analytics" Style="{StaticResource TitleStyle}" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <Grid Grid.Row="2" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".2*"/>
+                <ColumnDefinition Width=".2*"/>
+                <ColumnDefinition Width=".2*"/>
+                <ColumnDefinition Width=".2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Button Content="{Binding TotalLeads}" Grid.Column="0" Grid.Row="0" Style="{StaticResource KlikDashButtonStyle}"/>
+            <Button Content="{Binding NewLeads}" Grid.Column="1" Grid.Row="0" Style="{StaticResource KlikDashButtonStyle}"/>
+            <Button Content="{Binding FollowUpLeads}" Grid.Column="2" Grid.Row="0" Style="{StaticResource KlikDashButtonStyle}"/>
+            <Button Content="{Binding MatureLeads}" Grid.Column="3" Grid.Row="0" Style="{StaticResource KlikDashButtonStyle}"/>
+            <Button Content="{Binding DeadLeads}" Grid.Column="0" Grid.Row="2" Style="{StaticResource KlikDashButtonStyle}"/>
+            <Button Content="{Binding TotalLeads}" Grid.Column="1" Grid.Row="2" Style="{StaticResource KlikDashButtonStyle}"/>
+            <Button Content="{Binding TotalLeads}" Grid.Column="2" Grid.Row="2" Style="{StaticResource KlikDashButtonStyle}"/>
+            <Button Content="{Binding TotalLeads}" Grid.Column="3" Grid.Row="2" Style="{StaticResource KlikDashButtonStyle}"/>
+        </Grid>
+
+    </Grid>
+</UserControl>

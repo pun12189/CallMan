@@ -85,6 +85,21 @@
         <Setter Property="Margin" Value="5"/>
     </Style>
 
+    <Style TargetType="Button" x:Key="KlikDashButtonStyle">        
+        <Setter Property="Height" Value="100"/>
+        <Setter Property="MinWidth" Value="130"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#20b2aa"/>
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="IsHitTestVisible" Value="False"/>
+    </Style>
+
     <!-- Textbox Style -->
     <Style TargetType="TextBox">
         <Setter Property="Padding" Value="5"/>

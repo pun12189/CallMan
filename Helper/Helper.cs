@@ -1,6 +1,8 @@
 ﻿using MySqlConnector;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -28,6 +30,57 @@ namespace BahiKitab.Helper
             return result;
         }
 
+        public static DataTable ConvertCsvToDataTable(string filePath)
+        {
+            DataTable dtData = new DataTable();
+            try
+            {
+                //reading all the lines(rows) from the file.
+                string[] rows = File.ReadAllLines(filePath);
+                string[] rowValues = null;
+                DataRow dr = dtData.NewRow();
+
+                //Creating columns
+                if (rows.Length > 0)
+                {
+                    foreach (string columnName in rows[0].Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                        dtData.Columns.Add(columnName);
+                }
+                
+                //Creating row for each line.(except the first line, which contain column names)
+                for (int row = 1; row < rows.Length; row++)
+                {
+                    var rowStr = new string[4];
+                    rowValues = rows[row].Split(',');
+                    for (int i = 0; i < rowValues.Length; i++)
+                    {
+                        rowStr[i] = rowValues[i].Trim();
+                    }
+
+                    dr = dtData.NewRow();
+                    dr.ItemArray = rowStr;
+                    dtData.Rows.Add(dr);
+                }
+            }
+            catch (IOException e)
+            {
+                MessageBox.Show("Either the file is open or access by another process or app. " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //Helper.LogError(e);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show("Either the file is open or access by another process or app. " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //Helper.LogError(e);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //Helper.LogError(e);
+            }
+
+            return dtData;
+        }
+
         public static async Task BulkUpdateDataAsync(System.Data.DataTable dt)
         {
             var _connectionString = string.Empty;
@@ -48,7 +101,7 @@ namespace BahiKitab.Helper
 
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
-                using (MySqlCommand command = new MySqlCommand("CREATE TABLE tmptable (`name` varchar(100), `code` varchar(100), `stocks` double, PRIMARY KEY (`code`))", conn))
+                using (MySqlCommand command = new MySqlCommand("CREATE TABLE tmptable (`name` varchar(100), `email` varchar(100), `phone` text, `leadType` varchar(100) PRIMARY KEY (`phone`))", conn))
                 {
                     try
                     {
@@ -60,7 +113,7 @@ namespace BahiKitab.Helper
                         var result = await bulkCopy.WriteToServerAsync(dt);
 
                         command.CommandTimeout = 3000;
-                        command.CommandText = "UPDATE actives INNER JOIN tmptable ON actives.code = tmptable.code SET actives.stocks = tmptable.stocks WHERE tmptable.code = actives.code OR tmptable.name = actives.name; DROP TABLE tmptable";
+                        command.CommandText = "UPDATE leads INNER JOIN tmptable ON actives.code = tmptable.code SET actives.stocks = tmptable.stocks WHERE tmptable.code = actives.code OR tmptable.name = actives.name; DROP TABLE tmptable";
                         await command.ExecuteNonQueryAsync();
                     }
                     catch (Exception ex)

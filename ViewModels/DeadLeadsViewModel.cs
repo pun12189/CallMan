@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace BahiKitab.ViewModels
 {
-    public class LeadsViewModel : ViewModelBase
+    public class DeadLeadsViewModel : ViewModelBase
     {
         // Services
         private readonly LeadsDataService _dataService;
@@ -66,7 +66,7 @@ namespace BahiKitab.ViewModels
         public RelayCommand UpdateInfoCommand { get; private set; }
         public RelayCommand ImportLeadsCommand { get; private set; }
 
-        public LeadsViewModel()
+        public DeadLeadsViewModel()
         {
             // Initialize service and data collections
             _dataService = new LeadsDataService();
@@ -100,9 +100,8 @@ namespace BahiKitab.ViewModels
             // Get the selected file name and display in a TextBox 
             if (result == true)
             {
-                var dataTable = Helper.Helper.ConvertCsvToDataTable(dlg.FileName);
-                await _dataService.BulkInsertMySQL(dataTable, "leads");
-                await LoadLeadsAsync();
+                // var dataTable = Helper.Helper.UpdateConvertCsvToDataTable(dlg.FileName);
+                // await Helper.Helper.BulkUpdateDataAsync(dataTable);
             }
         }
 
