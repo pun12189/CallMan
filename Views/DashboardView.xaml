@@ -10,14 +10,7 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <core:IdToButtonTextConverter x:Key="IdToButtonTextConverter"/>
-        <Style x:Key="DataGridHeaderStyle" TargetType="DataGridColumnHeader">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="Background" Value="#20b2aa" />
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Height" Value="30"/>
-        </Style>
+        <core:IdToButtonTextConverter x:Key="IdToButtonTextConverter"/>        
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -25,29 +18,106 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
             <RowDefinition Height="10"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="DashBoard Analytics" Style="{StaticResource TitleStyle}" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+        <TextBlock Text="DashBoard" Style="{StaticResource TitleStyle}" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
 
-        <Grid Grid.Row="2" Margin="0,20,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width=".2*"/>
-                <ColumnDefinition Width=".2*"/>
-                <ColumnDefinition Width=".2*"/>
-                <ColumnDefinition Width=".2*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Button Content="{Binding TotalLeads}" Grid.Column="0" Grid.Row="0" Style="{StaticResource KlikDashButtonStyle}"/>
-            <Button Content="{Binding NewLeads}" Grid.Column="1" Grid.Row="0" Style="{StaticResource KlikDashButtonStyle}"/>
-            <Button Content="{Binding FollowUpLeads}" Grid.Column="2" Grid.Row="0" Style="{StaticResource KlikDashButtonStyle}"/>
-            <Button Content="{Binding MatureLeads}" Grid.Column="3" Grid.Row="0" Style="{StaticResource KlikDashButtonStyle}"/>
-            <Button Content="{Binding DeadLeads}" Grid.Column="0" Grid.Row="2" Style="{StaticResource KlikDashButtonStyle}"/>
-            <Button Content="{Binding TotalLeads}" Grid.Column="1" Grid.Row="2" Style="{StaticResource KlikDashButtonStyle}"/>
-            <Button Content="{Binding TotalLeads}" Grid.Column="2" Grid.Row="2" Style="{StaticResource KlikDashButtonStyle}"/>
-            <Button Content="{Binding TotalLeads}" Grid.Column="3" Grid.Row="2" Style="{StaticResource KlikDashButtonStyle}"/>
-        </Grid>
+        <TabControl Grid.Row="2" BorderThickness="0" Background="Transparent">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Padding" Value="15,8"/>
+                    <Setter Property="FontSize" Value="13"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </TabControl.Resources>
+
+            <TabItem Header="Analytics">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".2*"/>
+                        <ColumnDefinition Width=".2*"/>
+                        <ColumnDefinition Width=".2*"/>
+                        <ColumnDefinition Width=".2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="0" Grid.Row="0" MinHeight="100" MinWidth="130" Margin="5">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding TotalLeads}" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Total Leads" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="1" Grid.Row="0" MinHeight="100" MinWidth="130" Margin="5">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding FollowUpLeads}" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                            <TextBlock Text="FollowUp's" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="2" Grid.Row="0" MinHeight="100" MinWidth="130" Margin="5">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding MatureLeads}" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Mature Leads" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="0" Grid.Row="2" MinHeight="100" MinWidth="130" Margin="5">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding DeadLeads}" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Dead Leads" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="1" Grid.Row="2" MinHeight="100" MinWidth="130" Margin="5">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding NewLeads}" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                            <TextBlock Text="New Leads" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="2" Grid.Row="2" MinHeight="100" MinWidth="130" Margin="5">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding TotalOrders}" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Total Orders" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Reports">
+                <TextBlock Text="Reports will be shown here" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="#20b2aa" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </TabItem>
+        </TabControl>
+
+        
 
     </Grid>
 </UserControl>

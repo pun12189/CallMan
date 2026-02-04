@@ -13,7 +13,7 @@ namespace BahiKitab.ViewModels
 {
     public class AdminSettingsViewModel : ViewModelBase
     {
-        public ICommand NavigateCommand { get; }
+        public ICommand NavigateCommand { get; set; }
 
         public CommonSettingsViewModel CommonSettingsViewModel { get; }
 

@@ -4,9 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BahiKitab.Views"
+             xmlns:core="clr-namespace:BahiKitab.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <core:IdToButtonTextConverter x:Key="IdToButtonTextConverter"/>
         <Style x:Key="InputLabel" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#555"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -56,22 +58,22 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,10,0,0">
-            <Border Width="120" Height="120" CornerRadius="60" BorderThickness="1" Margin="0,0,0,15">
+            <Border Width="135" Height="135" CornerRadius="50" BorderBrush="Black" BorderThickness="1" Margin="0,0,0,15">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="8" Color="#AAA" Opacity="0.4" ShadowDepth="2"/>
                 </Border.Effect>
                 <Border.Background>
-                    <ImageBrush x:Name="ProfileImagePreview" Stretch="UniformToFill"/>
+                    <ImageBrush x:Name="ProfileImagePreview" Stretch="UniformToFill" ImageSource="{Binding CurrentLead.ProfileImage}"/>
                 </Border.Background>
             </Border>
 
             <Button Content="Upload Photo..." 
-                    Click="UploadButton_Click"
                     Background="White" 
                     BorderBrush="#CCC" 
                     BorderThickness="1" 
                     Padding="10,5"
-                    Foreground="#555">
+                    Foreground="#555"
+                    Command="{Binding UploadProfileCommand}">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 
@@ -107,12 +109,13 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0">
                         <TextBlock Text="Full Name" Style="{StaticResource InputLabel}" Margin="0,0,0,4"/>
-                        <TextBox x:Name="txtName" Style="{StaticResource InputBox}"/>
+                        <TextBox x:Name="txtName" Style="{StaticResource InputBox}" Text="{Binding CurrentLead.FullName}"/>
                     </StackPanel>
 
                     <Grid Grid.Row="1" Margin="0,10,0,0">
@@ -124,23 +127,41 @@
 
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Contact Number" Style="{StaticResource InputLabel}"/>
-                            <TextBox x:Name="txtPhone" Style="{StaticResource InputBox}"/>
+                            <TextBox x:Name="txtPhone" Style="{StaticResource InputBox}" Text="{Binding CurrentLead.Phone}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="Email Address" Style="{StaticResource InputLabel}"/>
-                            <TextBox x:Name="txtEmail" Style="{StaticResource InputBox}"/>
+                            <TextBox x:Name="txtEmail" Style="{StaticResource InputBox}" Text="{Binding CurrentLead.Email}"/>
                         </StackPanel>
                     </Grid>
 
-                    <StackPanel Grid.Row="2" Margin="0,10,0,0">
+                    <Grid Grid.Row="2" Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Department" Style="{StaticResource InputLabel}"/>
+                            <ComboBox x:Name="cbDpt" SelectedItem="{Binding CurrentLead.Department}" SelectedValuePath="Id" DisplayMemberPath="Name"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Team Lead" Style="{StaticResource InputLabel}"/>
+                            <ComboBox x:Name="cbTl" ItemsSource="{Binding StaffTL}" SelectedItem="{Binding CurrentLead.TeamLead}" SelectedValuePath="Id" DisplayMemberPath="FullName"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Row="3" Margin="0,10,0,0">
                         <TextBlock Text="Address" Style="{StaticResource InputLabel}"/>
                         <TextBox x:Name="txtAddress" Style="{StaticResource InputBox}" 
                                  VerticalAlignment="Stretch" 
                                  VerticalContentAlignment="Top" 
                                  TextWrapping="Wrap" 
                                  AcceptsReturn="True"
-                                 Height="80"/>
+                                 Height="80" Text="{Binding CurrentLead.Address}"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -151,7 +172,7 @@
                         <TextBlock Text="Set up login credentials for this user." Foreground="#888" FontSize="12" Margin="0,0,0,15"/>
 
                         <TextBlock Text="Username" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="txtUsername" Style="{StaticResource InputBox}"/>
+                        <TextBox x:Name="txtUsername" Style="{StaticResource InputBox}" Text="{Binding CurrentLead.Username}"/>
 
                         <Grid Margin="0,15,0,0">
                             <Grid.ColumnDefinitions>
@@ -162,7 +183,7 @@
 
                             <StackPanel Grid.Column="0">
                                 <TextBlock Text="Password" Style="{StaticResource InputLabel}"/>
-                                <PasswordBox x:Name="pwdPassword" Style="{StaticResource InputPass}"/>
+                                <PasswordBox x:Name="pwdPassword" Style="{StaticResource InputPass}" PasswordChanged="pwdPassword_PasswordChanged"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="2">
@@ -185,7 +206,7 @@
         <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
             <Button Content="Cancel" IsCancel="True"
                     Background="Transparent" Foreground="#666" Margin="0,0,10,0"
-                    BorderThickness="0" Cursor="Hand">
+                    BorderThickness="0" Cursor="Hand" Style="{StaticResource KlikButtonStyle}">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}">
@@ -195,9 +216,9 @@
                 </Button.Template>
             </Button>
 
-            <Button Content="Create User" IsDefault="True"
-                    Background="#2196F3" Foreground="White" Padding="25,8"
-                    BorderThickness="0" FontWeight="Bold" Cursor="Hand">
+            <Button Content="{Binding CurrentLead.Id, Converter={StaticResource IdToButtonTextConverter}}" IsDefault="True"
+                    Foreground="White" Padding="25,8"
+                    BorderThickness="0" FontWeight="Bold" Cursor="Hand" Command="{Binding CreateUpdateLeadCommand}" Style="{StaticResource KlikButtonStyle}">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" CornerRadius="4">

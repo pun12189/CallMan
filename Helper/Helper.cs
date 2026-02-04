@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace BahiKitab.Helper
 {
@@ -135,6 +136,40 @@ namespace BahiKitab.Helper
                         MessageBox.Show("Bulk Update runs successfully. Please check the inventory by clicking on refresh button.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
+            }
+        }
+
+        public static byte[] ImageToByteArray(ImageSource imageSource)
+        {
+            byte[] bytes = null;
+            var bitmapSource = imageSource as BitmapSource;
+
+            if (bitmapSource != null)
+            {
+                var encoder = new JpegBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+
+                using (var stream = new MemoryStream())
+                {
+                    encoder.Save(stream);
+                    bytes = stream.ToArray();
+                }
+            }
+
+            return bytes;
+        }
+
+        public static BitmapImage ByteArrayToImage(byte[] byteArray)
+        {
+            using (MemoryStream ms = new MemoryStream(byteArray))
+            {
+                // Create a Bitmap from the stream
+                BitmapImage bm = new BitmapImage();
+                bm.BeginInit();
+                bm.CacheOption = BitmapCacheOption.OnLoad;
+                bm.StreamSource = ms;
+                bm.EndInit();
+                return bm;
             }
         }
     }

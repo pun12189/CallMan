@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="BahiKitab.Views.CategoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BahiKitab.Views"
+             xmlns:model="clr-namespace:BahiKitab.Models"
+             xmlns:control="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.7"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <Button Content="Add Main Category" Click="AddRoot_Click" Margin="0,0,5,0" Padding="10,2" Style="{StaticResource KlikButtonStyle}"/>
+        </StackPanel>
+
+        <TreeView x:Name="CategoryTree" Grid.Row="1" ItemsSource="{Binding RootCategories}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type model:CategoryModel}" ItemsSource="{Binding SubCategories}">
+                    <Grid Margin="2" Background="Transparent" Name="CategoryRow">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="📁" Grid.Column="0" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+
+                        <TextBlock Text="{Binding Name}" Grid.Column="1" VerticalAlignment="Center" x:Name="NameDisplay" FontSize="16" FontWeight="Bold"/>
+
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" x:Name="ActionButtons" Visibility="Collapsed" Margin="10,0,0,0">
+                            <Button Content="✏️" Click="Edit_Click" Style="{StaticResource ActionButtonStyle}" ToolTip="Rename"/>
+                            <Button Content="➕" Click="AddSub_Click" Style="{StaticResource ActionButtonStyle}" ToolTip="Add Sub"/>
+                            <Button Content="❌" Click="Delete_Click" Style="{StaticResource ActionButtonStyle}" ToolTip="Delete" Foreground="Red"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <HierarchicalDataTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True" SourceName="CategoryRow">
+                            <Setter TargetName="ActionButtons" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </HierarchicalDataTemplate.Triggers>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</UserControl>

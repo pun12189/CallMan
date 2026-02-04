@@ -24,5 +24,15 @@ namespace BahiKitab.Views
         {
             InitializeComponent();
         }
+
+        public ICommand MainViewCommand
+        {
+            get { return (ICommand)GetValue(MainViewCommandProperty); }
+            set { SetValue(MainViewCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MainViewCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MainViewCommandProperty =
+            DependencyProperty.Register("MainViewCommand", typeof(ICommand), typeof(AdminSettingsView));
     }
 }

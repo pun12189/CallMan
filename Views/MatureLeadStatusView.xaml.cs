@@ -21,21 +21,21 @@ namespace BahiKitab.Views
     /// <summary>
     /// Interaction logic for LeadStatusView.xaml
     /// </summary>
-    public partial class LeadStatusView : UserControl
+    public partial class MatureLeadStatusView : UserControl
     {
-        private readonly FollowUpStagesDataService followUpStagesDataService;
+        private readonly MatureStagesDataService followUpStagesDataService;
         private readonly DeadReasonsDataService deadReasonsDataService;
         private readonly LeadsOrderDataService leadsOrderDataService;
         private readonly LeadHistoryDataService leadHistoryDataService;
 
-        private LeadsViewModel? leadsViewModel;
+        private MatureLeadsViewModel? leadsViewModel;
 
         private readonly LeadHistoryModel leadHistoryModel;
 
-        public LeadStatusView()
+        public MatureLeadStatusView()
         {
             InitializeComponent();
-            this.followUpStagesDataService = new FollowUpStagesDataService();
+            this.followUpStagesDataService = new MatureStagesDataService();
             this.deadReasonsDataService = new DeadReasonsDataService();
             this.leadHistoryDataService = new LeadHistoryDataService();
             this.leadsOrderDataService = new LeadsOrderDataService();
@@ -46,52 +46,13 @@ namespace BahiKitab.Views
         private async void LeadStatusView_Loaded(object sender, RoutedEventArgs e)
         {
             this.cbReason.ItemsSource = await this.deadReasonsDataService.GetAllDeadReasonsAsync();
-            this.cbFollowup.ItemsSource = await this.followUpStagesDataService.GetAllFollowUpStagessAsync();
-            this.leadsViewModel = this.DataContext as LeadsViewModel;            
+            this.cbFollowup.ItemsSource = await this.followUpStagesDataService.GetAllMatureStagessAsync();
+            this.leadsViewModel = this.DataContext as MatureLeadsViewModel;            
         }
 
         private async void UpdateLeadStatus(object sender, RoutedEventArgs e)
         {
-            if (this.rdFollow.IsChecked != null && this.rdFollow.IsChecked == true) 
-            {
-                if (this.leadsViewModel != null && this.leadsViewModel.SelectedLead != null)
-                {
-                    this.leadsViewModel.SelectedLead.LeadType = Helper.LeadType.FollowUp;
-                    var followUpModel = new LeadFollowUpModel();
-                    followUpModel.CreateFollowUp = DateTime.Now;
-                    var fStage = this.cbFollowup.SelectedItem as FollowUpStagesModel;
-                    if (fStage != null)
-                    {
-                        followUpModel.Name = fStage.Name;
-                    }
-
-                    var nextFDate = this.dtNFollow.SelectedDateTime;
-                    if (nextFDate != null) 
-                    {
-                        followUpModel.NextFollowUp = (DateTime)nextFDate;
-                    }
-
-                    if (!string.IsNullOrEmpty(this.tbFMsg.Text) && !string.IsNullOrWhiteSpace(this.tbFMsg.Text))
-                    {
-                        followUpModel.LastMsg = this.tbFMsg.Text;
-                    }
-
-                    followUpModel.LeadId = this.leadsViewModel.SelectedLead.Id;
-
-                    this.leadsViewModel.SelectedLead.LeadFollowUpModel = followUpModel;
-
-                    this.leadHistoryModel.LeadId = followUpModel.LeadId;
-                    this.leadHistoryModel.NextFollowUp = followUpModel.NextFollowUp;
-                    this.leadHistoryModel.Name = followUpModel.Name;
-                    this.leadHistoryModel.LeadType = Helper.LeadType.FollowUp;
-                    this.leadHistoryModel.LastMsg = followUpModel.LastMsg;
-
-                    await leadHistoryDataService.CreateLeadHistoryAsync(this.leadHistoryModel);
-                }
-
-                this.CloseWindow();
-            }
-            else if (this.rdDead.IsChecked != null && this.rdDead.IsChecked == true)
+            if (this.rdDead.IsChecked != null && this.rdDead.IsChecked == true)
             {
                 if (this.leadsViewModel != null && this.leadsViewModel.SelectedLead != null)
                 {
@@ -123,11 +84,11 @@ namespace BahiKitab.Views
 
                 this.CloseWindow();
             }
-            else if (this.rdMature.IsChecked != null && this.rdMature.IsChecked == true)
+            else if (this.rdFollow.IsChecked != null && this.rdFollow.IsChecked == true)
             {
                 if (this.leadsViewModel != null && this.leadsViewModel.SelectedLead != null)
                 {
-                    this.leadsViewModel.SelectedLead.LeadType = Helper.LeadType.Matured;
+                    // this.leadsViewModel.SelectedLead.LeadType = Helper.LeadType.Matured;
                     var orderModel = new LeadOrderModel();
                     if (!string.IsNullOrEmpty(this.tbOVal.Text) && !string.IsNullOrWhiteSpace(this.tbOVal.Text))
                     {

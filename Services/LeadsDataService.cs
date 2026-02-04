@@ -77,6 +77,7 @@ namespace BahiKitab.Services
                                 LeadType = reader.IsDBNull(20) ? LeadType.New : Enum.Parse<LeadType>(reader.GetString(20)),
                                 LeadFollowUpModel = reader.IsDBNull(21) ? null : JsonSerializer.Deserialize<LeadFollowUpModel>(reader.GetString(21)),
                                 LeadDeadModel = reader.IsDBNull(22) ? null : JsonSerializer.Deserialize<LeadDeadModel>(reader.GetString(22)),
+                                LeadHolder = reader.IsDBNull(23) ? null : JsonSerializer.Deserialize<StaffModel>(reader.GetString(23)),
                             };
                         }
 
@@ -140,6 +141,7 @@ namespace BahiKitab.Services
                                 LeadType = reader.IsDBNull(20) ? LeadType.New : Enum.Parse<LeadType>(reader.GetString(20)),
                                 LeadFollowUpModel = reader.IsDBNull(21) ? null : JsonSerializer.Deserialize<LeadFollowUpModel>(reader.GetString(21)),
                                 LeadDeadModel = reader.IsDBNull(22) ? null : JsonSerializer.Deserialize<LeadDeadModel>(reader.GetString(22)),
+                                LeadHolder = reader.IsDBNull(23) ? null : JsonSerializer.Deserialize<StaffModel>(reader.GetString(23)),
                             };
 
                             leads.Add(lead);
@@ -169,7 +171,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "insert into leads(name, company, email, phone, stage, leadSource, tags, label, country, state, city, district, pincode, firm_name, imp_date, alternate_number, status, leadType, leadFollowup, leadDead) values(@name, @company, @email, @phone, @stage, @leadSource, @tags, @label, @country, @state, @city, @district, @pincode, @firm_name, @imp_date, @alternate_number, @status, @leadType, @leadFollowup, @leadDead)";
+                    command.CommandText = "insert into leads(name, company, email, phone, stage, leadSource, tags, label, country, state, city, district, pincode, firm_name, imp_date, alternate_number, status, leadType, leadFollowup, leadDead, leadHolder) values(@name, @company, @email, @phone, @stage, @leadSource, @tags, @label, @country, @state, @city, @district, @pincode, @firm_name, @imp_date, @alternate_number, @status, @leadType, @leadFollowup, @leadDead, @leadHolder)";
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
                     command.Parameters.Add("@company", MySqlDbType.VarChar).Value = lead.Company;
                     command.Parameters.Add("@email", MySqlDbType.VarChar).Value = lead.Email;
@@ -190,6 +192,7 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@leadType", MySqlDbType.VarChar).Value = lead.LeadType;
                     command.Parameters.Add("@leadFollowup", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.LeadFollowUpModel);
                     command.Parameters.Add("@leadDead", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.LeadDeadModel);
+                    command.Parameters.Add("@leadHolder", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.LeadHolder);
                     await command.ExecuteScalarAsync();
                 }
             }
@@ -215,7 +218,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "update leads set name=@name, company=@company, email=@email, phone=@phone, stage=@stage, leadSource=@leadSource, tags=@tags, label=@label, updated_date=@updated_date, country=@country, state=@state, city=@city, district=@district, pincode=@pincode, firm_name=@firm_name, imp_date=@imp_date, alternate_number=@alternate_number, status=@status, leadType=@leadType, leadFollowup=@leadFollowup, leadDead=@leadDead where id=@id";
+                    command.CommandText = "update leads set name=@name, company=@company, email=@email, phone=@phone, stage=@stage, leadSource=@leadSource, tags=@tags, label=@label, updated_date=@updated_date, country=@country, state=@state, city=@city, district=@district, pincode=@pincode, firm_name=@firm_name, imp_date=@imp_date, alternate_number=@alternate_number, status=@status, leadType=@leadType, leadFollowup=@leadFollowup, leadDead=@leadDead, leadHolder=@leadHolder where id=@id";
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = lead.Id;
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
                     command.Parameters.Add("@company", MySqlDbType.VarChar).Value = lead.Company;
@@ -238,6 +241,7 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@leadType", MySqlDbType.VarChar).Value = lead.LeadType;
                     command.Parameters.Add("@leadFollowup", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.LeadFollowUpModel);
                     command.Parameters.Add("@leadDead", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.LeadDeadModel);
+                    command.Parameters.Add("@leadHolder", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.LeadHolder);
                     await command.ExecuteScalarAsync();
                 }
             }

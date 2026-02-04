@@ -85,8 +85,8 @@
                                 <StackPanel Margin="10">
                                     <TextBlock Text="{Binding Company, StringFormat=({0})}" FontSize="10" Margin="0,5,0,10" FontWeight="Bold"/>
                                     <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,0"/>
-                                    <Button Content="Update Info" Width="80" Command="{Binding DataContext.UpdateInfoCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" Height="25" HorizontalAlignment="Center" Background="ForestGreen" FontWeight="Bold" Margin="0,10"/>
-                                    <Button Content="Edit Info" Width="60" Height="25" Command="{Binding DataContext.UpdateLeadCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" HorizontalAlignment="Center" Background="CornflowerBlue" FontWeight="Bold"/>
+                                    <Button Content="Update Info" Width="80" Command="{Binding DataContext.UpdateInfoCommand, RelativeSource={RelativeSource AncestorType=local:MatureLeadsView}}" Height="25" HorizontalAlignment="Center" Background="ForestGreen" FontWeight="Bold" Margin="0,10"/>
+                                    <Button Content="Edit Info" Width="60" Height="25" Command="{Binding DataContext.UpdateLeadCommand, RelativeSource={RelativeSource AncestorType=local:MatureLeadsView}}" HorizontalAlignment="Center" Background="CornflowerBlue" FontWeight="Bold"/>
                                     <TextBlock HorizontalAlignment="Center" Text="{Binding Id, StringFormat=ID: {0}}" FontWeight="Bold" Margin="0,20"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -212,10 +212,10 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Background="Transparent" Command="{Binding DataContext.UpdateLeadCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                    <Button Background="Transparent" Command="{Binding DataContext.UpdateLeadCommand, RelativeSource={RelativeSource AncestorType=local:MatureLeadsView}}" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                         <icon:FontAwesome Kind="PencilSolid"/>
                                     </Button>
-                                    <Button Background="Transparent" Command="{Binding DataContext.DeleteLeadCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                    <Button Background="Transparent" Command="{Binding DataContext.DeleteLeadCommand, RelativeSource={RelativeSource AncestorType=local:MatureLeadsView}}" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                         <icon:FontAwesome Kind="TrashSolid"/>
                                     </Button>
                                 </StackPanel>                                

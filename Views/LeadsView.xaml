@@ -9,20 +9,13 @@
              xmlns:helper="clr-namespace:BahiKitab.Helper"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <core:IdToButtonTextConverter x:Key="IdToButtonTextConverter"/>
-        <Style x:Key="DataGridHeaderStyle" TargetType="DataGridColumnHeader">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="Background" Value="#20b2aa" />
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Height" Value="30"/>
-        </Style>
+        <core:IdToButtonTextConverter x:Key="IdToButtonTextConverter"/>        
     </UserControl.Resources>
     <Grid Margin="10">
 
         <!-- Left Column: Leads List (DataGrid) -->
         <StackPanel Margin="0,0,10,0">
-            <TextBlock Text="CRM Leads Management" Style="{StaticResource TitleStyle}" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+            <TextBlock Text="CRM Leads Management" Style="{StaticResource TitleStyle}" FontSize="24" FontWeight="Bold"/>
 
             <!-- Command Buttons for List -->
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Right">
@@ -64,6 +57,7 @@
                       CanUserAddRows="False"
                   Height="450"
                   SelectionMode="Single"
+                      SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
                       ScrollViewer.CanContentScroll="True" 
       ScrollViewer.VerticalScrollBarVisibility="Auto"
       ScrollViewer.HorizontalScrollBarVisibility="Auto">
@@ -97,20 +91,27 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}">
+                    <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="10">
                                     <TextBlock Text="{Binding Company, StringFormat=({0})}" FontSize="10" Margin="0,5,0,10" FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,0"/>
-                                    <Button Content="Update Info" Width="80" Command="{Binding DataContext.UpdateInfoCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" Height="25" HorizontalAlignment="Center" Background="ForestGreen" FontWeight="Bold" Margin="0,10"/>
-                                    <Button Content="Edit Info" Width="60" Height="25" Command="{Binding DataContext.UpdateLeadCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" HorizontalAlignment="Center" Background="CornflowerBlue" FontWeight="Bold"/>
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding Id, StringFormat=ID: {0}}" FontWeight="Bold" Margin="0,20"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,5,0"/>
+                                        <Button BorderThickness="0" Command="{Binding DataContext.UpdateInfoCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" HorizontalAlignment="Center" Background="Transparent" Foreground="ForestGreen" FontWeight="Bold" Margin="0,0,5,0">
+                                            <icon:BootstrapIcons Kind="PencilFill"/>
+                                        </Button>
+                                        <Button BorderThickness="0" Command="{Binding DataContext.UpdateLeadCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" HorizontalAlignment="Center" Background="Transparent" Foreground="CornflowerBlue" FontWeight="Bold" Margin="0,0,5,0">
+                                            <icon:BootstrapIcons Kind="Pen"/>
+                                        </Button>
+                                    </StackPanel>
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding CreationDate, StringFormat={}{0:dd/MM/yyyy}}" FontWeight="Bold" Margin="0,20,0,5"/>
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding Id, StringFormat=ID: {0}}" FontWeight="Bold" Margin="0,0,0,10"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Contact" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}">
+                    <DataGridTemplateColumn Header="Contact" Width="*" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
@@ -145,10 +146,10 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Lead Info" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}">
+                    <DataGridTemplateColumn Header="Lead Info" Width="*" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+                                <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
@@ -172,10 +173,10 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="FollowUp" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}">
+                    <DataGridTemplateColumn Header="FollowUp" Width="*" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+                                <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
@@ -195,10 +196,33 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Extra Info" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}">
+                    <DataGridTemplateColumn Header="LeadHolder" Width="*" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+                                <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Name: " Grid.Row="0" Grid.Column="0" FontSize="14" Margin="0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Contact: " Grid.Row="1" Grid.Column="0" FontSize="14" Margin="0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Email: " Grid.Row="2" Grid.Column="0" FontSize="14" Margin="0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding LeadHolder.FullName}" TextWrapping="Wrap" Grid.Row="0" Grid.Column="1" FontSize="14" FontWeight="Bold" Margin="0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding LeadHolder.Phone}" TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" FontSize="14" FontWeight="Bold" Margin="0,10" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding LeadHolder.Email}" TextWrapping="Wrap" Grid.Row="2" Grid.Column="1" FontSize="14" FontWeight="Bold" Margin="0" VerticalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!--<DataGridTemplateColumn Header="Extra Info" Width="*" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
@@ -207,16 +231,16 @@
                                         <RowDefinition/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Text="Creation Date: " Grid.Row="0" Grid.Column="0" FontSize="14" Margin="0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="Last Updated: " Grid.Row="1" Grid.Column="0" FontSize="14" Margin="0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Creation Date: " Grid.Row="0" Grid.Column="0" FontSize="12" Margin="0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Last Updated: " Grid.Row="1" Grid.Column="0" FontSize="12" Margin="0" VerticalAlignment="Center"/>
 
-                                    <TextBlock Text="{Binding CreationDate, StringFormat=F}" TextWrapping="Wrap" Grid.Row="0" Grid.Column="1" FontSize="14" FontWeight="Bold" Margin="0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding UpdationDate, StringFormat=F}" TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" FontSize="14" FontWeight="Bold" Margin="0,10" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding CreationDate, StringFormat=F}" TextWrapping="Wrap" Grid.Row="0" Grid.Column="1" FontSize="12" FontWeight="Bold" Margin="0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding UpdationDate, StringFormat=F}" TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" FontSize="12" FontWeight="Bold" Margin="0,10" VerticalAlignment="Center"/>
                                     
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                    </DataGridTemplateColumn>-->
                     <!--<DataGridTextColumn Header="Lead Source" Binding="{Binding LeadSource.Name}" Width="*" IsReadOnly="True"/>-->
                     <!--<DataGridTextColumn Header="Tags" Binding="{Binding Tags.Name}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Label" Binding="{Binding Label.Name}" Width="*" IsReadOnly="True"/>-->
@@ -226,10 +250,10 @@
                     <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="1.5*" IsReadOnly="True"/>-->
                     <!--<DataGridTextColumn Header="Important Date" Binding="{Binding ImpDate}" Width="*" IsReadOnly="True"/>-->
 
-                    <DataGridTemplateColumn Header="Actions" Width="100" HeaderStyle="{StaticResource DataGridHeaderStyle}">
+                    <DataGridTemplateColumn Header="Actions" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">                                    
                                     <Button Background="Transparent" Command="{Binding DataContext.UpdateLeadCommand, RelativeSource={RelativeSource AncestorType=local:LeadsView}}" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                         <icon:FontAwesome Kind="PencilSolid"/>
                                     </Button>

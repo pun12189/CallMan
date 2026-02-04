@@ -13,7 +13,13 @@
 
     <!-- Converters -->
     <!-- NOTE: You must include "using CrmWpfApp.Core;" in App.xaml.cs and set xmlns:core="clr-namespace:CrmWpfApp.Core" in XAML files for this to work -->
-    
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="Background" Value="#20b2aa" />
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Height" Value="30"/>
+    </Style>
 
     <!-- Title Style -->
     <Style x:Key="TitleStyle" TargetType="TextBlock">
@@ -101,7 +107,7 @@
     </Style>
 
     <!-- Textbox Style -->
-    <Style TargetType="TextBox">
+    <Style TargetType="TextBox" x:Key="KlikTextboxStyle">
         <Setter Property="Padding" Value="5"/>
         <Setter Property="BorderBrush" Value="#AAAAAA"/>
         <Setter Property="BorderThickness" Value="1"/>

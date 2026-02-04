@@ -62,11 +62,11 @@ namespace BahiKitab.Services
                                 PaymentType = reader.IsDBNull(5) ? PaymentType.Credit : Enum.Parse<PaymentType>(reader.GetString(5)),
                                 PaymentStatus= reader.IsDBNull(6) ? PaymentStatus.Unpaid : Enum.Parse<PaymentStatus>(reader.GetString(6)),
                                 OrderStatus = reader.IsDBNull(7) ? null : JsonSerializer.Deserialize<OrderStageModel>(reader.GetString(7)),
-                                OrderedProducts = reader.IsDBNull(8) ? null : JsonSerializer.Deserialize<ObservableCollection<InventoryModel>>(reader.GetString(8)),
+                                OrderedProducts = reader.IsDBNull(8) ? null : JsonSerializer.Deserialize<ObservableCollection<ProductModel>>(reader.GetString(8)),
                                 NextFollowup = reader.IsDBNull(9) ? DateTime.MinValue : reader.GetDateTime(9),
                                 AcceptedDate = reader.IsDBNull(10) ? DateTime.MinValue : reader.GetDateTime(10),
                                 IsAccepted = reader.IsDBNull(11) ? false : reader.GetBoolean(11),
-                                TakenBy = reader.IsDBNull(12) ? string.Empty : reader.GetString(12),
+                                TakenBy = reader.IsDBNull(12) ? null : JsonSerializer.Deserialize<StaffModel>(reader.GetString(12)),
                                 Discount = reader.IsDBNull(13) ? 0.0 : reader.GetDouble(13),
                                 Balance = reader.IsDBNull(14) ? 0.0 : reader.GetDouble(14),
                                 Priority = reader.IsDBNull(15) ? false : reader.GetBoolean(15),
@@ -96,7 +96,7 @@ namespace BahiKitab.Services
             // REAL IMPLEMENTATION: Open connection, execute SELECT query, map results to Lead objects, close connection.
 
             // Return a clone of the collection for mock safety
-            ObservableCollection<LeadOrderModel> leads = null;
+            ObservableCollection<LeadOrderModel> leads = new ObservableCollection<LeadOrderModel>();
             try
             {
                 using (var connection = GetConnection())
@@ -108,7 +108,6 @@ namespace BahiKitab.Services
                     var reader = await command.ExecuteReaderAsync();
                     if (reader.HasRows)
                     {
-                        leads = new ObservableCollection<LeadOrderModel>();
                         while (reader.Read())
                         {
                             var lead = new LeadOrderModel
@@ -121,11 +120,11 @@ namespace BahiKitab.Services
                                 PaymentType = reader.IsDBNull(5) ? PaymentType.Credit : Enum.Parse<PaymentType>(reader.GetString(5)),
                                 PaymentStatus = reader.IsDBNull(6) ? PaymentStatus.Unpaid : Enum.Parse<PaymentStatus>(reader.GetString(6)),
                                 OrderStatus = reader.IsDBNull(7) ? null : JsonSerializer.Deserialize<OrderStageModel>(reader.GetString(7)),
-                                OrderedProducts = reader.IsDBNull(8) ? null : JsonSerializer.Deserialize<ObservableCollection<InventoryModel>>(reader.GetString(8)),
+                                OrderedProducts = reader.IsDBNull(8) ? null : JsonSerializer.Deserialize<ObservableCollection<ProductModel>>(reader.GetString(8)),
                                 NextFollowup = reader.IsDBNull(9) ? DateTime.MinValue : reader.GetDateTime(9),
                                 AcceptedDate = reader.IsDBNull(10) ? DateTime.MinValue : reader.GetDateTime(10),
                                 IsAccepted = reader.IsDBNull(11) ? false : reader.GetBoolean(11),
-                                TakenBy = reader.IsDBNull(12) ? string.Empty : reader.GetString(12),
+                                TakenBy = reader.IsDBNull(12) ? null : JsonSerializer.Deserialize<StaffModel>(reader.GetString(12)),
                                 Discount = reader.IsDBNull(13) ? 0.0 : reader.GetDouble(13),
                                 Balance = reader.IsDBNull(14) ? 0.0 : reader.GetDouble(14),
                                 Priority = reader.IsDBNull(15) ? false : reader.GetBoolean(15),
@@ -161,7 +160,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "insert into lead_orders(order_id, order_amt, recvd_amt, lead_id, payment_type, payment_status, order_stage, products, next_followup, accepted_date, isAccepted, takenby, discount, balance, priority, create_time, update_time, lastMsg) values(@order_id, @order_amt, @recvd_amt, @lead_id, @payment_type, @payment_status, @order_stage, @products, @next_followup, @accepted_date, @isAccepted, @takenby, @discount, @balance, @priority, @create_time, @update_time, @lastMsg)";
+                    command.CommandText = "insert into lead_orders(order_id, order_amt, recvd_amt, lead_id, payment_type, payment_status, order_stage, products, next_followup, accepted_date, isAccepted, takenby, discount, balance, priority, lastMsg) values(@order_id, @order_amt, @recvd_amt, @lead_id, @payment_type, @payment_status, @order_stage, @products, @next_followup, @accepted_date, @isAccepted, @takenby, @discount, @balance, @priority, @lastMsg)";
                     command.Parameters.Add("@order_id", MySqlDbType.VarChar).Value = lead.OrderId;
                     command.Parameters.Add("@order_amt", MySqlDbType.Double).Value = lead.OrderAmount;
                     command.Parameters.Add("@recvd_amt", MySqlDbType.Double).Value = lead.ReceivedAmount;
@@ -172,13 +171,11 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@products", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.OrderedProducts);
                     command.Parameters.Add("@next_followup", MySqlDbType.DateTime).Value = lead.NextFollowup;
                     command.Parameters.Add("@accepted_date", MySqlDbType.DateTime).Value = lead.AcceptedDate;
-                    command.Parameters.Add("@isAccepted", MySqlDbType.Binary).Value = lead.IsAccepted;
-                    command.Parameters.Add("@takenby", MySqlDbType.VarChar).Value = lead.TakenBy;
+                    command.Parameters.Add("@isAccepted", MySqlDbType.Byte).Value = lead.IsAccepted;
+                    command.Parameters.Add("@takenby", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.TakenBy);
                     command.Parameters.Add("@discount", MySqlDbType.Double).Value = lead.Discount;
                     command.Parameters.Add("@balance", MySqlDbType.Double).Value = lead.Balance;
-                    command.Parameters.Add("@priority", MySqlDbType.Binary).Value = lead.Priority;
-                    command.Parameters.Add("@create_time", MySqlDbType.DateTime).Value = lead.Created;
-                    command.Parameters.Add("@update_time", MySqlDbType.DateTime).Value = lead.Updated;
+                    command.Parameters.Add("@priority", MySqlDbType.Byte).Value = lead.Priority;
                     command.Parameters.Add("@lastMsg", MySqlDbType.String).Value = lead.LastMsg;
                     await command.ExecuteScalarAsync();
                 }
@@ -217,13 +214,11 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@products", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.OrderedProducts);
                     command.Parameters.Add("@next_followup", MySqlDbType.DateTime).Value = lead.NextFollowup;
                     command.Parameters.Add("@accepted_date", MySqlDbType.DateTime).Value = lead.AcceptedDate;
-                    command.Parameters.Add("@isAccepted", MySqlDbType.Binary).Value = lead.IsAccepted;
-                    command.Parameters.Add("@takenby", MySqlDbType.VarChar).Value = lead.TakenBy;
+                    command.Parameters.Add("@isAccepted", MySqlDbType.Byte).Value = lead.IsAccepted;
+                    command.Parameters.Add("@takenby", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.TakenBy);
                     command.Parameters.Add("@discount", MySqlDbType.Double).Value = lead.Discount;
                     command.Parameters.Add("@balance", MySqlDbType.Double).Value = lead.Balance;
-                    command.Parameters.Add("@priority", MySqlDbType.Binary).Value = lead.Priority;
-                    command.Parameters.Add("@create_time", MySqlDbType.DateTime).Value = lead.Created;
-                    command.Parameters.Add("@update_time", MySqlDbType.DateTime).Value = lead.Updated;
+                    command.Parameters.Add("@priority", MySqlDbType.Byte).Value = lead.Priority;
                     command.Parameters.Add("@lastMsg", MySqlDbType.String).Value = lead.LastMsg;
                     await command.ExecuteScalarAsync();
                 }

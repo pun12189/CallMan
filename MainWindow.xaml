@@ -28,6 +28,8 @@
         <icon:FontAwesome Kind="FaceDizzySolid" Height="14" x:Key="deadicon"/>
         <icon:FontAwesome Kind="SignatureSolid" Height="14" x:Key="matureicon"/>
         <icon:FontAwesome Kind="EnvelopesBulkSolid" Height="14" x:Key="ordericon"/>
+        <icon:FontAwesome Kind="BoxesStackedSolid" Height="14" x:Key="stockicon"/>
+        <icon:FontAwesome Kind="BarsProgressSolid" Height="14" x:Key="stockicon1"/>
     </Window.Resources>
     <Window.DataContext>
         <!-- Set the DataContext to the Main Window ViewModel -->
@@ -48,9 +50,7 @@
 
             <Menu Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource TopMenuStyle}">
 
-                <MenuItem Header="Dashboard" Icon="{StaticResource dashicon}" Command="{Binding NavigateCommand}" CommandParameter="Dashboard"/>
-
-                <MenuItem Header="Followups" Icon="{StaticResource followicon}" Command="{Binding NavigateCommand}" CommandParameter="Tasks"/>
+                <MenuItem Header="Dashboard" Icon="{StaticResource dashicon}" Command="{Binding NavigateCommand}" CommandParameter="Dashboard"/>                
 
                 <MenuItem Header="Leads" Icon="{StaticResource leadicon}">
                     <MenuItem Header="All Leads" Icon="{StaticResource alleadsicon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Leads"/>
@@ -64,20 +64,24 @@
                     <MenuItem Header="Orders" Icon="{StaticResource ordericon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Orders"/>
                 </MenuItem>
 
+                <MenuItem Header="Inventory" Icon="{StaticResource stockicon}" Command="{Binding NavigateCommand}" CommandParameter="Inventory"/>
+
+                <MenuItem Header="Tasks" Icon="{StaticResource stockicon1}" Command="{Binding NavigateCommand}" CommandParameter="Tasks"/>
+
                 <MenuItem Header="Admin Settings" Icon="{StaticResource adminicon}" Command="{Binding NavigateCommand}" CommandParameter="Admin"/>
 
             </Menu>
         </Grid>
 
         <Grid>
-            <Border Grid.Column="1" Padding="20">
+            <Border>
                 <ContentControl Content="{Binding CurrentView}">
                     <ContentControl.Resources>
                         <DataTemplate DataType="{x:Type vm:LeadsViewModel}">
                             <views:LeadsView/>
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:AdminSettingsViewModel}">
-                            <views:AdminSettingsView/>
+                            <views:AdminSettingsView MainViewCommand="{Binding DataContext.NavigateCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:DeadLeadsViewModel}">
                             <views:DeadLeadsView/>
@@ -93,6 +97,18 @@
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:OrderViewModel}">
                             <views:OrderView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:StaffViewModel}">
+                            <views:StaffView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:InventoryViewModel}">
+                            <views:InventoryView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:CategoryViewModel}">
+                            <views:CategoryView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:TaskViewModel}">
+                            <views:TaskView/>
                         </DataTemplate>
                     </ContentControl.Resources>
                 </ContentControl>

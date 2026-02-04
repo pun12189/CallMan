@@ -54,6 +54,55 @@ namespace BahiKitab.Services
             return lead;
         }
 
+        public async Task<ObservableCollection<LeadHistoryModel>> GetLeadHistoryByLeadId(int id)
+        {
+            // Simulates an asynchronous database call
+            await Task.Delay(200);
+            // REAL IMPLEMENTATION: Open connection, execute SELECT query, map results to Lead objects, close connection.
+
+            // Return a clone of the collection for mock safety
+            ObservableCollection<LeadHistoryModel> leads = null;
+            try
+            {
+                using (var connection = GetConnection())
+                using (var command = new MySqlCommand())
+                {
+                    connection.Open();
+                    command.Connection = connection;
+                    command.CommandText = "select * from lead_history where lead_id=@lead_id";
+                    command.Parameters.Add("@lead_id", MySqlDbType.Int32).Value = id;
+                    var reader = await command.ExecuteReaderAsync();
+                    if (reader.HasRows)
+                    {
+                        leads = new ObservableCollection<LeadHistoryModel>();
+                        while (reader.Read())
+                        {
+                            var lead = new LeadHistoryModel
+                            {
+                                Id = reader.GetInt32(0),
+                                Name = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
+                                CreationDate = reader.IsDBNull(2) ? DateTime.MinValue : reader.GetDateTime(2),
+                                LeadId = reader.GetInt32(3),
+                                LeadType = reader.IsDBNull(4) ? LeadType.New : Enum.Parse<LeadType>(reader.GetString(4), true),
+                                LastMsg = reader.IsDBNull(5) ? string.Empty : reader.GetString(5),
+                                NextFollowUp = reader.IsDBNull(5) ? DateTime.MinValue : reader.GetDateTime(6),
+                            };
+
+                            leads.Add(lead);
+                        }
+
+                        reader.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //Helper.Helper.BugReport(e);
+            }
+
+            return leads;
+        }
+
         public async Task<ObservableCollection<LeadHistoryModel>> GetAllLeadHistorysAsync()
         {
             // Simulates an asynchronous database call

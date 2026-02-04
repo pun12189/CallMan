@@ -19,10 +19,10 @@ namespace BahiKitab.Models
         private Lead customer;
         private PaymentStatus paymentStatus;
         private OrderStageModel orderStatus;
-        private string takenBy;
+        private StaffModel takenBy;
         private DateTime created;
         private DateTime updated;
-        private ObservableCollection<InventoryModel> orderedProducts;
+        private ObservableCollection<ProductModel> orderedProducts;
         private DateTime nextFollowup;
         private double orderAmount;
         private DateTime acceptedDate;
@@ -30,6 +30,7 @@ namespace BahiKitab.Models
         private bool isAccepted;
         private double discount;
         private string lastMsg;
+        private List<int> referenceImages;
 
         public int Id { get => id; set => Set(ref id, value, nameof(Id)); }
 
@@ -47,13 +48,13 @@ namespace BahiKitab.Models
 
         public OrderStageModel OrderStatus { get => orderStatus; set => Set(ref orderStatus, value, nameof(OrderStatus)); }
 
-        public string TakenBy { get => takenBy; set => Set(ref takenBy, value, nameof(TakenBy)); }
+        public StaffModel TakenBy { get => takenBy; set => Set(ref takenBy, value, nameof(TakenBy)); }
 
         public DateTime Created { get => created; set => Set(ref created, value, nameof(Created)); }
 
         public DateTime Updated { get => updated; set => Set(ref updated, value, nameof(Updated)); }
 
-        public ObservableCollection<InventoryModel> OrderedProducts { get => orderedProducts; set => Set(ref orderedProducts, value, nameof(OrderedProducts)); }
+        public ObservableCollection<ProductModel> OrderedProducts { get => orderedProducts; set => Set(ref orderedProducts, value, nameof(OrderedProducts)); }
 
         public DateTime NextFollowup { get => nextFollowup; set => Set(ref nextFollowup, value, nameof(NextFollowup)); }
 
@@ -68,6 +69,8 @@ namespace BahiKitab.Models
         public double Discount { get => discount; set => Set(ref discount, value, nameof(Discount)); }
 
         public string LastMsg { get => lastMsg; set => Set(ref lastMsg, value, nameof(LastMsg)); }
+
+        public List<int> ReferenceImages { get => referenceImages; set => Set(ref referenceImages, value, nameof(ReferenceImages)); }
 
         public LeadOrderModel Clone() { return (LeadOrderModel)this.MemberwiseClone(); }
 

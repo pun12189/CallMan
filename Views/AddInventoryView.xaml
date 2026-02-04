@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="BahiKitab.Views.AddInventoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BahiKitab.Views"
+             xmlns:core="clr-namespace:BahiKitab.Core"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <core:IdToButtonTextConverter x:Key="IdToButtonTextConverter"/>
+    </UserControl.Resources>
+    <ScrollViewer>
+        <Border Grid.Column="1" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="5" Padding="15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding CurrentLead.Id, StringFormat='Inventory Details ({0})'}" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                <StackPanel Grid.Row="1" Grid.Column="0">
+
+                    <!-- Form Fields (Bound to CurrentLead) -->
+                    <TextBlock Text="Name" Margin="0,5,0,2"/>
+                    <TextBox Text="{Binding CurrentLead.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="ShortCode" Margin="0,5,0,2"/>
+                    <TextBox Text="{Binding CurrentLead.ShortCode, Mode=TwoWay}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Quantity" Margin="0,5,0,2"/>
+                    <TextBox Text="{Binding CurrentLead.Stock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Units" Margin="0,5,0,2"/>
+                    <ComboBox x:Name="cbUnits" SelectedItem="{Binding CurrentLead.Units, Mode=TwoWay}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="SKU" Margin="0,5,0,2"/>
+                    <TextBox Text="{Binding CurrentLead.SKU, Mode=TwoWay}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="GST" Margin="0,5,0,2"/>
+                    <ComboBox x:Name="cbGST" SelectedItem="{Binding CurrentLead.GST, Mode=TwoWay}" Margin="0,0,0,10">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StringFormat={}{0:P}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Text="Price (Inc.GST)" Margin="0,5,0,2"/>
+                    <ComboBox x:Name="cbLabel" SelectedItem="{Binding CurrentLead.PurchasePrice, Mode=TwoWay}" Margin="0,0,0,10" SelectedValuePath="Id" DisplayMemberPath="Name"/>
+
+                    <!--<TextBlock Text="Status" Margin="0,5,0,2"/>-->
+                    <!-- Hardcoding for simplicity, would bind to a list from Admin Settings in a real app -->
+                    <!--<ComboBox x:Name="cbStatus" SelectedItem="{Binding CurrentLead.Status, Mode=TwoWay}" Margin="0,0,0,20" SelectedValuePath="Id" DisplayMemberPath="Name"/>-->
+
+                </StackPanel>
+                <!-- CRUD Action Buttons -->
+                <Button Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Center" Content="{Binding CurrentLead.Id, Converter={StaticResource IdToButtonTextConverter}}" Command="{Binding CreateUpdateLeadCommand}" Margin="0,10,0,5" Style="{StaticResource KlikButtonStyle}"/>
+
+            </Grid>
+        </Border>
+    </ScrollViewer>
+</UserControl>

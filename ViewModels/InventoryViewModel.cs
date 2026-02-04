@@ -12,21 +12,21 @@ using System.Windows;
 
 namespace BahiKitab.ViewModels
 {
-    public class MatureLeadsViewModel : ViewModelBase
+    public class InventoryViewModel : ViewModelBase
     {
         // Services
-        private readonly LeadsDataService _dataService;
+        private readonly InventoryDataService _dataService;
 
         // Data Properties
-        private ObservableCollection<Lead> _leads;
-        public ObservableCollection<Lead> Leads
+        private ObservableCollection<InventoryModel> _leads;
+        public ObservableCollection<InventoryModel> Leads
         {
             get => _leads;
             set => Set(ref _leads, value, nameof(Leads));
         }
 
-        private Lead _selectedLead;
-        public Lead SelectedLead
+        private InventoryModel _selectedLead;
+        public InventoryModel SelectedLead
         {
             get => _selectedLead;
             set
@@ -43,15 +43,15 @@ namespace BahiKitab.ViewModels
                     }
                     else
                     {
-                        CurrentLead = new Lead(); // Clear form if deselected
+                        CurrentLead = new InventoryModel(); // Clear form if deselected
                     }
                 }
             }
         }
 
-        private Lead _currentLead = new Lead();
+        private InventoryModel _currentLead = new InventoryModel();
         // This is the model used for the data entry form (Create/Update)
-        public Lead CurrentLead
+        public InventoryModel CurrentLead
         {
             get => _currentLead;
             set => Set(ref _currentLead, value, nameof(CurrentLead));
@@ -66,11 +66,11 @@ namespace BahiKitab.ViewModels
         public RelayCommand UpdateInfoCommand { get; private set; }
         public RelayCommand ImportLeadsCommand { get; private set; }
 
-        public MatureLeadsViewModel()
+        public InventoryViewModel()
         {
             // Initialize service and data collections
-            _dataService = new LeadsDataService();
-            Leads = new ObservableCollection<Lead>();
+            _dataService = new InventoryDataService();
+            Leads = new ObservableCollection<InventoryModel>();
 
             // Initialize Commands
             LoadLeadsCommand = new RelayCommand(async _ => await LoadLeadsAsync());
@@ -100,17 +100,18 @@ namespace BahiKitab.ViewModels
             // Get the selected file name and display in a TextBox 
             if (result == true)
             {
-                // var dataTable = Helper.Helper.UpdateConvertCsvToDataTable(dlg.FileName);
-                // await Helper.Helper.BulkUpdateDataAsync(dataTable);
+                var dataTable = Helper.Helper.ConvertCsvToDataTable(dlg.FileName);
+                await _dataService.BulkInsertMySQL(dataTable, "inventory");
+                await LoadLeadsAsync();
             }
         }
 
         private async Task UpdateInfoLead()
         {
-            var view = new MatureLeadStatusView();
+            var view = new LeadStatusView();
             view.DataContext = this;
             var window = new Window();
-            window.Title = "Update Lead";
+            window.Title = "Update Inventory";
             window.Content = view;
             window.Width = 600;
             window.SizeToContent = SizeToContent.Height;
@@ -133,23 +134,23 @@ namespace BahiKitab.ViewModels
         private bool CanSaveLead()
         {
             // Basic validation: must have First Name and Email
-            return !string.IsNullOrEmpty(CurrentLead?.Name) && !string.IsNullOrEmpty(CurrentLead?.Phone);
+            return !string.IsNullOrEmpty(CurrentLead?.Name) && CurrentLead?.Stock != 0.0;
         }
 
         private async Task LoadLeadsAsync()
         {
-            Leads = await _dataService.GetAllLeadsAsync();
+            Leads = await _dataService.GetAllInventoryAsync();
         }
 
         private void CreateNewLead()
         {
             // Clear selection and form for a new entry
             SelectedLead = null;
-            CurrentLead = new Lead();
-            var view = new AddLeadsView();
+            CurrentLead = new InventoryModel();
+            var view = new AddInventoryView();
             view.DataContext = this;
             var window = new Window();
-            window.Title = "Add Lead";
+            window.Title = "Add Inventory";
             window.Content = view;
             window.Width = 600;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -160,10 +161,10 @@ namespace BahiKitab.ViewModels
         {
             // Clear selection and form for a new entry
             CurrentLead = this.SelectedLead;
-            var view = new AddLeadsView();
+            var view = new AddInventoryView();
             view.DataContext = this;
             var window = new Window();
-            window.Title = "Update Lead";
+            window.Title = "Update Inventory";
             window.Content = view;
             window.Width = 600;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -175,39 +176,30 @@ namespace BahiKitab.ViewModels
             if (CurrentLead.Id == 0)
             {
                 // CREATE NEW LEAD
-                Lead createdLead = await _dataService.CreateLeadAsync(CurrentLead);
+                var createdLead = await _dataService.CreateInventoryAsync(CurrentLead);
                 Leads.Add(createdLead);
-                MessageBox.Show($"Lead {createdLead.Name} created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Inventory {createdLead.Name} created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
                 // UPDATE EXISTING LEAD
-                await _dataService.UpdateLeadAsync(CurrentLead);
+                await _dataService.UpdateInventoryAsync(CurrentLead);
 
                 // Find the original object in the collection and update its properties
                 var existingLead = Leads.FirstOrDefault(l => l.Id == CurrentLead.Id);
                 if (existingLead != null)
                 {
                     existingLead.Name = CurrentLead.Name;
-                    existingLead.Company = CurrentLead.Company;
-                    existingLead.Email = CurrentLead.Email;
-                    existingLead.Phone = CurrentLead.Phone;
-                    existingLead.Status = CurrentLead.Status;
-                    existingLead.LeadSource = CurrentLead.LeadSource;
-                    existingLead.Tags = CurrentLead.Tags;
-                    existingLead.Label = CurrentLead.Label;
-                    existingLead.City = CurrentLead.City;
-                    existingLead.State = CurrentLead.State;
-                    existingLead.District = CurrentLead.District;
-                    existingLead.Pincode = CurrentLead.Pincode;
-                    existingLead.Country = CurrentLead.Country;
-                    existingLead.ImpDate = CurrentLead.ImpDate;
-                    existingLead.AltPhone = CurrentLead.AltPhone;
-                    existingLead.FirmName = CurrentLead.FirmName;
-                    existingLead.UpdationDate = CurrentLead.UpdationDate;
-                    existingLead.LeadType = CurrentLead.LeadType;
+                    existingLead.ShortCode = CurrentLead.ShortCode;
+                    existingLead.Stock = CurrentLead.Stock;
+                    existingLead.SKU = CurrentLead.SKU;
+                    existingLead.Units = CurrentLead.Units;
+                    existingLead.GST = CurrentLead.GST;
+                    existingLead.SellingPrice = CurrentLead.SellingPrice;
+                    existingLead.PurchasePrice = CurrentLead.PurchasePrice;
+                    existingLead.Updated = CurrentLead.Updated;
                 }
-                MessageBox.Show($"Lead {CurrentLead.Id} updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Inventory {CurrentLead.Id} updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -216,18 +208,18 @@ namespace BahiKitab.ViewModels
             if (SelectedLead == null) return;
 
             var result = MessageBox.Show(
-                $"Are you sure you want to delete lead: {SelectedLead.Name}?",
+                $"Are you sure you want to delete Inventory: {SelectedLead.Name}?",
                 "Confirm Delete",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
-                await _dataService.DeleteLeadAsync(SelectedLead);
+                await _dataService.DeleteInventoryAsync(SelectedLead);
                 // The data service updates the mock list, so we just need to refresh the bound collection.
                 Leads.Remove(SelectedLead);
                 SelectedLead = null; // Clear selection after deletion
-                MessageBox.Show("Lead deleted.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Inventory deleted.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }

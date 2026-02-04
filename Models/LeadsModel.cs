@@ -175,6 +175,13 @@ namespace BahiKitab.Models
             set => Set(ref _leadDeadModel, value, nameof(LeadDeadModel));
         }
 
+        private StaffModel _leadHolder;
+        public StaffModel LeadHolder
+        {
+            get => _leadHolder;
+            set => Set(ref _leadHolder, value, nameof(LeadHolder));
+        }
+
         public Lead Clone() { return (Lead)this.MemberwiseClone(); }
 
         object ICloneable.Clone() { return Clone(); }

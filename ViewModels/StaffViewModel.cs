@@ -1,7 +1,9 @@
 ﻿using BahiKitab.Core;
 using BahiKitab.Models;
 using BahiKitab.Services;
+using BahiKitab.ViewModels;
 using BahiKitab.Views;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,24 +11,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace BahiKitab.ViewModels
 {
-    public class MatureLeadsViewModel : ViewModelBase
+    public class StaffViewModel : ViewModelBase
     {
         // Services
-        private readonly LeadsDataService _dataService;
+        private readonly StaffDataService _dataService;
 
         // Data Properties
-        private ObservableCollection<Lead> _leads;
-        public ObservableCollection<Lead> Leads
+        private ObservableCollection<StaffModel> _staffTL;
+        public ObservableCollection<StaffModel> StaffTL
         {
-            get => _leads;
-            set => Set(ref _leads, value, nameof(Leads));
+            get => _staffTL;
+            set => Set(ref _staffTL, value, nameof(StaffTL));
         }
 
-        private Lead _selectedLead;
-        public Lead SelectedLead
+        // Data Properties
+        private ObservableCollection<StaffModel> _staff;
+        public ObservableCollection<StaffModel> Staff
+        {
+            get => _staff;
+            set => Set(ref _staff, value, nameof(Staff));
+        }
+
+        private StaffModel _selectedLead;
+        public StaffModel SelectedLead
         {
             get => _selectedLead;
             set
@@ -43,15 +54,15 @@ namespace BahiKitab.ViewModels
                     }
                     else
                     {
-                        CurrentLead = new Lead(); // Clear form if deselected
+                        CurrentLead = new StaffModel(); // Clear form if deselected
                     }
                 }
             }
         }
 
-        private Lead _currentLead = new Lead();
+        private StaffModel _currentLead = new StaffModel();
         // This is the model used for the data entry form (Create/Update)
-        public Lead CurrentLead
+        public StaffModel CurrentLead
         {
             get => _currentLead;
             set => Set(ref _currentLead, value, nameof(CurrentLead));
@@ -64,13 +75,15 @@ namespace BahiKitab.ViewModels
         public RelayCommand DeleteLeadCommand { get; private set; }
         public RelayCommand NewLeadCommand { get; private set; }
         public RelayCommand UpdateInfoCommand { get; private set; }
+        public RelayCommand UploadProfileCommand { get; private set; }
         public RelayCommand ImportLeadsCommand { get; private set; }
 
-        public MatureLeadsViewModel()
+        public StaffViewModel()
         {
             // Initialize service and data collections
-            _dataService = new LeadsDataService();
-            Leads = new ObservableCollection<Lead>();
+            _dataService = new StaffDataService();
+            Staff = new ObservableCollection<StaffModel>();
+            StaffTL = new ObservableCollection<StaffModel>();
 
             // Initialize Commands
             LoadLeadsCommand = new RelayCommand(async _ => await LoadLeadsAsync());
@@ -79,38 +92,34 @@ namespace BahiKitab.ViewModels
             DeleteLeadCommand = new RelayCommand(async _ => await DeleteLeadAsync(), _ => SelectedLead != null);
             NewLeadCommand = new RelayCommand(_ => CreateNewLead());
             UpdateInfoCommand = new RelayCommand(_ => UpdateInfoLead());
-            ImportLeadsCommand = new RelayCommand(async _ => await ImportLeadsCommandAsync());
+            UploadProfileCommand = new RelayCommand(_ => UploadProfileImage());
 
             // Load data immediately upon initialization
             LoadLeadsCommand.Execute(null);
         }
 
-        private async Task ImportLeadsCommandAsync()
+        private void UploadProfileImage()
         {
-            // Create OpenFileDialog 
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|All files (*.*)|*.*";
 
-            // Set filter for file extension and default file extension 
-            dlg.DefaultExt = ".csv";
-            dlg.Filter = "Excel files(*.csv, *.xls, *.xlsx) | *.csv; *.xls; *.xlsx | All files(*.*) | *.* ";
-
-            // Display OpenFileDialog by calling ShowDialog method 
-            bool? result = dlg.ShowDialog();
-
-            // Get the selected file name and display in a TextBox 
-            if (result == true)
+            if (openFileDialog.ShowDialog() == true)
             {
-                // var dataTable = Helper.Helper.UpdateConvertCsvToDataTable(dlg.FileName);
-                // await Helper.Helper.BulkUpdateDataAsync(dataTable);
+                // Create a bitmap from the selected file
+                Uri fileUri = new Uri(openFileDialog.FileName);
+                BitmapImage bitmap = new BitmapImage(fileUri);
+
+                // Set the ImageBrush source to the new image
+                CurrentLead.ProfileImage = bitmap;
             }
         }
 
         private async Task UpdateInfoLead()
         {
-            var view = new MatureLeadStatusView();
+            var view = new LeadStatusView();
             view.DataContext = this;
             var window = new Window();
-            window.Title = "Update Lead";
+            window.Title = "Update Staff";
             window.Content = view;
             window.Width = 600;
             window.SizeToContent = SizeToContent.Height;
@@ -133,23 +142,24 @@ namespace BahiKitab.ViewModels
         private bool CanSaveLead()
         {
             // Basic validation: must have First Name and Email
-            return !string.IsNullOrEmpty(CurrentLead?.Name) && !string.IsNullOrEmpty(CurrentLead?.Phone);
+            return !string.IsNullOrEmpty(CurrentLead?.FullName) && !string.IsNullOrEmpty(CurrentLead?.Phone);
         }
 
         private async Task LoadLeadsAsync()
         {
-            Leads = await _dataService.GetAllLeadsAsync();
+            Staff = await _dataService.GetAllStaffAsync();
+            StaffTL = await _dataService.GetAllStaffAsync();
         }
 
         private void CreateNewLead()
         {
             // Clear selection and form for a new entry
             SelectedLead = null;
-            CurrentLead = new Lead();
-            var view = new AddLeadsView();
+            CurrentLead = new StaffModel();
+            var view = new AddStaffProfile();
             view.DataContext = this;
             var window = new Window();
-            window.Title = "Add Lead";
+            window.Title = "Add Staff";
             window.Content = view;
             window.Width = 600;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -160,10 +170,10 @@ namespace BahiKitab.ViewModels
         {
             // Clear selection and form for a new entry
             CurrentLead = this.SelectedLead;
-            var view = new AddLeadsView();
+            var view = new AddStaffProfile();
             view.DataContext = this;
             var window = new Window();
-            window.Title = "Update Lead";
+            window.Title = "Update Staff";
             window.Content = view;
             window.Width = 600;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -175,39 +185,40 @@ namespace BahiKitab.ViewModels
             if (CurrentLead.Id == 0)
             {
                 // CREATE NEW LEAD
-                Lead createdLead = await _dataService.CreateLeadAsync(CurrentLead);
-                Leads.Add(createdLead);
-                MessageBox.Show($"Lead {createdLead.Name} created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                StaffModel createdLead = await _dataService.CreateStaffAsync(CurrentLead);
+                if (Staff == null)
+                {
+                    Staff = new ObservableCollection<StaffModel>();
+                }
+
+                Staff.Add(createdLead);
+                MessageBox.Show($"Staff {createdLead.FullName} created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
                 // UPDATE EXISTING LEAD
-                await _dataService.UpdateLeadAsync(CurrentLead);
+                await _dataService.UpdateStaffAsync(CurrentLead);
 
                 // Find the original object in the collection and update its properties
-                var existingLead = Leads.FirstOrDefault(l => l.Id == CurrentLead.Id);
+                var existingLead = Staff.FirstOrDefault(l => l.Id == CurrentLead.Id);
                 if (existingLead != null)
                 {
-                    existingLead.Name = CurrentLead.Name;
-                    existingLead.Company = CurrentLead.Company;
+                    existingLead.FullName = CurrentLead.FullName;
                     existingLead.Email = CurrentLead.Email;
                     existingLead.Phone = CurrentLead.Phone;
-                    existingLead.Status = CurrentLead.Status;
-                    existingLead.LeadSource = CurrentLead.LeadSource;
-                    existingLead.Tags = CurrentLead.Tags;
-                    existingLead.Label = CurrentLead.Label;
-                    existingLead.City = CurrentLead.City;
-                    existingLead.State = CurrentLead.State;
-                    existingLead.District = CurrentLead.District;
-                    existingLead.Pincode = CurrentLead.Pincode;
-                    existingLead.Country = CurrentLead.Country;
-                    existingLead.ImpDate = CurrentLead.ImpDate;
-                    existingLead.AltPhone = CurrentLead.AltPhone;
-                    existingLead.FirmName = CurrentLead.FirmName;
-                    existingLead.UpdationDate = CurrentLead.UpdationDate;
-                    existingLead.LeadType = CurrentLead.LeadType;
+                    existingLead.IsActive = CurrentLead.IsActive;
+                    existingLead.Department = CurrentLead.Department;
+                    existingLead.TeamLead = CurrentLead.TeamLead;
+                    existingLead.Username = CurrentLead.Username;
+                    existingLead.Password = CurrentLead.Password;
+                    existingLead.Address = CurrentLead.Address;
+                    existingLead.Role = CurrentLead.Role;
+                    existingLead.ProfileImage = CurrentLead.ProfileImage;
+                    existingLead.UpdateTime = CurrentLead.UpdateTime;
+                    existingLead.CreateTime = CurrentLead.CreateTime;
                 }
-                MessageBox.Show($"Lead {CurrentLead.Id} updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                MessageBox.Show($"Staff {CurrentLead.FullName} updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -216,18 +227,18 @@ namespace BahiKitab.ViewModels
             if (SelectedLead == null) return;
 
             var result = MessageBox.Show(
-                $"Are you sure you want to delete lead: {SelectedLead.Name}?",
+                $"Are you sure you want to delete staff: {SelectedLead.FullName}?",
                 "Confirm Delete",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
-                await _dataService.DeleteLeadAsync(SelectedLead);
+                await _dataService.DeleteStaffAsync(SelectedLead);
                 // The data service updates the mock list, so we just need to refresh the bound collection.
-                Leads.Remove(SelectedLead);
+                Staff.Remove(SelectedLead);
                 SelectedLead = null; // Clear selection after deletion
-                MessageBox.Show("Lead deleted.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Staff deleted.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }

@@ -38,6 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\MatureLeadStatusView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\MatureLeadsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

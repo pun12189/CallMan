@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BahiKitab.Models
 {
-    public class ProductModel : ObservableObject
+    public class ProductModel : ObservableObject, ICloneable
     {
         private int _id;
         public int Id
@@ -45,5 +45,17 @@ namespace BahiKitab.Models
             get => _customerId;
             set => Set(ref _customerId, value, nameof(CustomerId));
         }
+
+        private CostModel productCost = new CostModel();
+        public CostModel ProductCost { get => productCost; set => Set(ref productCost, value, nameof(ProductCost)); }
+
+
+        private List<int> imageIds = new();
+        public List<int> ImageIds { get => imageIds; set => Set(ref imageIds, value, nameof(ImageIds)); }
+
+        public ProductModel Clone() { return (ProductModel)this.MemberwiseClone(); }
+
+        object ICloneable.Clone() { return Clone(); }
+
     }
 }

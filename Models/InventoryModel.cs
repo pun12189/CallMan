@@ -1,4 +1,6 @@
 ﻿using BahiKitab.Core;
+using BahiKitab.Helper;
+using Mysqlx.Crud;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,6 +32,13 @@ namespace BahiKitab.Models
         {
             get => _shortCode;
             set => Set(ref _shortCode, value, nameof(ShortCode));
+        }
+
+        private CategoryModel _category;
+        public CategoryModel Category
+        {
+            get => _category;
+            set => Set(ref _category, value, nameof(Category));
         }
 
         private double _stock;
@@ -85,7 +94,41 @@ namespace BahiKitab.Models
             }
         }
 
-        public Lead Clone() { return (Lead)this.MemberwiseClone(); }
+        private ProductUnits units;
+        public ProductUnits Units
+        {
+            get => units;
+            set => Set(ref units, value, nameof(Units));
+        }
+
+        private double _gst;
+        public double GST
+        {
+            get => _gst;
+            set => Set(ref _gst, value, nameof(GST));
+        }
+
+        private double _purchasePrice;
+        public double PurchasePrice
+        {
+            get => _purchasePrice;
+            set => Set(ref _purchasePrice, value, nameof(PurchasePrice));
+        }
+
+        private double _sellingPrice;
+        public double SellingPrice
+        {
+            get => _sellingPrice;
+            set => Set(ref _sellingPrice, value, nameof(SellingPrice));
+        }
+
+        private DateTime created;        
+        public DateTime Created { get => created; set => Set(ref created, value, nameof(Created)); }
+
+        private DateTime updated;
+        public DateTime Updated { get => updated; set => Set(ref updated, value, nameof(Updated)); }
+
+        public InventoryModel Clone() { return (InventoryModel)this.MemberwiseClone(); }
 
         object ICloneable.Clone() { return Clone(); }
     }

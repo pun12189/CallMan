@@ -64,6 +64,7 @@ namespace BahiKitab.ViewModels
         public RelayCommand DeleteLeadCommand { get; private set; }
         public RelayCommand NewLeadCommand { get; private set; }
         public RelayCommand UpdateInfoCommand { get; private set; }
+        public RelayCommand ImportOrdersCommand { get; private set; }
 
         public OrderViewModel()
         {
@@ -77,10 +78,28 @@ namespace BahiKitab.ViewModels
             UpdateLeadCommand = new RelayCommand(_ => UpdateNewLead());
             DeleteLeadCommand = new RelayCommand(async _ => await DeleteLeadAsync(), _ => SelectedLead != null);
             NewLeadCommand = new RelayCommand(_ => CreateNewLead());
-            UpdateInfoCommand = new RelayCommand(_ => UpdateInfoLead());            
+            UpdateInfoCommand = new RelayCommand(_ => UpdateInfoLead());
+            ImportOrdersCommand = new RelayCommand(_ => ImportOrders());
 
             // Load data immediately upon initialization
             LoadLeadsCommand.Execute(null);
+        }
+
+        private void ImportOrders()
+        {
+            var view = new ImportDialog();
+            view.DataContext = this;
+            var window = new Window();
+            window.Title = "Import Order";
+            window.Content = view;
+            window.Width = 600;
+            window.SizeToContent = SizeToContent.Height;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            var res = window.ShowDialog();
+            if (res is true)
+            {
+                MessageBox.Show("Orders will be imported at background when implemented.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private async Task UpdateInfoLead()
@@ -124,7 +143,7 @@ namespace BahiKitab.ViewModels
             // Clear selection and form for a new entry
             SelectedLead = null;
             CurrentLead = new LeadOrderModel();
-            var view = new AddLeadsView();
+            var view = new CreateOrderView();
             view.DataContext = this;
             var window = new Window();
             window.Title = "Add Order";
@@ -138,7 +157,7 @@ namespace BahiKitab.ViewModels
         {
             // Clear selection and form for a new entry
             CurrentLead = this.SelectedLead;
-            var view = new AddLeadsView();
+            var view = new CreateOrderView();
             view.DataContext = this;
             var window = new Window();
             window.Title = "Update Order";

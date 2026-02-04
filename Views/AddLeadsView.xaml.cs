@@ -20,6 +20,7 @@ namespace BahiKitab.Views
         private readonly LeadStatusDataService _statusDataService;
         private readonly LeadTagsDataService _tagsDataService;
         private readonly LeadLabelsDataService _labelsDataService;
+        private readonly StaffDataService _staffDataService;
 
         public AddLeadsView()
         {
@@ -28,6 +29,7 @@ namespace BahiKitab.Views
             _labelsDataService = new LeadLabelsDataService();
             _tagsDataService = new LeadTagsDataService();
             _statusDataService = new LeadStatusDataService();
+            _staffDataService = new StaffDataService();
 
             this.Loaded += AddLeadsView_Loaded;
         }
@@ -38,6 +40,7 @@ namespace BahiKitab.Views
             this.cbSource.ItemsSource = await _sourceDataService.GetAllLeadSourcesAsync();
             this.cbTags.ItemsSource = await _tagsDataService.GetAllLeadTagsAsync();
             this.cbStatus.ItemsSource = await _statusDataService.GetAllLeadStatussAsync();
+            this.cbLH.ItemsSource = await _staffDataService.GetAllStaffAsync();
         }
 
         private void tb_PreviewTextInput(object sender, TextCompositionEventArgs e)

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
 using System.Windows.Controls;
+using BahiKitab.Views;
 
 namespace BahiKitab.ViewModels
 {
@@ -25,7 +26,7 @@ namespace BahiKitab.ViewModels
             set => Set(ref _currentView, value, nameof(CurrentView));
         }
 
-        public ICommand NavigateCommand { get; }
+        public ICommand NavigateCommand { get; set; }
 
         public MainWindowViewModel()
         {
@@ -45,11 +46,12 @@ namespace BahiKitab.ViewModels
                     CurrentView = new LeadsViewModel();
                     break;
                 case "Tasks":
-                    // CurrentView = new TasksViewModel(); // Placeholder for Task View
-                    MessageBox.Show("Tasks View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    CurrentView = new TaskViewModel(); // Placeholder for Task View
+                    //MessageBox.Show("Tasks View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "Admin":
-                    CurrentView = new AdminSettingsViewModel(); // Placeholder for Admin Settings
+                    var adminSettingsViewModel = new AdminSettingsViewModel();
+                    CurrentView = adminSettingsViewModel; // Placeholder for Admin Settings
                     //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "Dead":
@@ -70,6 +72,18 @@ namespace BahiKitab.ViewModels
                     break;
                 case "Orders":
                     CurrentView = new OrderViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "Staff":
+                    CurrentView = new StaffViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "Inventory":
+                    CurrentView = new InventoryViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "Category":
+                    CurrentView = new CategoryViewModel(); // Placeholder for Admin Settings
                     //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
             }

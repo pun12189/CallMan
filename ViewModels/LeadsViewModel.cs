@@ -17,6 +17,8 @@ namespace BahiKitab.ViewModels
         // Services
         private readonly LeadsDataService _dataService;
 
+        private readonly LeadHistoryDataService leadHistoryDataService;
+
         // Data Properties
         private ObservableCollection<Lead> _leads;
         public ObservableCollection<Lead> Leads
@@ -70,6 +72,7 @@ namespace BahiKitab.ViewModels
         {
             // Initialize service and data collections
             _dataService = new LeadsDataService();
+            leadHistoryDataService = new LeadHistoryDataService();
             Leads = new ObservableCollection<Lead>();
 
             // Initialize Commands
@@ -177,7 +180,7 @@ namespace BahiKitab.ViewModels
             {
                 // CREATE NEW LEAD
                 Lead createdLead = await _dataService.CreateLeadAsync(CurrentLead);
-                Leads.Add(createdLead);
+                Leads.Add(createdLead);                
                 MessageBox.Show($"Lead {createdLead.Name} created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
