@@ -2,9 +2,12 @@
 using BahiKitab.Models;
 using BahiKitab.Services;
 using BahiKitab.Views;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +19,9 @@ namespace BahiKitab.ViewModels
     {
         // Services
         private readonly LeadsOrderDataService _dataService;
+        private readonly ImagesDataService imagesDataService;
+        private readonly LeadsDataService leadsDataService;
+        private readonly TaskDataService tasksDataService;
 
         // Data Properties
         private ObservableCollection<LeadOrderModel> _leads;
@@ -50,6 +56,7 @@ namespace BahiKitab.ViewModels
         }
 
         private LeadOrderModel _currentLead = new LeadOrderModel();
+
         // This is the model used for the data entry form (Create/Update)
         public LeadOrderModel CurrentLead
         {
@@ -65,11 +72,24 @@ namespace BahiKitab.ViewModels
         public RelayCommand NewLeadCommand { get; private set; }
         public RelayCommand UpdateInfoCommand { get; private set; }
         public RelayCommand ImportOrdersCommand { get; private set; }
+        public RelayCommand ReferenceImagesCommand { get; private set; }
+
+        public RelayCommand EditCommand { get; private set; }
+        public RelayCommand SaveCommand { get; private set; }
+        public RelayCommand WhatsappCommand { get; private set; }
+
+        public RelayCommand PdfCommand { get; private set; }
+
+        public RelayCommand TaskCreateCommand { get; private set; }
+
 
         public OrderViewModel()
         {
             // Initialize service and data collections
             _dataService = new LeadsOrderDataService();
+            imagesDataService = new ImagesDataService();
+            leadsDataService = new LeadsDataService();
+            tasksDataService = new TaskDataService();
             Leads = new ObservableCollection<LeadOrderModel>();
 
             // Initialize Commands
@@ -80,9 +100,136 @@ namespace BahiKitab.ViewModels
             NewLeadCommand = new RelayCommand(_ => CreateNewLead());
             UpdateInfoCommand = new RelayCommand(_ => UpdateInfoLead());
             ImportOrdersCommand = new RelayCommand(_ => ImportOrders());
+            ReferenceImagesCommand = new RelayCommand(_ => AddRefImages());
+            EditCommand = new RelayCommand(EditCommandExecute);
+            SaveCommand = new RelayCommand(SaveCommandExecute);
+            WhatsappCommand = new RelayCommand(WhatsappCommandExecute);
+            PdfCommand = new RelayCommand(PdfCommandExecute);
+            TaskCreateCommand = new RelayCommand(TaskCreateCommandExecute);
 
             // Load data immediately upon initialization
             LoadLeadsCommand.Execute(null);
+        }
+
+        private async void TaskCreateCommandExecute(object obj)
+        {
+            var model = obj as LeadOrderModel;
+
+            if (model != null)
+            {
+                model.IsTaskCreated = true;
+                if (model.OrderedProducts != null)
+                {
+                    foreach (var item in model.OrderedProducts)
+                    {
+                        var task = new TaskModel();
+                        task.Product = item.Clone();
+                        task.Customer = model.Customer.Clone();
+                        task.OrderId = model.OrderId;
+
+                        await tasksDataService.CreateLeadHistoryAsync(task);
+                    }
+                }
+                
+                await _dataService.UpdateLeadOrderAsync(model);
+            }
+        }
+
+        private void PdfCommandExecute(object obj)
+        {
+            var pdf = new PdfForm();
+            var model = obj as LeadOrderModel;
+
+            if (model != null)
+            {
+                pdf.CreateFreePdf(model);
+            }
+        }
+
+        private void WhatsappCommandExecute(object obj)
+        {
+            var model = obj as LeadOrderModel;
+
+            if (model != null) 
+            {
+                if (!string.IsNullOrEmpty(model.Customer.Phone))
+                {
+                    // Phone number se extra characters (+, spaces, dashes) hatane ke liye
+                    string cleanNumber = new string(model.Customer.Phone.Where(char.IsDigit).ToArray());
+
+                    // Agar number 10 digit ka hai, toh country code (e.g., 91) add karna zaroori hai
+                    if (cleanNumber.Length == 10)
+                    {
+                        cleanNumber = "91" + cleanNumber;
+                    }
+
+                    string message = $"Hello {model.Customer.Name} , \n\n" +
+                         $"Your bill number {model.OrderId} is generated। \n" +
+                         $"Total Amount: ₹{model.OrderAmount} \n" +
+                         $"Received Amount: ₹{model.ReceivedAmount} \n\n" +
+                         $"Balance Amount: ₹{model.Balance} \n\n" +
+                         $"Thanks \n" +
+                         $"_automated msg, sent from SofricERP_";
+
+                    string encodedMessage = Uri.EscapeDataString(message);
+
+                    // WhatsApp Web URL
+                    string url = $"https://web.whatsapp.com/send?phone={cleanNumber}&text={encodedMessage}";
+
+                    try
+                    {
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = url,
+                            UseShellExecute = true
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        // Error handling agar browser open na ho sake
+                        Debug.WriteLine(ex.Message);
+                    }
+                }
+            }            
+        }
+
+        private async void SaveCommandExecute(object obj)
+        {
+            this.CurrentLead = this.SelectedLead;
+            await SaveLeadAsync();
+            var model = obj as LeadOrderModel;
+            if (model != null)
+            {
+                model.IsEditing = false;
+            }
+        }
+
+        private void EditCommandExecute(object obj)
+        {
+            var model = obj as LeadOrderModel;
+            if (model != null) 
+            {
+                model.IsEditing = true;
+            }
+        }
+
+        private async void AddRefImages()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Multiselect = true,
+                Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                foreach (string filePath in openFileDialog.FileNames)
+                {
+                    byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+                    string fileName = System.IO.Path.GetFileName(filePath);
+                    CurrentLead.ReferenceImages.Add(await imagesDataService.CreateImageAsync(fileName, imageBytes));
+                }                
+            }
         }
 
         private void ImportOrders()
@@ -104,10 +251,10 @@ namespace BahiKitab.ViewModels
 
         private async Task UpdateInfoLead()
         {
-            var view = new LeadStatusView();
+            var view = new MatureLeadStatusView();
             view.DataContext = this;
             var window = new Window();
-            window.Title = "Update Order";
+            window.Title = "Update Order Status";
             window.Content = view;
             window.Width = 600;
             window.SizeToContent = SizeToContent.Height;
@@ -115,6 +262,7 @@ namespace BahiKitab.ViewModels
             var res = window.ShowDialog();
             if (res is true)
             {
+                this.SelectedLead.Updated = DateTime.Now;
                 CurrentLead = this.SelectedLead;
                 await SaveLeadAsync();
             }
@@ -130,7 +278,7 @@ namespace BahiKitab.ViewModels
         private bool CanSaveLead()
         {
             // Basic validation: must have First Name and Email
-            return CurrentLead?.OrderAmount != 0.0 && CurrentLead?.ReceivedAmount != 0.0;
+            return CurrentLead?.OrderAmount != 0.0;
         }
 
         private async Task LoadLeadsAsync()
@@ -172,13 +320,38 @@ namespace BahiKitab.ViewModels
             if (CurrentLead.Id == 0)
             {
                 // CREATE NEW LEAD
+                CurrentLead.Balance = CurrentLead.OrderAmount - CurrentLead.ReceivedAmount;
+
+                if (CurrentLead.Balance <= 0.0)
+                {
+                    CurrentLead.PaymentStatus = Helper.PaymentStatus.Paid;
+                    CurrentLead.PaymentType = Helper.PaymentType.Cash;
+                }
+                else if (CurrentLead.Balance == CurrentLead.OrderAmount)
+                {
+                    CurrentLead.PaymentStatus = Helper.PaymentStatus.Unpaid;
+                    CurrentLead.PaymentType = Helper.PaymentType.Credit;
+                }
+                else
+                {
+                    CurrentLead.PaymentStatus = Helper.PaymentStatus.PartialPaid;
+                    CurrentLead.PaymentType = Helper.PaymentType.Credit;
+                }
+
+                CurrentLead.OrderId = "LKY" + DateTime.Now.GetHashCode();
+                CurrentLead.IsAccepted = false;
+                CurrentLead.Customer.LeadType = Helper.LeadType.Matured;
+
                 LeadOrderModel createdLead = await _dataService.CreateLeadOrderAsync(CurrentLead);
+
+                await leadsDataService.UpdateLeadAsync(CurrentLead.Customer);
+
                 Leads.Add(createdLead);
                 MessageBox.Show($"Order {createdLead.OrderId} of Customer {createdLead.Customer?.Name} created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                // UPDATE EXISTING LEAD
+                // UPDATE EXISTING LEAD                
                 await _dataService.UpdateLeadOrderAsync(CurrentLead);
 
                 // Find the original object in the collection and update its properties
@@ -200,6 +373,7 @@ namespace BahiKitab.ViewModels
                     existingLead.Balance = CurrentLead.Balance;
                     existingLead.NextFollowup = CurrentLead.NextFollowup;
                 }
+
                 MessageBox.Show($"Order {CurrentLead.OrderId} updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }

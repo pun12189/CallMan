@@ -1,5 +1,6 @@
 ﻿using BahiKitab.Models;
 using BahiKitab.Services;
+using BahiKitab.ViewModels;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -27,20 +28,32 @@ namespace BahiKitab.Views
     {
         private ProductModel product = new ProductModel();
 
+        private LeadOrderModel currentOrder;
+
         private readonly ImagesDataService imagesDataService;
         private readonly LeadsDataService leadsDataService;
+
+        private OrderViewModel orderViewModel;
 
         public CreateOrderView()
         {
             InitializeComponent();
             imagesDataService = new ImagesDataService();
-            leadsDataService = new LeadsDataService();
+            leadsDataService = new LeadsDataService();           
+
             this.Loaded += this.CreateOrderView_Loaded;
         }
 
         private async void CreateOrderView_Loaded(object sender, RoutedEventArgs e)
         {
             this.cbCust.ItemsSource = await leadsDataService.GetAllLeadsAsync();
+            var dc = this.DataContext as OrderViewModel;
+            if (dc != null)
+            {
+                orderViewModel = dc;
+            }
+
+            this.currentOrder = orderViewModel.CurrentLead;
         }
 
         private async void btnUpload_Click(object sender, RoutedEventArgs e)
@@ -97,6 +110,15 @@ namespace BahiKitab.Views
             product.CustomerId = ((Lead)this.cbCust.SelectedItem).Id;
 
             this.ProductCollection.Add(product.Clone());
+
+            if (currentOrder.OrderedProducts == null)
+            {
+                currentOrder.OrderedProducts = new ObservableCollection<ProductModel>();
+            }
+
+            currentOrder.OrderedProducts.Add(product.Clone());
+            currentOrder.Customer = (Lead)this.cbCust.SelectedItem;
+
             this.product = new ProductModel();
             this.ProductCost = new CostModel();
             this.tbImg.Text = "";
@@ -112,14 +134,13 @@ namespace BahiKitab.Views
             window.Show();
         }
 
-        private void btnOrderImg_Click(object sender, RoutedEventArgs e)
+        private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void btnAddOrder_Click(object sender, RoutedEventArgs e)
-        {
-
+            currentOrder.OrderAmount = 0;
+            foreach (var item in this.ProductCollection)
+            {
+                currentOrder.OrderAmount += item.ProductCost.TotalPrice;
+            }
         }
     }
 }

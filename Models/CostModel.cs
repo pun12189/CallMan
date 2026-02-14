@@ -79,7 +79,7 @@ namespace BahiKitab.Models
             { 
                 Set(ref totalPrice, value, nameof(TotalPrice));
                 var tp = (this.TotalPrice * 100)/(this.GST + 100);
-                this.Rate = tp / this.Quantity;
+                this.Rate = Math.Round(tp / this.Quantity, 2);
             } 
         }
 

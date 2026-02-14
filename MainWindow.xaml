@@ -30,6 +30,8 @@
         <icon:FontAwesome Kind="EnvelopesBulkSolid" Height="14" x:Key="ordericon"/>
         <icon:FontAwesome Kind="BoxesStackedSolid" Height="14" x:Key="stockicon"/>
         <icon:FontAwesome Kind="BarsProgressSolid" Height="14" x:Key="stockicon1"/>
+        <icon:FontAwesome Kind="MoneyBillSolid" Height="14" x:Key="saleicon"/>
+        <icon:FontAwesome Kind="AtomSolid" Height="14" x:Key="batchicon"/>
     </Window.Resources>
     <Window.DataContext>
         <!-- Set the DataContext to the Main Window ViewModel -->
@@ -60,7 +62,7 @@
                 </MenuItem>
 
                 <MenuItem Header="CRM" Icon="{StaticResource crmicon}">
-                    <MenuItem Header="Customers" Icon="{StaticResource alleadsicon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Mature"/>
+                    <MenuItem Header="Customers" Icon="{StaticResource allstatsicon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Mature"/>
                     <MenuItem Header="Orders" Icon="{StaticResource ordericon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Orders"/>
                 </MenuItem>
 
@@ -69,6 +71,10 @@
                 <MenuItem Header="Tasks" Icon="{StaticResource stockicon1}" Command="{Binding NavigateCommand}" CommandParameter="Tasks"/>
 
                 <MenuItem Header="Admin Settings" Icon="{StaticResource adminicon}" Command="{Binding NavigateCommand}" CommandParameter="Admin"/>
+
+                <MenuItem Header="Sale Orders" Icon="{StaticResource saleicon}" Command="{Binding NavigateCommand}"/>
+
+                <MenuItem Header="Batch Orders" Icon="{StaticResource batchicon}" Command="{Binding NavigateCommand}"/>
 
             </Menu>
         </Grid>
@@ -109,6 +115,9 @@
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:TaskViewModel}">
                             <views:TaskView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:ProfileViewModel}">
+                            <views:ProfileView/>
                         </DataTemplate>
                     </ContentControl.Resources>
                 </ContentControl>

@@ -26,10 +26,14 @@ namespace BahiKitab.Models
         }
 
         private DateTime _creationDate = DateTime.Now;
+
         public DateTime CreationDate
         {
             get => _creationDate;
             set => Set(ref _creationDate, value, nameof(CreationDate));
         }
+
+        private bool isSelected;
+        public bool IsSelected { get => isSelected; set => Set(ref isSelected, value, nameof(IsSelected)); }
     }
 }

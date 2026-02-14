@@ -24,5 +24,29 @@ namespace BahiKitab.Views
         {
             InitializeComponent();
         }
+
+        private void cbAll_Checked(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in this.dataGrid1.Items)
+            {
+                var row = this.dataGrid1.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
+                if (row != null)
+                {
+                    row.IsSelected = true;
+                }
+            }
+        }
+
+        private void cbAll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in this.dataGrid1.Items)
+            {
+                var row = this.dataGrid1.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
+                if (row != null)
+                {
+                    row.IsSelected = false;
+                }
+            }
+        }
     }
 }

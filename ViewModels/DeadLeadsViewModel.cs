@@ -5,6 +5,7 @@ using BahiKitab.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,6 +66,7 @@ namespace BahiKitab.ViewModels
         public RelayCommand NewLeadCommand { get; private set; }
         public RelayCommand UpdateInfoCommand { get; private set; }
         public RelayCommand ImportLeadsCommand { get; private set; }
+        public RelayCommand WhatsappCommand { get; private set; }
 
         public DeadLeadsViewModel()
         {
@@ -80,9 +82,53 @@ namespace BahiKitab.ViewModels
             NewLeadCommand = new RelayCommand(_ => CreateNewLead());
             UpdateInfoCommand = new RelayCommand(_ => UpdateInfoLead());
             ImportLeadsCommand = new RelayCommand(async _ => await ImportLeadsCommandAsync());
+            WhatsappCommand = new RelayCommand(WhatsappCommandExecute);
 
             // Load data immediately upon initialization
             LoadLeadsCommand.Execute(null);
+        }
+
+        private void WhatsappCommandExecute(object obj)
+        {
+            var model = obj as Lead;
+
+            if (model != null)
+            {
+                if (!string.IsNullOrEmpty(model.Phone))
+                {
+                    // Phone number se extra characters (+, spaces, dashes) hatane ke liye
+                    string cleanNumber = new string(model.Phone.Where(char.IsDigit).ToArray());
+
+                    // Agar number 10 digit ka hai, toh country code (e.g., 91) add karna zaroori hai
+                    if (cleanNumber.Length == 10)
+                    {
+                        cleanNumber = "91" + cleanNumber;
+                    }
+
+                    string message = $"Hello {model.Name} , \n\n" +
+                         $"Please feel free to contact us on this whatsapp \n" +
+                         $"_automated msg, sent from SofricERP_";
+
+                    string encodedMessage = Uri.EscapeDataString(message);
+
+                    // WhatsApp Web URL
+                    string url = $"https://web.whatsapp.com/send?phone={cleanNumber}&text={encodedMessage}";
+
+                    try
+                    {
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = url,
+                            UseShellExecute = true
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        // Error handling agar browser open na ho sake
+                        Debug.WriteLine(ex.Message);
+                    }
+                }
+            }
         }
 
         private async Task ImportLeadsCommandAsync()

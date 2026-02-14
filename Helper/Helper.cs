@@ -146,7 +146,7 @@ namespace BahiKitab.Helper
 
             if (bitmapSource != null)
             {
-                var encoder = new JpegBitmapEncoder();
+                var encoder = new PngBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
 
                 using (var stream = new MemoryStream())
@@ -171,6 +171,22 @@ namespace BahiKitab.Helper
                 bm.EndInit();
                 return bm;
             }
+        }
+
+        public static string SaveBitmapSourceToTempFile(BitmapSource bitmapSource)
+        {
+            // एक अस्थायी फाइल पाथ बनाएँ
+            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString() + ".png");
+
+            using (var fileStream = new System.IO.FileStream(tempPath, System.IO.FileMode.Create))
+            {
+                // PNG के रूप में एनकोड करें
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                encoder.Save(fileStream);
+            }
+
+            return tempPath;
         }
     }
 }

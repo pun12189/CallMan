@@ -60,8 +60,8 @@
             <Button Content="Connect Whatsapp" Grid.Column="3" Grid.Row="0" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Connect Email" Grid.Column="0" Grid.Row="2" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Categories" Command="{Binding ElementName=adminView, Path=MainViewCommand, NotifyOnSourceUpdated=True}" CommandParameter="Category" Grid.Column="1" Grid.Row="2" Style="{StaticResource ButtonStyle}"/>
-            <Button Content="Sub Categories" Grid.Column="2" Grid.Row="2" Style="{StaticResource ButtonStyle}"/>
-            <Button Content="Sub Sub Categories" Grid.Column="3" Grid.Row="2" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Company Profile" Grid.Column="2" Grid.Row="2" Style="{StaticResource ButtonStyle}" Command="{Binding ElementName=adminView, Path=MainViewCommand, NotifyOnSourceUpdated=True}" CommandParameter="Profile"/>
+            <Button Content="Master Formulations" Grid.Column="3" Grid.Row="2" Style="{StaticResource ButtonStyle}"/>
         </Grid>
         <Grid Grid.Column="2">            
             <Grid.RowDefinitions>

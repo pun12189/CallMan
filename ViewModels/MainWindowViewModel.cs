@@ -86,6 +86,10 @@ namespace BahiKitab.ViewModels
                     CurrentView = new CategoryViewModel(); // Placeholder for Admin Settings
                     //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
+                case "Profile":
+                    CurrentView = new ProfileViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
             }
         }
     }

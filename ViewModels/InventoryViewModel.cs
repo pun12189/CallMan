@@ -87,8 +87,22 @@ namespace BahiKitab.ViewModels
 
         private async Task ImportLeadsCommandAsync()
         {
+            var view = new ImportDialog();
+            view.DataContext = this;
+            var window = new Window();
+            window.Title = "Import Inventory";
+            window.Content = view;
+            window.Width = 600;
+            window.SizeToContent = SizeToContent.Height;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            var res = window.ShowDialog();
+            if (res is true)
+            {
+                MessageBox.Show("Inventory will be imported at background when implemented.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
             // Create OpenFileDialog 
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            /*Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             // Set filter for file extension and default file extension 
             dlg.DefaultExt = ".csv";
@@ -103,7 +117,7 @@ namespace BahiKitab.ViewModels
                 var dataTable = Helper.Helper.ConvertCsvToDataTable(dlg.FileName);
                 await _dataService.BulkInsertMySQL(dataTable, "inventory");
                 await LoadLeadsAsync();
-            }
+            }*/
         }
 
         private async Task UpdateInfoLead()

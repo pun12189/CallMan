@@ -73,6 +73,9 @@ namespace BahiKitab.Services
                                 Created = reader.IsDBNull(16) ? DateTime.MinValue : reader.GetDateTime(16),
                                 Updated = reader.IsDBNull(17) ? DateTime.MinValue : reader.GetDateTime(17),
                                 LastMsg = reader.IsDBNull(18) ? string.Empty : reader.GetString(18),
+                                ReferenceImages = reader.IsDBNull(19) ? null : JsonSerializer.Deserialize<List<int>>(reader.GetString(19)),
+                                Remarks = reader.IsDBNull(20) ? string.Empty : reader.GetString(20),
+                                IsTaskCreated = reader.IsDBNull(21) ? false : reader.GetBoolean(21),
                             };
                         }
 
@@ -131,6 +134,9 @@ namespace BahiKitab.Services
                                 Created = reader.IsDBNull(16) ? DateTime.MinValue : reader.GetDateTime(16),
                                 Updated = reader.IsDBNull(17) ? DateTime.MinValue : reader.GetDateTime(17),
                                 LastMsg = reader.IsDBNull(18) ? string.Empty : reader.GetString(18),
+                                ReferenceImages = reader.IsDBNull(19) ? null : JsonSerializer.Deserialize<List<int>>(reader.GetString(19)),
+                                Remarks = reader.IsDBNull(20) ? string.Empty : reader.GetString(20),
+                                IsTaskCreated = reader.IsDBNull(21) ? false : reader.GetBoolean(21),
                             };
 
                             leads.Add(lead);
@@ -160,7 +166,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "insert into lead_orders(order_id, order_amt, recvd_amt, lead_id, payment_type, payment_status, order_stage, products, next_followup, accepted_date, isAccepted, takenby, discount, balance, priority, lastMsg) values(@order_id, @order_amt, @recvd_amt, @lead_id, @payment_type, @payment_status, @order_stage, @products, @next_followup, @accepted_date, @isAccepted, @takenby, @discount, @balance, @priority, @lastMsg)";
+                    command.CommandText = "insert into lead_orders(order_id, order_amt, recvd_amt, lead_id, payment_type, payment_status, order_stage, products, next_followup, accepted_date, isAccepted, takenby, discount, balance, priority, lastMsg, ref_imgs, remarks, isTaskCreated) values(@order_id, @order_amt, @recvd_amt, @lead_id, @payment_type, @payment_status, @order_stage, @products, @next_followup, @accepted_date, @isAccepted, @takenby, @discount, @balance, @priority, @lastMsg, @ref_imgs, @remarks, @isTaskCreated)";
                     command.Parameters.Add("@order_id", MySqlDbType.VarChar).Value = lead.OrderId;
                     command.Parameters.Add("@order_amt", MySqlDbType.Double).Value = lead.OrderAmount;
                     command.Parameters.Add("@recvd_amt", MySqlDbType.Double).Value = lead.ReceivedAmount;
@@ -177,6 +183,9 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@balance", MySqlDbType.Double).Value = lead.Balance;
                     command.Parameters.Add("@priority", MySqlDbType.Byte).Value = lead.Priority;
                     command.Parameters.Add("@lastMsg", MySqlDbType.String).Value = lead.LastMsg;
+                    command.Parameters.Add("@ref_imgs", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.ReferenceImages);
+                    command.Parameters.Add("@remarks", MySqlDbType.String).Value = lead.Remarks;
+                    command.Parameters.Add("@isTaskCreated", MySqlDbType.Byte).Value = lead.IsTaskCreated;
                     await command.ExecuteScalarAsync();
                 }
             }
@@ -202,7 +211,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "update lead_orders set order_id=@order_id, order_amt=@order_amt, recvd_amt=@recvd_amt, lead_id=@lead_id, payment_type=@payment_type, payment_status=@payment_status, order_stage=@order_stage, products=@products, next_followup=@next_followup, accepted_date=@accepted_date, isAccepted=@isAccepted, takenby=@takenby, discount=@discount, balance=@balance, priority=@priority, create_time=@create_time, update_time=@update_time, lastMsg=@lastMsg where id=@id";
+                    command.CommandText = "update lead_orders set order_id=@order_id, order_amt=@order_amt, recvd_amt=@recvd_amt, lead_id=@lead_id, payment_type=@payment_type, payment_status=@payment_status, order_stage=@order_stage, products=@products, next_followup=@next_followup, accepted_date=@accepted_date, isAccepted=@isAccepted, takenby=@takenby, discount=@discount, balance=@balance, priority=@priority, update_time=@update_time, lastMsg=@lastMsg, ref_imgs=@ref_imgs, remarks=@remarks, isTaskCreated=@isTaskCreated where id=@id";
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = lead.Id;
                     command.Parameters.Add("@order_id", MySqlDbType.VarChar).Value = lead.OrderId;
                     command.Parameters.Add("@order_amt", MySqlDbType.Double).Value = lead.OrderAmount;
@@ -220,6 +229,10 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@balance", MySqlDbType.Double).Value = lead.Balance;
                     command.Parameters.Add("@priority", MySqlDbType.Byte).Value = lead.Priority;
                     command.Parameters.Add("@lastMsg", MySqlDbType.String).Value = lead.LastMsg;
+                    command.Parameters.Add("@update_time", MySqlDbType.DateTime).Value = DateTime.Now;
+                    command.Parameters.Add("@ref_imgs", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.ReferenceImages);
+                    command.Parameters.Add("@remarks", MySqlDbType.String).Value = lead.Remarks;
+                    command.Parameters.Add("@isTaskCreated", MySqlDbType.Byte).Value = lead.IsTaskCreated;
                     await command.ExecuteScalarAsync();
                 }
             }

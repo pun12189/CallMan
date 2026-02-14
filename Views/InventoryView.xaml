@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,10">
             <TextBox x:Name="tbSearch" Margin="0,0,5,0" VerticalContentAlignment="Center" Width="250" controls:TextBoxHelper.Watermark="Search" controls:TextBoxHelper.ClearTextButton="True"/>
-            <controls:DropDownButton x:Name="ddFormat" Content="Download Format" Width="150" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="0,0,5,0">
+            <controls:DropDownButton BorderThickness="1" x:Name="ddFormat" Content="Download Format" Width="150" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="0,0,5,0">
                 <controls:DropDownButton.Items>
                     <MenuItem x:Name="miInsert" Header="Insert Format">
                         <MenuItem.Icon>
@@ -109,7 +109,7 @@
                 <DataGridTemplateColumn Header="Info" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontWeight="Bold"/>
                                 <TextBlock Text="{Binding ShortCode, UpdateSourceTrigger=PropertyChanged}" FontSize="12" FontWeight="DemiBold"/>
                                 <TextBlock Text="{Binding Id, UpdateSourceTrigger=PropertyChanged, StringFormat=ID: {0}}" Margin="0,10"/>
@@ -121,7 +121,7 @@
                 <!--<DataGridTextColumn Header="S.no" Binding="{Binding Id}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Code" Binding="{Binding ShortCode, UpdateSourceTrigger=PropertyChanged}" />-->
-                <DataGridTemplateColumn Header="Category" Width="*">
+                <DataGridTemplateColumn Header="Category" Width="*" Visibility="Collapsed">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -156,8 +156,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>-->
-                <DataGridTextColumn Header="InStock" Binding="{Binding Stocks, UpdateSourceTrigger=LostFocus}"/>
-                <DataGridTextColumn Header="Units" Binding="{Binding Units, UpdateSourceTrigger=PropertyChanged}" />                
+                <DataGridTextColumn Header="InStock" Binding="{Binding Stock, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                <DataGridTextColumn Header="Units" Binding="{Binding Units, UpdateSourceTrigger=PropertyChanged}" Width="*"/>                
 
                 <!--<DataGridTextColumn Header="Product Names" Binding="{Binding ProductNamesCount, UpdateSourceTrigger=PropertyChanged}" />-->
                 <DataGridTemplateColumn Header="Products" Width="*">
@@ -179,7 +179,7 @@
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>-->
                 <!--<DataGridTextColumn Header="Planned Orders" Binding="{Binding TotalBatchOrders, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />-->
-                <DataGridTextColumn Header="Qty Rqt" Binding="{Binding TotalRequired, UpdateSourceTrigger=PropertyChanged}" Width="Auto" IsReadOnly="True">
+                <DataGridTextColumn Header="Qty Rqt" Binding="{Binding TotalRequired, UpdateSourceTrigger=PropertyChanged}" Width="*" IsReadOnly="True">
                     <DataGridTextColumn.CellStyle>
                         <!--green-->
                         <Style TargetType="DataGridCell">
@@ -210,7 +210,7 @@
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>-->
 
-                <DataGridTextColumn Header="Remaining" Binding="{Binding RemainingStock, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True">
+                <DataGridTextColumn Header="Remaining" Binding="{Binding RemainingStock, UpdateSourceTrigger=PropertyChanged}" Width="*" IsReadOnly="True">
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="DataGridCell">
                             <Setter Property="Background" Value="{Binding RemainingStock, Converter={StaticResource ValueToForegroundColor}}"/>
@@ -218,7 +218,7 @@
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Header="SKU" Binding="{Binding SKU, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="SKU" Binding="{Binding SKU, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                 <DataGridTemplateColumn Header="Actions" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

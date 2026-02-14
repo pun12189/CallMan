@@ -130,7 +130,7 @@
             <Button x:Name="btnAdd" Margin="10" VerticalAlignment="Center" Click="btnAdd_Click" Content="Add To Cart" Style="{StaticResource KlikButtonStyle}"/>
         </WrapPanel>
 
-        <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="True" Margin="0,10" Name="dataGrid1" VerticalAlignment="Stretch" ItemsSource="{Binding ElementName=createOrder, Path=ProductCollection}">
+        <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="True" Margin="10" Name="dataGrid1" VerticalAlignment="Stretch" ItemsSource="{Binding ElementName=createOrder, Path=ProductCollection}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Width="*"/>
                 <DataGridTextColumn Header="Quantity" Binding="{Binding ProductCost.Quantity, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
@@ -143,17 +143,22 @@
         <WrapPanel Orientation="Horizontal" Grid.Row="2">
             <StackPanel Orientation="Vertical" Margin="10" VerticalAlignment="Center">
                 <TextBlock Text="Total Order" Margin="0,5" VerticalAlignment="Center"/>
-                <TextBox x:Name="tbTOrder" Margin="0,5" Text="{Binding OrderAmount, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Width="50" Style="{StaticResource InputBox}"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="tbTOrder" Margin="0,5,5,5" Text="{Binding DataContext.CurrentLead.OrderAmount, RelativeSource={RelativeSource AncestorType=local:CreateOrderView}, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Width="80" Style="{StaticResource InputBox}"/>
+                    <Button x:Name="btnLoad" Click="btnLoad_Click" BorderThickness="0" Background="White" Foreground="Blue" Padding="2" ToolTip="Calculate Order">
+                        <icon:FontAwesome Kind="RotateSolid"/>
+                    </Button>
+                </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="10" VerticalAlignment="Center">
                 <TextBlock Text="Payment Received" Margin="0,5" VerticalAlignment="Center"/>
-                <TextBox x:Name="tbPayment" Margin="0,5" Text="{Binding ReceivedAmount, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" MinWidth="60" Style="{StaticResource InputBox}"/>
+                <TextBox x:Name="tbPayment" Margin="0,5" Text="{Binding DataContext.CurrentLead.ReceivedAmount, RelativeSource={RelativeSource AncestorType=local:CreateOrderView}, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" MinWidth="80" Style="{StaticResource InputBox}"/>
             </StackPanel>
         </WrapPanel>
         
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
-            <Button x:Name="btnOrderImg" Content="Upload Order Images" Style="{StaticResource KlikButtonStyle}" Margin="5" Click="btnOrderImg_Click"/>
-            <Button x:Name="btnAddOrder" Content="Create Order" Style="{StaticResource KlikButtonStyle}" Margin="5" Click="btnAddOrder_Click"/>
+            <Button x:Name="btnOrderImg" Content="Upload Order Images" Command="{Binding ReferenceImagesCommand}" Style="{StaticResource KlikButtonStyle}" Margin="5"/>
+            <Button x:Name="btnAddOrder" Content="Create Order" Command="{Binding CreateUpdateLeadCommand}" Style="{StaticResource KlikButtonStyle}" Margin="5"/>
         </StackPanel>
         
     </Grid>

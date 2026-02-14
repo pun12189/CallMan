@@ -111,7 +111,12 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
                                     <icon:PackIconFontAwesome Kind="PhoneSolid" Grid.Row="1" Grid.Column="0" FontSize="14" FontWeight="Bold"/>
                                     <icon:PackIconMaterial Kind="Email" Grid.Row="2" Grid.Column="0" FontSize="14" FontWeight="Bold"/>
                                     <icon:PackIconMaterial Kind="MapMarker" Grid.Row="3" Grid.Column="0" FontSize="14" FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding Phone}" Grid.Row="1" Grid.Column="2" FontSize="14"/>
+                                    <StackPanel x:Name="WhatsApp" Grid.Row="1" Grid.Column="2" Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Phone}" TextWrapping="Wrap" FontSize="14" FontWeight="Bold" Margin="0" VerticalAlignment="Center"/>
+                                        <Button BorderThickness="0" Command="{Binding DataContext.WhatsappCommand, RelativeSource={RelativeSource AncestorType=local:NewLeadsView}}" CommandParameter="{Binding}" Background="Transparent" Margin="5,0" Padding="5" Foreground="Green">
+                                            <icon:FontAwesome6 Kind="WhatsappBrands"/>
+                                        </Button>
+                                    </StackPanel>
                                     <TextBlock Text="{Binding Email}" Grid.Row="2" Grid.Column="2" FontSize="14"/>
                                     <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="2">
                                         <StackPanel Orientation="Horizontal">
@@ -125,6 +130,14 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
                                         <TextBlock Text="{Binding Country}" FontSize="12" Margin="0"/>
                                     </StackPanel>
                                 </Grid>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Phone}" Value="{x:Null}">
+                                        <Setter TargetName="WhatsApp" Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Phone}" Value="">
+                                        <Setter TargetName="WhatsApp" Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

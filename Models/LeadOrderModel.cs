@@ -31,6 +31,9 @@ namespace BahiKitab.Models
         private double discount;
         private string lastMsg;
         private List<int> referenceImages;
+        private bool isEditing = false;
+        private string remarks;
+        private bool isTaskCreated = false;
 
         public int Id { get => id; set => Set(ref id, value, nameof(Id)); }
 
@@ -71,6 +74,12 @@ namespace BahiKitab.Models
         public string LastMsg { get => lastMsg; set => Set(ref lastMsg, value, nameof(LastMsg)); }
 
         public List<int> ReferenceImages { get => referenceImages; set => Set(ref referenceImages, value, nameof(ReferenceImages)); }
+
+        public bool IsEditing { get => isEditing; set => Set(ref isEditing, value, nameof(IsEditing)); }
+
+        public string Remarks { get => remarks; set => Set(ref remarks, value, nameof(Remarks)); }
+
+        public bool IsTaskCreated { get => isTaskCreated; set => Set(ref isTaskCreated, value, nameof(IsTaskCreated)); }
 
         public LeadOrderModel Clone() { return (LeadOrderModel)this.MemberwiseClone(); }
 

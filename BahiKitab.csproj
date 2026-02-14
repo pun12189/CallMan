@@ -24,6 +24,8 @@
     <PackageReference Include="MySql.Data" Version="9.5.0" />
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="NumericWordsConversion" Version="2.1.1" />
+    <PackageReference Include="PDFsharp-MigraDoc-WPF" Version="6.2.4" />
   </ItemGroup>
 
   <ItemGroup>

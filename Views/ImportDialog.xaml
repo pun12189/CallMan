@@ -39,9 +39,10 @@
                     <TextBlock Text="No file chosen" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#6B7280"/>
                 </StackPanel>
 
-                <CheckBox Content="Marg Orders Import" Foreground="#555E6D" FontSize="13"/>
-                <CheckBox Content="Busy Orders Import" Foreground="#555E6D" FontSize="13"/>
-                <CheckBox Content="Tally Orders Import" Foreground="#555E6D" FontSize="13"/>
+                <RadioButton GroupName="import" Content="Marg Orders Import" Foreground="#555E6D" FontSize="13"/>
+                <RadioButton GroupName="import" Content="Busy Orders Import" Foreground="#555E6D" FontSize="13"/>
+                <RadioButton GroupName="import" Content="Tally Orders Import" Foreground="#555E6D" FontSize="13"/>
+                <RadioButton GroupName="import" Content="System Import" Foreground="#555E6D" FontSize="13" IsChecked="True"/>
             </StackPanel>
 
             <StackPanel Grid.Row="2">
