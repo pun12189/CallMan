@@ -32,5 +32,15 @@ namespace BahiKitab.Views
             this.cbUnits.ItemsSource = Enum.GetValues(typeof(ProductUnits));
             this.cbGST.ItemsSource = new List<string> { "0", "5", "18" };
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var parent = this.Parent as Window;
+            if (parent != null)
+            {
+                parent.DialogResult = false;
+                parent.Close();
+            }            
+        }
     }
 }

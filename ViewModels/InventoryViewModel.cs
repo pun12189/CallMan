@@ -5,10 +5,13 @@ using BahiKitab.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace BahiKitab.ViewModels
 {
@@ -16,6 +19,8 @@ namespace BahiKitab.ViewModels
     {
         // Services
         private readonly InventoryDataService _dataService;
+
+        public ICollectionView ProductView { get; set; }
 
         // Data Properties
         private ObservableCollection<InventoryModel> _leads;
@@ -50,11 +55,19 @@ namespace BahiKitab.ViewModels
         }
 
         private InventoryModel _currentLead = new InventoryModel();
+        private string searchText;
+
         // This is the model used for the data entry form (Create/Update)
         public InventoryModel CurrentLead
         {
             get => _currentLead;
             set => Set(ref _currentLead, value, nameof(CurrentLead));
+        }
+
+        public string SearchText { get => searchText; set { 
+                Set(ref searchText, value, nameof(SearchText)); 
+                ProductView.Refresh();
+            } 
         }
 
         // Commands
@@ -65,12 +78,15 @@ namespace BahiKitab.ViewModels
         public RelayCommand NewLeadCommand { get; private set; }
         public RelayCommand UpdateInfoCommand { get; private set; }
         public RelayCommand ImportLeadsCommand { get; private set; }
+        public RelayCommand BulkDeleteLeadCommand { get; private set; }
 
         public InventoryViewModel()
         {
             // Initialize service and data collections
             _dataService = new InventoryDataService();
             Leads = new ObservableCollection<InventoryModel>();
+            ProductView = CollectionViewSource.GetDefaultView(Leads);
+            ProductView.Filter = FilterProducts;
 
             // Initialize Commands
             LoadLeadsCommand = new RelayCommand(async _ => await LoadLeadsAsync());
@@ -80,9 +96,36 @@ namespace BahiKitab.ViewModels
             NewLeadCommand = new RelayCommand(_ => CreateNewLead());
             UpdateInfoCommand = new RelayCommand(_ => UpdateInfoLead());
             ImportLeadsCommand = new RelayCommand(async _ => await ImportLeadsCommandAsync());
+            BulkDeleteLeadCommand = new RelayCommand(BulkDeleteLeadCommandAsync);
 
             // Load data immediately upon initialization
             LoadLeadsCommand.Execute(null);
+        }
+
+        private async void BulkDeleteLeadCommandAsync(object obj)
+        {
+            var grid = obj as DataGrid;
+            if (grid?.SelectedItems.Count == 0) return;
+
+            // Confirm with the user
+            var result = MessageBox.Show($"Delete {grid.SelectedItems.Count} items?", "Confirm", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes) return;
+
+            // Convert SelectedItems to a list of IDs or SKUs
+            var selectedList = grid.SelectedItems.Cast<InventoryModel>().ToList();
+            var idsToDelete = selectedList.Select(p => p.Id).ToList(); // Using SKU as identifier
+
+            // 1. Delete from MySQL
+            bool success = await _dataService.BulkDeleteInventoryAsync(idsToDelete);
+
+            if (success)
+            {
+                // 2. Remove from ObservableCollection to update UI instantly
+                foreach (var item in selectedList)
+                {
+                    Leads.Remove(item);
+                }
+            }
         }
 
         private async Task ImportLeadsCommandAsync()
@@ -152,8 +195,37 @@ namespace BahiKitab.ViewModels
         }
 
         private async Task LoadLeadsAsync()
+        {            
+            try
+            {
+                var data = await _dataService.GetAllInventoryAsync();
+
+                // Clear and update the collection on the UI Thread
+                Leads.Clear();
+                foreach (var item in data)
+                {
+                    Leads.Add(item);
+                }
+
+                // Force the View to refresh to reflect the new data
+                ProductView.Refresh();
+            }
+            catch (Exception ex)
+            {
+                // Handle DB connection errors here
+                MessageBox.Show($"Error loading inventory: {ex.Message}");
+            }
+        }
+
+        private bool FilterProducts(object obj)
         {
-            Leads = await _dataService.GetAllInventoryAsync();
+            if (obj is InventoryModel product)
+            {
+                return string.IsNullOrWhiteSpace(SearchText) ||
+                       product.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                       product.ShortCode.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
         }
 
         private void CreateNewLead()
@@ -168,7 +240,7 @@ namespace BahiKitab.ViewModels
             window.Content = view;
             window.Width = 600;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Show();
+            window.ShowDialog();
         }
 
         private void UpdateNewLead()
@@ -182,7 +254,7 @@ namespace BahiKitab.ViewModels
             window.Content = view;
             window.Width = 600;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Show();
+            window.ShowDialog();
         }
 
         private async Task SaveLeadAsync()
@@ -203,15 +275,7 @@ namespace BahiKitab.ViewModels
                 var existingLead = Leads.FirstOrDefault(l => l.Id == CurrentLead.Id);
                 if (existingLead != null)
                 {
-                    existingLead.Name = CurrentLead.Name;
-                    existingLead.ShortCode = CurrentLead.ShortCode;
-                    existingLead.Stock = CurrentLead.Stock;
-                    existingLead.SKU = CurrentLead.SKU;
-                    existingLead.Units = CurrentLead.Units;
-                    existingLead.GST = CurrentLead.GST;
-                    existingLead.SellingPrice = CurrentLead.SellingPrice;
-                    existingLead.PurchasePrice = CurrentLead.PurchasePrice;
-                    existingLead.Updated = CurrentLead.Updated;
+                    existingLead = CurrentLead.Clone();
                 }
                 MessageBox.Show($"Inventory {CurrentLead.Id} updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }

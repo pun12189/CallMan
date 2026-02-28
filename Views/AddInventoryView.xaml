@@ -48,7 +48,7 @@
                     </ComboBox>
 
                     <TextBlock Text="Price (Inc.GST)" Margin="0,5,0,2"/>
-                    <ComboBox x:Name="cbLabel" SelectedItem="{Binding CurrentLead.PurchasePrice, Mode=TwoWay}" Margin="0,0,0,10" SelectedValuePath="Id" DisplayMemberPath="Name"/>
+                    <TextBox x:Name="cbLabel" Text="{Binding CurrentLead.PurchasePrice, Mode=TwoWay}" Margin="0,0,0,10"/>
 
                     <!--<TextBlock Text="Status" Margin="0,5,0,2"/>-->
                     <!-- Hardcoding for simplicity, would bind to a list from Admin Settings in a real app -->
@@ -56,8 +56,10 @@
 
                 </StackPanel>
                 <!-- CRUD Action Buttons -->
-                <Button Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Center" Content="{Binding CurrentLead.Id, Converter={StaticResource IdToButtonTextConverter}}" Command="{Binding CreateUpdateLeadCommand}" Margin="0,10,0,5" Style="{StaticResource KlikButtonStyle}"/>
-
+                <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Center">
+                    <Button Content="{Binding CurrentLead.Id, Converter={StaticResource IdToButtonTextConverter}}" Command="{Binding CreateUpdateLeadCommand}" Margin="0,10,0,5" Style="{StaticResource KlikButtonStyle}"/>
+                    <Button Content="Cancel" Click="Button_Click" Margin="5,10,0,5" Style="{StaticResource KlikButtonStyle}"/>
+                </StackPanel>
             </Grid>
         </Border>
     </ScrollViewer>

@@ -24,21 +24,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,10">
-            <TextBox x:Name="tbSearch" Margin="0,0,5,0" VerticalContentAlignment="Center" Width="250" controls:TextBoxHelper.Watermark="Search" controls:TextBoxHelper.ClearTextButton="True"/>
-            <controls:DropDownButton BorderThickness="1" x:Name="ddFormat" Content="Download Format" Width="150" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="0,0,5,0">
-                <controls:DropDownButton.Items>
-                    <MenuItem x:Name="miInsert" Header="Insert Format">
-                        <MenuItem.Icon>
-                            <icon:PackIconModern Kind="ArrowDownUp"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem x:Name="miUpdate" Header="Update Format">
-                        <MenuItem.Icon>
-                            <icon:BootstrapIcons Kind="Upload"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </controls:DropDownButton.Items>
-            </controls:DropDownButton>
+            <TextBox x:Name="tbSearch" Margin="0,0,5,0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Width="250" Height="35" controls:TextBoxHelper.Watermark="Search" controls:TextBoxHelper.ClearTextButton="True"/>
+            
             <Button x:Name="btnRefresh" Style="{StaticResource KlikButtonStyle}" Content="Refresh" Width="150" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="0,0,5,0" Command="{Binding LoadLeadsCommand}"/>
             <!--<Button x:Name="btnFormat" Content="Download Format" Width="150" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="0,0,5,0">
                         <Button.ContextMenu>
@@ -50,9 +37,9 @@
                     </Button>-->
             <Button Content="Insert Bulk" Command="{Binding ImportLeadsCommand}" Style="{StaticResource KlikButtonStyle}" Width="150" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="0,0,5,0"/>
             <!--<Button x:Name="btnBulkUpdate" Content="Update Bulk" Width="150" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="0,0,5,0"/>-->
-            <Button Content="Export Excel" x:Name="btnExcel" Width="150" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource KlikButtonStyle}" Margin="0,0,5,0"/>
-            <Button Content="Bulk Delete" x:Name="btnBulk" Width="150" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource KlikButtonStyle}"/>
-            <Button Command="{Binding NewLeadCommand}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource KlikButtonStyle}">
+            <Button Content="Export Excel" x:Name="btnExcel" Width="150" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource KlikButtonStyle}" Margin="0,0,5,0" Visibility="Collapsed"/>
+            <Button Content="Bulk Delete" Command="{Binding BulkDeleteLeadCommand}" CommandParameter="{Binding ElementName=dataGrid1}" x:Name="btnBulk" Width="150" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource KlikButtonStyle}"/>
+            <Button Command="{Binding NewLeadCommand}" MinWidth="60" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource KlikButtonStyle}">
                 <Button.Content>
                     <icon:FontAwesome6 Kind="PlusSolid"/>
                 </Button.Content>
@@ -74,7 +61,7 @@
             </StackPanel>
         </Expander>
         <TextBlock Grid.Row="2" Text="**Note: Press CTRL Key for Multiple Selection, For edit, double click on any cell, For delete, select any row and press delete" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="10" FontStyle="Italic"/>
-        <DataGrid FontFamily="Arial" Foreground="Black" SelectionMode="Extended" SelectionUnit="FullRow" ItemsSource="{Binding Leads}" SelectedItem="{Binding SelectedLead, Mode=TwoWay}" AutoGenerateColumns="False" Grid.Row="3" CanUserAddRows="False" CanUserDeleteRows="True" HorizontalAlignment="Stretch" Margin="10" Name="dataGrid1" VerticalAlignment="Stretch">
+        <DataGrid FontFamily="Arial" Foreground="Black" SelectionMode="Extended" SelectionUnit="FullRow" ItemsSource="{Binding ProductView}" SelectedItem="{Binding SelectedLead, Mode=TwoWay}" AutoGenerateColumns="False" Grid.Row="3" CanUserAddRows="False" CanUserDeleteRows="True" HorizontalAlignment="Stretch" Margin="10" Name="dataGrid1" VerticalAlignment="Stretch">
             <!--<DataGrid.ColumnHeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="Background" Value="Blue"/>
@@ -98,7 +85,7 @@
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.Header>
-                        <CheckBox x:Name="cbAll" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <CheckBox x:Name="cbAll" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="cbAll_Checked" Unchecked="cbAll_Unchecked"/>
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -109,11 +96,11 @@
                 <DataGridTemplateColumn Header="Info" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
                                 <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontWeight="Bold"/>
-                                <TextBlock Text="{Binding ShortCode, UpdateSourceTrigger=PropertyChanged}" FontSize="12" FontWeight="DemiBold"/>
-                                <TextBlock Text="{Binding Id, UpdateSourceTrigger=PropertyChanged, StringFormat=ID: {0}}" Margin="0,10"/>
-                                <TextBlock Text="{Binding Created, UpdateSourceTrigger=PropertyChanged}" Margin="0,10"/>
+                                <TextBlock Text="{Binding ShortCode, UpdateSourceTrigger=PropertyChanged, StringFormat=Code: {0}}" FontSize="12" FontWeight="DemiBold"/>
+                                <TextBlock Text="{Binding Id, UpdateSourceTrigger=PropertyChanged, StringFormat=ID: {0}}" Margin="0,5"/>
+                                <TextBlock Text="{Binding Created, UpdateSourceTrigger=PropertyChanged}" Margin="0,5"/>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -156,14 +143,28 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>-->
-                <DataGridTextColumn Header="InStock" Binding="{Binding Stock, UpdateSourceTrigger=LostFocus}" Width="*"/>
-                <DataGridTextColumn Header="Units" Binding="{Binding Units, UpdateSourceTrigger=PropertyChanged}" Width="*"/>                
+                <DataGridTemplateColumn Header="In Stock" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Stock, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Units" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Units, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--<DataGridTextColumn Header="InStock" Binding="{Binding Stock, UpdateSourceTrigger=LostFocus}" Width="*"/>-->
+                <!--<DataGridTextColumn Header="Units" Binding="{Binding Units, UpdateSourceTrigger=PropertyChanged}" Width="*"/>-->                
 
                 <!--<DataGridTextColumn Header="Product Names" Binding="{Binding ProductNamesCount, UpdateSourceTrigger=PropertyChanged}" />-->
                 <DataGridTemplateColumn Header="Products" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="{Binding TotalProductCount, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="Blue"/>
+                            <Button Content="{Binding TotalProductCount, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="Blue" Height="35" Width="60" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -179,14 +180,20 @@
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>-->
                 <!--<DataGridTextColumn Header="Planned Orders" Binding="{Binding TotalBatchOrders, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />-->
-                <DataGridTextColumn Header="Qty Rqt" Binding="{Binding TotalRequired, UpdateSourceTrigger=PropertyChanged}" Width="*" IsReadOnly="True">
-                    <DataGridTextColumn.CellStyle>
+                <DataGridTemplateColumn Header="Qty Rqt" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding TotalRequired, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellStyle>
                         <!--green-->
                         <Style TargetType="DataGridCell">
                             <Setter Property="Background" Value="{StaticResource ProsClr}"/>
                         </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
+                    </DataGridTemplateColumn.CellStyle>
+                </DataGridTemplateColumn>
+                
 
                 <!--<DataGridTextColumn Header="Created Oders" Binding="{Binding TotalCreated, UpdateSourceTrigger=PropertyChanged}" />-->
                 <!--gray-->
@@ -209,24 +216,37 @@
                         </Style>
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>-->
-
-                <DataGridTextColumn Header="Remaining" Binding="{Binding RemainingStock, UpdateSourceTrigger=PropertyChanged}" Width="*" IsReadOnly="True">
-                    <DataGridTextColumn.CellStyle>
+                <DataGridTemplateColumn Header="Remaining" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding RemainingStock, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellStyle>
+                        <!--green-->
                         <Style TargetType="DataGridCell">
                             <Setter Property="Background" Value="{Binding RemainingStock, Converter={StaticResource ValueToForegroundColor}}"/>
                         </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-
-                <DataGridTextColumn Header="SKU" Binding="{Binding SKU, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                    </DataGridTemplateColumn.CellStyle>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="SKU" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding SKU, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Actions" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Button Background="Transparent" Margin="0,0,2,0" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                <Button BorderThickness="0" Background="Transparent" Margin="0,0,2,0" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                     <icon:FontAwesome Kind="FilePdfSolid"/>
                                 </Button>
-                                <Button Background="Transparent" HorizontalAlignment="Center" Command="{Binding DataContext.DeleteLeadCommand, RelativeSource={RelativeSource AncestorType=local:InventoryView}}" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                <Button BorderThickness="0" Background="Transparent" HorizontalAlignment="Center" Command="{Binding DataContext.UpdateLeadCommand, RelativeSource={RelativeSource AncestorType=local:InventoryView}}" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                    <icon:FontAwesome Kind="PencilSolid"/>
+                                </Button>
+                                <Button BorderThickness="0" Background="Transparent" HorizontalAlignment="Center" Command="{Binding DataContext.DeleteLeadCommand, RelativeSource={RelativeSource AncestorType=local:InventoryView}}" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                     <icon:FontAwesome Kind="TrashSolid"/>
                                 </Button>
                             </StackPanel>

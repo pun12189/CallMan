@@ -22,6 +22,7 @@ namespace BahiKitab.ViewModels
         private readonly ImagesDataService imagesDataService;
         private readonly LeadsDataService leadsDataService;
         private readonly TaskDataService tasksDataService;
+        private readonly CompanyProfileDataService companyProfileDataService;
 
         // Data Properties
         private ObservableCollection<LeadOrderModel> _leads;
@@ -90,6 +91,7 @@ namespace BahiKitab.ViewModels
             imagesDataService = new ImagesDataService();
             leadsDataService = new LeadsDataService();
             tasksDataService = new TaskDataService();
+            companyProfileDataService = new CompanyProfileDataService();
             Leads = new ObservableCollection<LeadOrderModel>();
 
             // Initialize Commands
@@ -135,14 +137,15 @@ namespace BahiKitab.ViewModels
             }
         }
 
-        private void PdfCommandExecute(object obj)
+        private async void PdfCommandExecute(object obj)
         {
             var pdf = new PdfForm();
             var model = obj as LeadOrderModel;
+            var profile = await companyProfileDataService.GetProfileAsync(1);
 
             if (model != null)
             {
-                pdf.CreateFreePdf(model);
+                pdf.CreateFreePdf(model, profile);
             }
         }
 

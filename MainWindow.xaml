@@ -76,6 +76,17 @@
 
                 <MenuItem Header="Batch Orders" Icon="{StaticResource batchicon}" Command="{Binding NavigateCommand}"/>
 
+                <MenuItem Header="👤 Profile" FontSize="14" HorizontalAlignment="Right">
+                    <MenuItem Header="View Profile" Background="#20b2aa" Command="{Binding ViewProfileCommand}"/>
+                    <MenuItem Header="Settings" Background="#20b2aa" Command="{Binding SettingsCommand}"/>
+                    <Separator />
+                    <MenuItem Header="Logout" 
+                      Command="{Binding LogoutCommand}" 
+                              Background="#20b2aa"
+                      Foreground="Red" 
+                      FontWeight="Bold"/>
+                </MenuItem>
+
             </Menu>
         </Grid>
 

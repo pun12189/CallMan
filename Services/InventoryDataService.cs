@@ -2,6 +2,7 @@
 using BahiKitab.Models;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -172,7 +173,7 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@gst", MySqlDbType.Double).Value = lead.GST;
                     command.Parameters.Add("@saleprice", MySqlDbType.Double).Value = lead.SellingPrice;
                     command.Parameters.Add("@purchaseprice", MySqlDbType.Double).Value = lead.PurchasePrice;
-                    command.Parameters.Add("@updated", MySqlDbType.DateTime).Value = lead.Updated;
+                    command.Parameters.Add("@updated", MySqlDbType.DateTime).Value = DateTime.Now;
                     await command.ExecuteScalarAsync();
                 }
             }
@@ -207,6 +208,40 @@ namespace BahiKitab.Services
             {
                 MessageBox.Show(e.Message);
             }
+        }
+
+        public async Task<bool> BulkDeleteInventoryAsync(List<int> ids)
+        {
+            await Task.Delay(100);
+            // REAL IMPLEMENTATION: Execute a DELETE query using lead.Id.
+
+            // Mock:
+            try
+            {
+                var parameterNames = ids.Select((s, i) => $"@p{i}").ToArray();
+                string query = $"DELETE FROM inventory WHERE id IN ({string.Join(",", parameterNames)})";
+
+                using (var connection = GetConnection())
+                using (var command = new MySqlCommand())
+                {
+                    connection.Open();
+                    command.Connection = connection;
+                    command.CommandText = query;
+                    for (int i = 0; i < ids.Count; i++)
+                    {
+                        command.Parameters.AddWithValue($"@p{i}", ids[i]);
+                    }
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    return rowsAffected > 0;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
+            return false;
         }
 
         public async Task BulkInsertMySQL(DataTable table, string tableName)

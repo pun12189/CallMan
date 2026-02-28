@@ -92,14 +92,14 @@ namespace BahiKitab.ViewModels
 
         private void WhatsappCommandExecute(object obj)
         {
-            var model = obj as Lead;
+            var model = obj as TaskModel;
 
             if (model != null)
             {
-                if (!string.IsNullOrEmpty(model.Phone))
+                if (!string.IsNullOrEmpty(model.Staff[0].Phone))
                 {
                     // Phone number se extra characters (+, spaces, dashes) hatane ke liye
-                    string cleanNumber = new string(model.Phone.Where(char.IsDigit).ToArray());
+                    string cleanNumber = new string(model.Staff[0].Phone.Where(char.IsDigit).ToArray());
 
                     // Agar number 10 digit ka hai, toh country code (e.g., 91) add karna zaroori hai
                     if (cleanNumber.Length == 10)
@@ -107,7 +107,7 @@ namespace BahiKitab.ViewModels
                         cleanNumber = "91" + cleanNumber;
                     }
 
-                    string message = $"Hello {model.Name} , \n\n" +
+                    string message = $"Hello {model.Staff[0].FullName} , \n\n" +
                          $"Thanks for visiting our store \n" +
                          $"Please feel free to contact us on this whatsapp \n" +
                          $"_automated msg, sent from SofricERP_";

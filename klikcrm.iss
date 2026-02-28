@@ -12,6 +12,9 @@
 ;#ifndef SourceFileDir
 ;#define public SourceFileDir "C:\Users\Kishant\Source\Repos\KlikCRM\bin\Release\net6.0-windows\"
 ;#endif
+
+#include "CodeDependencies.iss"
+
 [setup]
 ;name of your application
 ChangesAssociations=yes 
@@ -117,14 +120,14 @@ Name: "en"; MessagesFile: "compiler:Default.isl"
 
 
    [Dirs]
- ;Name: "{app}\de"
+ Name: "{app}\de"
  Name: "{commonappdata}\KlikCRM"; Permissions: everyone-modify
- ;Name: "{app}\TxtFile"
- ;Name: "{app}\runtimes"
+ Name: "{app}\TxtFile"
+ Name: "{app}\runtimes"
 [Files]
-   ;Source: {#SourceFileDir}\de\*;  DestDir: "{app}\de"; Flags:ignoreversion recursesubdirs
-   ;Source: {#SourceFileDir}\runtimes\*;  DestDir: "{app}\runtimes"; Flags:ignoreversion recursesubdirs
-   ;Source: {#SourceFileDir}\TxtFile\*;  DestDir: "{app}\TxtFile"; Flags:ignoreversion recursesubdirs
+   Source: {#SourceFileDir}\de\*;  DestDir: "{app}\de"; Flags:ignoreversion recursesubdirs
+   Source: {#SourceFileDir}\runtimes\*;  DestDir: "{app}\runtimes"; Flags:ignoreversion recursesubdirs
+   Source: {#SourceFileDir}\TxtFile\*;  DestDir: "{app}\TxtFile"; Flags:ignoreversion recursesubdirs
    Source: {#SourceFileDir}\BahiKitab.exe;  DestDir: "{app}"; Flags:ignoreversion recursesubdirs
    Source: {#SourceFileDir}\*.dll;  DestDir: "{app}"; Flags:ignoreversion
    Source: {#SourceFileDir}\*.pdb;  DestDir: "{app}"; Flags:ignoreversion
@@ -224,7 +227,7 @@ Name: "en"; MessagesFile: "compiler:Default.isl"
 ;Source: {#SourceFileDir}SetupFiles\windowsdesktop-runtime-6.0.36-win-x64.exe; DestDir: {tmp}; Flags: deleteafterinstall;
 ;Source: {#SourceFileDir}SetupFiles\windowsdesktop-runtime-6.0.36-win-x86.exe; DestDir: {tmp}; Flags: deleteafterinstall;
 
-;Source: {#SourceFileDir}SetupFiles\NDP40-KB2468871-v2-x64.exe; DestDir: {tmp};  Check:  IsWin64
+;Source: {#SourceFileDir}SetupFiles\net8runtime.exe; DestDir: {tmp}; Flags: deleteafterinstall
 ;Source: {#SourceFileDir}SetupFiles\NDP40-KB2468871-v2-x86.exe; DestDir: {tmp}; Check: Not IsWin64
 ;[Types]
 ;Name: "full"; Description: "Full installation"; Flags: iscustom
@@ -405,9 +408,13 @@ settingpermission = Setting Program Access Permissions
 Name: {group}\KlikCRM; Filename: {app}\BahiKitab.exe; WorkingDir: {app}; IconFilename: "{#SourceFileDir}SetupFiles\BahiKitab-Icon.ico";
 Name: "{group}\Help"; Filename: "http://sofric.com/"; 
 Name: {group}\Uninstall; Filename: {uninstallexe};  WorkingDir: {app}; IconFilename: "{#SourceFileDir}SetupFiles\BahiKitab-Icon.ico";
-Name: {commondesktop}\KlikCRM;  Filename: {app}\BahiKitab.exe; IconFilename: "{#SourceFileDir}SetupFiles\BahiKitab-Icon.ico"; WorkingDir: {app}; 
+Name: {commondesktop}\KlikCRM;  Filename: {app}\BahiKitab.exe; IconFilename: "{#SourceFileDir}SetupFiles\BahiKitab-Icon.ico"; Tasks: desktopicon
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"
 
 [Run]
+;Filename: "{tmp}\net8runtime.exe"; Parameters: "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART"; Flags: runhidden waituntilterminated
 Filename: "{app}\BahiKitab.exe"; Description: "{cm:launchtemplatetoaster}"; Flags: nowait skipifsilent postinstall ; 
 Filename: explorer.exe; Parameters: "http://sofric.com/"; Description: "{cm:viewhelpfile}"; Flags: Shellexec skipifsilent  postinstall unchecked; 
 
@@ -853,27 +860,27 @@ begin
       result := -1
     end
 end;
-function InitializeSetup(): Boolean;
-var
-  ErrCode: integer;
-  UninsResult : integer;
-begin
+//function InitializeSetup(): Boolean;
+//var
+  //ErrCode: integer;
+  //UninsResult : integer;
+//begin
 
-       UninsResult := UnInstallOldVersion();
+  //     UninsResult := UnInstallOldVersion();
        
-    if NeedsFramework() then 
-    begin
-        if MsgBox('KlikCRM requires Microsoft .NET 6 Desktop Runtime.'#13#13
-            'Please download this file to run KlikCRM. Click Yes to download it.',  mbConfirmation, MB_YESNO) = IDYES
-            then 
-    ShellExec('open', 'https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.36-windows-x64-installer',
-      '', '', SW_SHOW, ewNoWait, ErrCode);
+    //if NeedsFramework() then 
+    //begin
+      //  if MsgBox('KlikCRM requires Microsoft .NET 6 Desktop Runtime.'#13#13
+        //    'Please download this file to run KlikCRM. Click Yes to download it.',  mbConfirmation, MB_YESNO) = IDYES
+          //  then 
+    //ShellExec('open', 'https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.36-windows-x64-installer',
+      //'', '', SW_SHOW, ewNoWait, ErrCode);
      
-        result := false;   
-        end 
-     else
-        result := true;
-end;
+        //result := false;   
+        //end 
+     //else
+       // result := true;
+//end;
 // THIS FUNCTION IS FOR CHECK THAT VC++ REDIST 2015 OR LATER IS INSTALLED OF NOT
 function VCinstalled: Boolean;
  // Function for Inno Setup Compiler
@@ -956,6 +963,14 @@ end;
   //end;
 end;
 //-----------------------------------------------------------------------------------
+function InitializeSetup: Boolean;
+begin
+  
+  Dependency_AddDotNet80Desktop;   
+
+  Result := True;
+end;
+
 procedure InitializeWizard();
 var
 Version: TWindowsVersion;

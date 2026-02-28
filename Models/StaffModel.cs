@@ -26,6 +26,7 @@ namespace BahiKitab.Models
         private string role;
         private StaffModel teamLead;
         private bool isActive;
+        private bool isSelected;
 
         public int Id { get => id; set => Set(ref id, value, nameof(Id)); }
         public string FullName { get => fullName; set => Set(ref fullName, value, nameof(FullName)); }
@@ -44,6 +45,7 @@ namespace BahiKitab.Models
         public string Role { get => role; set => Set(ref role, value, nameof(Role)); }
         public StaffModel TeamLead { get => teamLead; set => Set(ref teamLead, value, nameof(TeamLead)); }
         public bool IsActive { get => isActive; set => Set(ref isActive, value, nameof(IsActive)); }
+        public bool IsSelected { get => isSelected; set => Set(ref isSelected, value, nameof(IsSelected)); }
 
         public StaffModel Clone() { return (StaffModel)this.MemberwiseClone(); }
 

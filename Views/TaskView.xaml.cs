@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BahiKitab.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,21 @@ namespace BahiKitab.Views
     /// </summary>
     public partial class TaskView : UserControl
     {
+        private TaskViewModel dc;
+
         public TaskView()
         {
             InitializeComponent();
+            this.Loaded += TaskView_Loaded;
+        }
+
+        private void TaskView_Loaded(object sender, RoutedEventArgs e)
+        {
+            var dc1 = this.DataContext as TaskViewModel;
+            if (dc1 != null) 
+            {
+                dc = dc1;
+            }
         }
 
         private void cbAll_Checked(object sender, RoutedEventArgs e)
@@ -45,6 +58,27 @@ namespace BahiKitab.Views
                 if (row != null)
                 {
                     row.IsSelected = false;
+                }
+            }
+        }
+
+        private void dataGrid1_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            dc.SelectedLead.Departments.Clear();
+            dc.SelectedLead.Staff.Clear();
+            foreach (var item in dc.AllDepartments)
+            {
+                if (item.IsSelected)
+                {
+                    dc.SelectedLead.Departments.Add(item);
+                }
+            }
+
+            foreach (var item in dc.AllStaff)
+            {
+                if (item.IsSelected)
+                {
+                    dc.SelectedLead.Staff.Add(item);
                 }
             }
         }

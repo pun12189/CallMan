@@ -18,9 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
     <PackageReference Include="gong-wpf-dragdrop" Version="4.0.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.11" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="6.2.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
     <PackageReference Include="MySql.Data" Version="9.5.0" />
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
@@ -33,10 +35,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\ApplicationStyles.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="SetupFiles\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,6 +57,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SetupFiles\eula.rtf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SetupFiles\net8runtime.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TxtFile\Sample_Leads.csv">

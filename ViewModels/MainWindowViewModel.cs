@@ -1,13 +1,14 @@
 ﻿using BahiKitab.Core;
+using BahiKitab.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using System.Windows;
 using System.Windows.Controls;
-using BahiKitab.Views;
+using System.Windows.Input;
 
 namespace BahiKitab.ViewModels
 {
@@ -27,13 +28,37 @@ namespace BahiKitab.ViewModels
         }
 
         public ICommand NavigateCommand { get; set; }
+        public ICommand LogoutCommand { get; set; }
 
         public MainWindowViewModel()
         {
             NavigateCommand = new RelayCommand(Navigate);
+            LogoutCommand = new RelayCommand(LogoutCommandExecute);
 
             // Set initial view
             CurrentView = new DashboardViewModel();
+        }
+
+        private void LogoutCommandExecute(object obj)
+        {
+            var result = MessageBox.Show("Are you sure you want to logout?", "Logout",
+                                MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                // 1. Get a fresh LoginWindow from DI
+                var loginWindow = App.ServiceProvider.GetRequiredService<LoginWindow>();
+                loginWindow.Show();
+
+                Application.Current.MainWindow = loginWindow;
+
+                // 2. Find the current MainWindow and trigger the "Safe" logout
+                var currentWin = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+                if (currentWin != null)
+                {
+                    currentWin.Logout(); // This sets the flag and closes the window
+                }
+            }
         }
 
         private void Navigate(object parameter)

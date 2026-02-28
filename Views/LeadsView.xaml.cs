@@ -33,7 +33,7 @@ namespace BahiKitab.Views
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            File.Copy(System.AppDomain.CurrentDomain.BaseDirectory + @"TxtFile\Sample_Leads.csv", System.IO.Path.GetTempPath() + "\\Sample.csv", true);
+            File.Copy(AppContext.BaseDirectory + @"TxtFile\Sample_Leads.csv", System.IO.Path.GetTempPath() + "\\Sample.csv", true);
             Process excel = new Process();
             excel.StartInfo.UseShellExecute = true;
             excel.StartInfo.FileName = System.IO.Path.GetTempPath() + "\\Sample.csv";

@@ -59,12 +59,12 @@ namespace BahiKitab.Core
             imagesDataService = new ImagesDataService();
         }
 
-        public async void CreateFreePdf(LeadOrderModel data)
+        public async void CreateFreePdf(LeadOrderModel data, CompanyProfile profile)
         {
             Document document = new Document();
             document.Info.Title = "Quotation Order";
             document.Info.Subject = "Details of Customer's Order";
-            document.Info.Author = "Lucky Furniture | Zirakpur";            
+            document.Info.Author = profile.CompanyName;            
 
             // 1. Styles Definition
             Style style = document.Styles["Normal"];
@@ -91,19 +91,14 @@ namespace BahiKitab.Core
             logotable.AddColumn("20cm");
             Row lRow = logotable.AddRow();
 
-            var logoPath = @"C:\Users\Puneet Aggrwal\Pictures\logo.png";
-
-            if (System.IO.File.Exists(logoPath))
-            {
-                var logo = lRow.Cells[0].AddImage(logoPath);
-                logo.Width = "5cm";
-            }
+            var logo = lRow.Cells[0].AddImage(Helper.Helper.SaveBitmapSourceToTempFile(profile.LogoPath));
+            logo.Width = "5cm";
 
             var logoinfo = lRow.Cells[1];
             logoinfo.Format.Alignment = ParagraphAlignment.Right;
             logoinfo.Format.Font.Bold = true;
             logoinfo.AddParagraph("ID: " + data.OrderId); // 
-            logoinfo.AddParagraph("Best Furniture Store in Zirakpur");
+            //logoinfo.AddParagraph("Best Furniture Store in Zirakpur");
 
             // Seller Info Table
             Table sellerTable = section.AddTable();
@@ -113,10 +108,10 @@ namespace BahiKitab.Core
 
             var sellerInfo = sRow.Cells[0];
             sellerInfo.AddParagraph();
-            sellerInfo.AddParagraph("LUCKY FURNITURE").Format.Font.Bold = true; // [cite: 46, 47]
-            sellerInfo.AddParagraph("BASEMENT, GROUND, FIRST AND SECOND, \nSCO 2 & 3, Patiala Road, Yes Bank,\nUtrathiya, Zirakpur, SAS Nagar,\nPunjab, 140603"); // [cite: 48]
-            sellerInfo.AddParagraph("Mobile: 9815760634 | Email: design.luckyfurniture@gmail.com"); // [cite: 49, 51]
-            sellerInfo.AddParagraph("GSTIN: 03AAZPG4515F1ZS"); // [cite: 50]
+            sellerInfo.AddParagraph(profile.CompanyName).Format.Font.Bold = true; // [cite: 46, 47]
+            sellerInfo.AddParagraph(profile.Address); // [cite: 48]
+            sellerInfo.AddParagraph("Contact:" + profile.Contact + "| Email:" + profile.Email); // [cite: 49, 51]
+            sellerInfo.AddParagraph("GSTIN:" + profile.GstNumber); // [cite: 50]
             sellerInfo.AddParagraph();
 
             var invMeta = sRow.Cells[1];
@@ -140,7 +135,7 @@ namespace BahiKitab.Core
             addrRow.Cells[1].AddParagraph("SHIP TO").Format.Font.Bold = true; // [cite: 56]
 
             Row addrData = addressTable.AddRow();
-            string client = "SBP\nSingla Builders & Promoters\nLalru Site"; // [cite: 54, 55]
+            string client = data.Customer.Name + "," + data.Customer.FirmName + data.Customer.City + "\n" + data.Customer.State + "\n" + data.Customer.Phone; // [cite: 54, 55] 
             addrData.Cells[0].AddParagraph(client);
             addrData.Cells[1].AddParagraph(client); // [cite: 57, 60]
 
@@ -168,41 +163,44 @@ namespace BahiKitab.Core
             var trate = 0.0;
             var tgst = 0.0;
             var count = 0;
-            foreach(var item in data.OrderedProducts)
+            if (data.OrderedProducts != null)
             {
-                Row r1 = itemsTable.AddRow();
-                r1.Cells[0].AddParagraph((++count).ToString()); // [cite: 61]
-                r1.Cells[1].AddParagraph(item.Name);
-
-                if (item.ImageIds.Count > 0)
+                foreach (var item in data.OrderedProducts)
                 {
-                    var image = await imagesDataService.GetImage(item.ImageIds[0]);
-                    var l = r1.Cells[2].AddImage(Helper.Helper.SaveBitmapSourceToTempFile(image.ImageSource));
-                    l.Width = "5cm";
-                    l.LockAspectRatio = true;
-                    l.Left = ShapePosition.Center;
+                    Row r1 = itemsTable.AddRow();
+                    r1.Cells[0].AddParagraph((++count).ToString()); // [cite: 61]
+                    r1.Cells[1].AddParagraph(item.Name);
+
+                    if (item.ImageIds.Count > 0)
+                    {
+                        var image = await imagesDataService.GetImage(item.ImageIds[0]);
+                        var l = r1.Cells[2].AddImage(Helper.Helper.SaveBitmapSourceToTempFile(image.ImageSource));
+                        l.Width = "5cm";
+                        l.LockAspectRatio = true;
+                        l.Left = ShapePosition.Center;
+                    }
+
+                    if (item.Name == "Carriage")
+                    {
+                        r1.Cells[3].AddParagraph();
+                    }
+                    else
+                    {
+                        r1.Cells[3].AddParagraph(item.ProductCost.Quantity + "pcs");
+                    }
+
+                    //r1.Cells[1].AddParagraph("94036000");
+
+
+                    r1.Cells[4].AddParagraph(item.ProductCost.Rate + "₹");
+                    r1.Cells[5].AddParagraph(item.ProductCost.GST + "%");
+                    r1.Cells[6].AddParagraph(item.ProductCost.TotalPrice + "₹");
+
+
+                    trate += (item.ProductCost.Rate * item.ProductCost.Quantity);
+                    tgst += (item.ProductCost.TotalPrice - (item.ProductCost.Rate * item.ProductCost.Quantity));
                 }
-
-                if (item.Name == "Carriage")
-                {
-                    r1.Cells[3].AddParagraph();
-                }
-                else
-                {                    
-                    r1.Cells[3].AddParagraph(item.ProductCost.Quantity + "pcs");
-                }
-
-                //r1.Cells[1].AddParagraph("94036000");
-
-                
-                r1.Cells[4].AddParagraph(item.ProductCost.Rate + "₹");
-                r1.Cells[5].AddParagraph(item.ProductCost.GST + "%");
-                r1.Cells[6].AddParagraph(item.ProductCost.TotalPrice + "₹");
-                                
-
-                trate += (item.ProductCost.Rate * item.ProductCost.Quantity);
-                tgst += (item.ProductCost.TotalPrice - (item.ProductCost.Rate * item.ProductCost.Quantity));
-            }            
+            }                        
 
             // Repeat for other items as per source 61...
 
@@ -216,9 +214,10 @@ namespace BahiKitab.Core
             var bank = fRow.Cells[0];
             bank.AddParagraph();
             bank.AddParagraph("BANK DETAILS").Format.Font.Bold = true;
-            bank.AddParagraph("Name: Lucky Furniture");
-            bank.AddParagraph("IFSC: HDFC0000154");
-            bank.AddParagraph("A/c No: 50200044148165");
+            bank.AddParagraph("Name:" + profile.CompanyName);
+            bank.AddParagraph("Bank:" + profile.BankName);
+            bank.AddParagraph("IFSC:" + profile.IfscCode);
+            bank.AddParagraph("A/c No:" + profile.AccountNumber);
 
             //[cite_start]// Totals Table [cite: 63]
             var totals = fRow.Cells[1];
@@ -245,7 +244,7 @@ namespace BahiKitab.Core
 
             section.AddParagraph();
             section.AddParagraph("TERMS AND CONDITIONS").Format.Font.Bold = true; // [cite: 68]
-            section.AddParagraph("1. Goods once sold will not be taken back.\n2. Disputes subject to Zirakpur jurisdiction.\n"); // [cite: 69, 70]
+            section.AddParagraph(profile.TermsAndConditions); // [cite: 69, 70]
 
             // Signatures
             section.AddParagraph("Authorised Signatory").Format.Alignment = ParagraphAlignment.Right; // [cite: 74, 76]
@@ -255,7 +254,7 @@ namespace BahiKitab.Core
             // Render PDF
             PdfDocumentRenderer renderer = new PdfDocumentRenderer() { Document = document };
             renderer.RenderDocument();
-            var filename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/" + "LKY" + Math.Abs(DateTime.Now.GetHashCode()) + ".pdf";
+            var filename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/" + profile.Initials + Math.Abs(DateTime.Now.GetHashCode()) + ".pdf";
             renderer.PdfDocument.Save(filename);
             Process.Start(new ProcessStartInfo(filename) { UseShellExecute = true });
         }

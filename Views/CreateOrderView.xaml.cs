@@ -54,6 +54,10 @@ namespace BahiKitab.Views
             }
 
             this.currentOrder = orderViewModel.CurrentLead;
+            if (currentOrder.OrderedProducts != null)
+            {
+                this.ProductCollection = currentOrder.OrderedProducts;
+            }
         }
 
         private async void btnUpload_Click(object sender, RoutedEventArgs e)
@@ -116,7 +120,11 @@ namespace BahiKitab.Views
                 currentOrder.OrderedProducts = new ObservableCollection<ProductModel>();
             }
 
-            currentOrder.OrderedProducts.Add(product.Clone());
+            if (!currentOrder.OrderedProducts.Contains(product))
+            {
+                currentOrder.OrderedProducts.Add(product.Clone());
+            }
+            
             currentOrder.Customer = (Lead)this.cbCust.SelectedItem;
 
             this.product = new ProductModel();
