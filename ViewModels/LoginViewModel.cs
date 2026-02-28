@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Navigation;
 
 namespace BahiKitab.ViewModels
 {
@@ -17,6 +18,13 @@ namespace BahiKitab.ViewModels
         private readonly IAuthenticationService _authService;
         private string _username;
         private string _errorMessage;
+        private bool _isBusy;
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => Set(ref _isBusy, value, nameof(IsBusy));
+        }
 
         public string Username
         {
@@ -43,29 +51,46 @@ namespace BahiKitab.ViewModels
             ExitCommand = new RelayCommand(_ => Application.Current.Shutdown());
         }
 
-        private void ExecuteLogin(object parameter)
+        private async void ExecuteLogin(object parameter)
         {
-            var passwordContainer = parameter as IHavePassword;
-            string password = passwordContainer?.Password;
+            if (IsBusy) return; // Prevent double-clicking
 
-            if (_authService.Authenticate(Username, password))
+            IsBusy = true; // Show Spinner, Disable Button
+
+            try
             {
-                var mainWindow = App.ServiceProvider.GetRequiredService<MainWindow>();
-                mainWindow.Show();
+                string? password = (parameter as IHavePassword)?.Password;
 
-                // 2. Set the new window as the actual MainWindow of the app
-                Application.Current.MainWindow = mainWindow;
+                // This runs on a background thread; UI stays alive!
+                bool isAuthenticated = await _authService.AuthenticateAsync(Username, password);
 
-                // 3. Now it is safe to close the login window
-                CloseCurrentWindow();
+                if (isAuthenticated)
+                {
+                    var mainWindow = App.ServiceProvider.GetRequiredService<MainWindow>();
+                    mainWindow.Show();
 
-                // 4. (Optional) Set mode back to default if you want app to close when MainWindow closes
-                Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                    // 2. Set the new window as the actual MainWindow of the app
+                    Application.Current.MainWindow = mainWindow;
+
+                    // 3. Now it is safe to close the login window
+                    CloseCurrentWindow();
+
+                    // 4. (Optional) Set mode back to default if you want app to close when MainWindow closes
+                    Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                }
+                else
+                {
+                    ErrorMessage = "Invalid credentials.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ErrorMessage = "Invalid username or password.";
+                ErrorMessage = "Connection failed: " + ex.Message;
             }
+            finally
+            {
+                IsBusy = false; // Hide Spinner, Enable Button
+            }           
         }
 
         private void ExecuteForgot(object parameter)

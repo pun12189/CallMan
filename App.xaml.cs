@@ -3,6 +3,7 @@ using BahiKitab.Services;
 using BahiKitab.Services.Interface;
 using BahiKitab.ViewModels;
 using BahiKitab.Views;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
@@ -26,9 +27,28 @@ namespace BahiKitab
 
         private void ConfigureServices(IServiceCollection services)
         {
+#if DEBUG
+
+            //_connectionString = "DataSource=bahikitab-aws.c3s6wewcwox1.us-east-1.rds.amazonaws.com;Port=3306;Uid=admin;Pwd=Il6oOvguA2SB5IEQxWCJ;database=bahikitab";
+            string connectionString = "Server=82.29.166.165;Port=3306;Uid=root;Pwd=sofricdev;database=bahikitabdev";
+#endif
+#if RELEASE
+
+            //_connectionString = "Server=192.168.1.90;Uid=cosdb;Pwd=Cosmetify@123;database=cosmetify";
+            string connectionString = "Server=82.29.166.165;Port=3307;Uid=root;Pwd=sofricprod;database=bahikitabprod";
+#endif
+#if TESTING
+
+            //_connectionString = "DataSource=bahikitab-aws.c3s6wewcwox1.us-east-1.rds.amazonaws.com;Port=3306;Uid=admin;Pwd=Il6oOvguA2SB5IEQxWCJ;database=bahikitab";
+            string connectionString = "Server=82.29.166.165;Port=3306;Uid=root;Pwd=sofricdev;database=bahikitabdev";
+#endif
+
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));            
+
             // Services
             services.AddSingleton<IPasswordService, BCryptPasswordService>();
-            services.AddSingleton<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             // ViewModels
             services.AddTransient<LoginViewModel>();

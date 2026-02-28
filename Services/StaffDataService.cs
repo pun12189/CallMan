@@ -134,14 +134,14 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "insert into staff(name, email, phone, address, role, uname, password, department, team_lead, status, profileImage) values(@name, @email, @phone, @address, @role, @uname, @password, @department, @team_lead, @status, @profileImage)";
+                    command.CommandText = "insert into staff(fullname, email, phone, address, role, username, password, department, team_lead, status, profileImage) values(@name, @email, @phone, @address, @role, @uname, @password, @department, @team_lead, @status, @profileImage)";
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.FullName;
                     command.Parameters.Add("@email", MySqlDbType.VarChar).Value = lead.Email;
                     command.Parameters.Add("@phone", MySqlDbType.VarChar).Value = lead.Phone;
                     command.Parameters.Add("@address", MySqlDbType.VarChar).Value = lead.Address;
                     command.Parameters.Add("@role", MySqlDbType.VarChar).Value = lead.Role;
                     command.Parameters.Add("@uname", MySqlDbType.VarChar).Value = lead.Username;
-                    command.Parameters.Add("@password", MySqlDbType.VarString).Value = lead.Password;
+                    command.Parameters.Add("@password", MySqlDbType.VarString).Value = BCrypt.Net.BCrypt.HashPassword(lead.Password);
                     command.Parameters.Add("@department", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.Department);
                     command.Parameters.Add("@team_lead", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.TeamLead);
                     command.Parameters.Add("@status", MySqlDbType.Bit).Value = lead.IsActive;
@@ -171,7 +171,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "update staff set name=@name, email=@email, phone=@phone, address=@address, role=@role, uname=@uname, password=@password, department=@department, team_lead=@team_lead, status=@status, profileImage=@profileImage, update_time=@update_time where id=@id";
+                    command.CommandText = "update staff set fullname=@name, email=@email, phone=@phone, address=@address, role=@role, username=@uname, password=@password, department=@department, team_lead=@team_lead, status=@status, profileImage=@profileImage, updatetime=@updatetime where id=@id";
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = lead.Id;
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.FullName;
                     command.Parameters.Add("@email", MySqlDbType.VarChar).Value = lead.Email;
@@ -179,12 +179,12 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@address", MySqlDbType.VarChar).Value = lead.Address;
                     command.Parameters.Add("@role", MySqlDbType.VarChar).Value = lead.Role;
                     command.Parameters.Add("@uname", MySqlDbType.VarChar).Value = lead.Username;
-                    command.Parameters.Add("@password", MySqlDbType.VarString).Value = lead.Password;
+                    command.Parameters.Add("@password", MySqlDbType.VarString).Value = BCrypt.Net.BCrypt.HashPassword(lead.Password);
                     command.Parameters.Add("@department", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.Department);
                     command.Parameters.Add("@team_lead", MySqlDbType.JSON).Value = JsonSerializer.Serialize(lead.TeamLead);
                     command.Parameters.Add("@status", MySqlDbType.Bit).Value = lead.IsActive;
                     command.Parameters.Add("@profileImage", MySqlDbType.LongBlob).Value = Helper.Helper.ImageToByteArray(lead.ProfileImage);
-                    command.Parameters.Add("@update_time", MySqlDbType.DateTime).Value = DateTime.Now;
+                    command.Parameters.Add("@updatetime", MySqlDbType.DateTime).Value = DateTime.Now;
                     await command.ExecuteScalarAsync();
                 }
             }

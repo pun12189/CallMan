@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="Secure Login" Height="450" Width="800" WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         WindowStartupLocation="CenterScreen" MouseDown="Window_MouseDown">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Window.Resources>
     <Border CornerRadius="10" Background="White" BorderThickness="1" BorderBrush="#DDD">
         <StackPanel Margin="30">
             <TextBlock Text="SIGN IN" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
@@ -19,9 +22,32 @@
 
             <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontSize="11" Margin="0,5"/>
 
-            <Button Content="LOGIN" Command="{Binding LoginCommand}" 
+            <Button Command="{Binding LoginCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                    Height="40" Margin="0,20,0,10" Background="#2193b0" Foreground="White"/>
+                    Height="40" Margin="0,20,0,10" Background="#2193b0" Foreground="White">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="LOGIN" Margin="0,0,10,0"/>
+                    <Ellipse x:Name="LoadingSpinner" StrokeThickness="3" Stroke="White" StrokeDashArray="1" Height="20" Width="20"
+              Fill="Transparent" RenderTransformOrigin="0.5,0.5"
+              Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Ellipse.RenderTransform>
+                            <RotateTransform x:Name="noStopRotation" Angle="0" />
+                        </Ellipse.RenderTransform>
+                        <Ellipse.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="noStopRotation"
+                                             Storyboard.TargetProperty="Angle"
+                                             From="0" To="360" Duration="0:0:3"
+                                             RepeatBehavior="Forever" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Ellipse.Triggers>
+                    </Ellipse>
+                </StackPanel>
+            </Button>
 
             <Grid>
                 <Button Content="Forgot Password?" Command="{Binding ForgotPasswordCommand}" 

@@ -1,6 +1,7 @@
 ﻿using BahiKitab.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -37,14 +38,22 @@ namespace BahiKitab.Models
         public string Address { get => address; set => Set(ref address, value, nameof(Address)); }
         
         [JsonIgnore]
+        [NotMapped]
         public ImageSource ProfileImage { get => profileImage; set => Set(ref profileImage, value, nameof(ProfileImage)); }
 
+        [NotMapped]
         public DepartmentsModel Department { get => department; set => Set(ref department, value, nameof(Department)); }
         public DateTime CreateTime { get => createTime; set => Set(ref createTime, value, nameof(CreateTime)); }
         public DateTime UpdateTime { get => updateTime; set => Set(ref updateTime, value, nameof(UpdateTime)); }
         public string Role { get => role; set => Set(ref role, value, nameof(Role)); }
+        
+        [NotMapped]
         public StaffModel TeamLead { get => teamLead; set => Set(ref teamLead, value, nameof(TeamLead)); }
+
+        [NotMapped]
         public bool IsActive { get => isActive; set => Set(ref isActive, value, nameof(IsActive)); }
+
+        [NotMapped]
         public bool IsSelected { get => isSelected; set => Set(ref isSelected, value, nameof(IsSelected)); }
 
         public StaffModel Clone() { return (StaffModel)this.MemberwiseClone(); }
