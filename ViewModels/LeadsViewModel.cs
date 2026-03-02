@@ -5,11 +5,13 @@ using BahiKitab.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 
 namespace BahiKitab.ViewModels
 {
@@ -19,6 +21,8 @@ namespace BahiKitab.ViewModels
         private readonly LeadsDataService _dataService;
 
         private readonly LeadHistoryDataService leadHistoryDataService;
+
+        public ICollectionView ProductView { get; set; }
 
         // Data Properties
         private ObservableCollection<Lead> _leads;
@@ -53,11 +57,22 @@ namespace BahiKitab.ViewModels
         }
 
         private Lead _currentLead = new Lead();
+        private string searchText;
+
         // This is the model used for the data entry form (Create/Update)
         public Lead CurrentLead
         {
             get => _currentLead;
             set => Set(ref _currentLead, value, nameof(CurrentLead));
+        }
+
+        public string SearchText
+        {
+            get => searchText; set
+            {
+                Set(ref searchText, value, nameof(SearchText));
+                ProductView.Refresh();
+            }
         }
 
         // Commands
@@ -76,6 +91,8 @@ namespace BahiKitab.ViewModels
             _dataService = new LeadsDataService();
             leadHistoryDataService = new LeadHistoryDataService();
             Leads = new ObservableCollection<Lead>();
+            ProductView = CollectionViewSource.GetDefaultView(Leads);
+            ProductView.Filter = FilterProducts;
 
             // Initialize Commands
             LoadLeadsCommand = new RelayCommand(async _ => await LoadLeadsAsync());
@@ -89,6 +106,21 @@ namespace BahiKitab.ViewModels
 
             // Load data immediately upon initialization
             LoadLeadsCommand.Execute(null);
+        }
+
+        private bool FilterProducts(object obj)
+        {
+            if (obj is Lead product)
+            {
+                return string.IsNullOrWhiteSpace(SearchText) ||
+                       product.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                       product.Company.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                       product.Email.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                       product.Phone.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                       product.Pincode.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                       product.State.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
         }
 
         private void WhatsappCommandExecute(object obj)
@@ -188,8 +220,26 @@ namespace BahiKitab.ViewModels
         }
 
         private async Task LoadLeadsAsync()
-        {
-            Leads = await _dataService.GetAllLeadsAsync();
+        {            
+            try
+            {
+                var data = await _dataService.GetAllLeadsAsync();
+
+                // Clear and update the collection on the UI Thread
+                Leads.Clear();
+                foreach (var item in data)
+                {
+                    Leads.Add(item);
+                }
+
+                // Force the View to refresh to reflect the new data
+                ProductView.Refresh();
+            }
+            catch (Exception ex)
+            {
+                // Handle DB connection errors here
+                MessageBox.Show($"Error loading leads: {ex.Message}");
+            }
         }
 
         private void CreateNewLead()

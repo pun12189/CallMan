@@ -18,12 +18,25 @@ namespace BahiKitab.ViewModels
         private readonly IAuthenticationService _authService;
         private string _username;
         private string _errorMessage;
-        private bool _isBusy;
+        private bool _isBusy;        
+        private string _resetEmail;
+        private bool isLoginVisible = true;
+        private bool isForgotVisible = false;
+
+        public bool IsLoginVisible { get => isLoginVisible; set => Set(ref isLoginVisible, value, nameof(IsLoginVisible)); }
+
+        public bool IsForgotVisible { get => isForgotVisible; set => Set(ref isForgotVisible, value, nameof(IsForgotVisible)); }
 
         public bool IsBusy
         {
             get => _isBusy;
             set => Set(ref _isBusy, value, nameof(IsBusy));
+        }
+
+        public string ResetEmail
+        {
+            get => _resetEmail;
+            set => Set(ref _resetEmail, value, nameof(ResetEmail));
         }
 
         public string Username
@@ -39,16 +52,48 @@ namespace BahiKitab.ViewModels
         }
 
         public ICommand LoginCommand { get; }
-        public ICommand ForgotPasswordCommand { get; }
         public ICommand ExitCommand { get; }
+        public ICommand SwitchViewCommand { get; }
+        public ICommand SendResetCommand { get; }
 
         public LoginViewModel(IAuthenticationService authService)
         {
             _authService = authService;
 
             LoginCommand = new RelayCommand(ExecuteLogin);
-            ForgotPasswordCommand = new RelayCommand(ExecuteForgot);
+            SwitchViewCommand = new RelayCommand(SwitchViewCommandExecute);
+            SendResetCommand = new RelayCommand(SendResetCommandExecute);
             ExitCommand = new RelayCommand(_ => Application.Current.Shutdown());
+        }
+
+        private async void SendResetCommandExecute(object obj)
+        {
+            if (string.IsNullOrWhiteSpace(ResetEmail)) return;
+
+            IsBusy = true; // Show your professional spinner!
+            var success = await _authService.ResetPasswordAsync(ResetEmail);
+            IsBusy = false;
+
+            if (success)
+            {
+                if (MessageBox.Show("A temporary password has been sent to your email.") == MessageBoxResult.OK)
+                {
+                    IsLoginVisible = !IsLoginVisible;
+                    IsForgotVisible = !IsForgotVisible;
+                    ErrorMessage = ""; // Clear any old errors when switching
+                }                
+            }
+            else
+            {
+                ErrorMessage = "Email not found in our records.";
+            }
+        }
+
+        private void SwitchViewCommandExecute(object obj)
+        {
+            IsLoginVisible = !IsLoginVisible;
+            IsForgotVisible = !IsForgotVisible;
+            ErrorMessage = ""; // Clear any old errors when switching
         }
 
         private async void ExecuteLogin(object parameter)
@@ -91,12 +136,6 @@ namespace BahiKitab.ViewModels
             {
                 IsBusy = false; // Hide Spinner, Enable Button
             }           
-        }
-
-        private void ExecuteForgot(object parameter)
-        {
-            _authService.RequestPasswordReset(Username);
-            MessageBox.Show("Password reset instructions sent.");
         }
 
         private void CloseCurrentWindow()

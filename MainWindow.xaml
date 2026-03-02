@@ -23,6 +23,7 @@
         <icon:FontAwesome Kind="HardDriveSolid" Height="14" x:Key="leadicon"/>
         <icon:FontAwesome Kind="UsersSolid" Height="14" x:Key="crmicon"/>
         <icon:FontAwesome Kind="UserSolid" Height="14" x:Key="adminicon"/>
+        <icon:FontAwesome Kind="UserCheckSolid" Height="14" x:Key="proficon"/>
         <icon:FontAwesome Kind="DiagramNextSolid" Height="14" x:Key="alleadsicon"/>
         <icon:FontAwesome Kind="HexagonNodesSolid" Height="14" x:Key="allstatsicon"/>
         <icon:FontAwesome Kind="FaceDizzySolid" Height="14" x:Key="deadicon"/>
@@ -76,7 +77,7 @@
 
                 <MenuItem Header="Batch Orders" Icon="{StaticResource batchicon}" Command="{Binding NavigateCommand}"/>
 
-                <MenuItem Header="👤 Profile" FontSize="14" HorizontalAlignment="Right">
+                <MenuItem Header="Profile"  HorizontalAlignment="Right" Icon="{StaticResource proficon}">
                     <MenuItem Header="View Profile" Background="#20b2aa" Command="{Binding ViewProfileCommand}"/>
                     <MenuItem Header="Settings" Background="#20b2aa" Command="{Binding SettingsCommand}"/>
                     <Separator />

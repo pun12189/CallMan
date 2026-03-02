@@ -9,6 +9,6 @@ namespace BahiKitab.Services.Interface
     public interface IAuthenticationService
     {
         Task<bool> AuthenticateAsync(string username, string password);
-        void RequestPasswordReset(string username);
+        Task<bool> ResetPasswordAsync(string email);
     }
 }

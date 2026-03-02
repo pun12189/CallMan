@@ -7,6 +7,7 @@
              xmlns:core="clr-namespace:BahiKitab.Core"
              xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:helper="clr-namespace:BahiKitab.Helper"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d">
     <UserControl.Resources>
         <core:IdToButtonTextConverter x:Key="IdToButtonTextConverter"/>        
@@ -19,6 +20,8 @@
 
             <!-- Command Buttons for List -->
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Right">
+                <TextBox x:Name="tbSearch" Margin="0,0,5,0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Width="250" Height="35" controls:TextBoxHelper.Watermark="Search" controls:TextBoxHelper.ClearTextButton="True"/>
+                
                 <Button Command="{Binding LoadLeadsCommand}" Style="{StaticResource KlikButtonStyle}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
@@ -50,7 +53,7 @@
                 </Button>
             </StackPanel>
             <!-- Data Grid to display Leads -->
-            <DataGrid ItemsSource="{Binding Leads}" x:Name="dataGrid1"
+            <DataGrid ItemsSource="{Binding ProductView}" x:Name="dataGrid1"
                   SelectedItem="{Binding SelectedLead, Mode=TwoWay}"
                       AlternatingRowBackground="Cornsilk"
                   AutoGenerateColumns="False"
