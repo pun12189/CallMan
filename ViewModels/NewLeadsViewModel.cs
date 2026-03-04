@@ -71,6 +71,7 @@ namespace BahiKitab.ViewModels
         public RelayCommand UpdateInfoCommand { get; private set; }
         public RelayCommand ImportLeadsCommand { get; private set; }
         public RelayCommand WhatsappCommand { get; private set; }
+        public RelayCommand ResetColumnsCommand { get; private set; }
 
         public Dictionary<string, ColumnItemModel> Columns { get; } = new()
     {
@@ -99,6 +100,11 @@ namespace BahiKitab.ViewModels
             UpdateInfoCommand = new RelayCommand(_ => UpdateInfoLead());
             ImportLeadsCommand = new RelayCommand(async _ => await ImportLeadsCommandAsync());
             WhatsappCommand = new RelayCommand(WhatsappCommandExecute);
+            ResetColumnsCommand = new RelayCommand(_ =>
+            {
+                foreach (var col in Columns.Values)
+                    col.IsVisible = true;
+            });
 
             // Load data immediately upon initialization
             LoadLeadsCommand.Execute(null);
@@ -107,10 +113,17 @@ namespace BahiKitab.ViewModels
 
         public void SaveColumnSettings()
         {
-            // Extract only the header and visibility status
-            var settings = Columns.ToDictionary(k => k.Key, v => v.Value.IsVisible);
-            string json = JsonSerializer.Serialize(settings);
-            File.WriteAllText(Helper.Helper.GetSettingsPath("leadsColumnSettings.json"), json);
+            try
+            {
+                var settings = Columns.ToDictionary(k => k.Key, v => v.Value.IsVisible);
+                string json = JsonSerializer.Serialize(settings);
+                File.WriteAllText(Helper.Helper.GetSettingsPath("leadsColumnSettings.json"), json);
+            }
+            catch (Exception ex)
+            {
+                // Log error - at least it won't crash the app!
+                System.Diagnostics.Debug.WriteLine($"Failed to save settings: {ex.Message}");
+            }
         }
 
         public void LoadColumnSettings()

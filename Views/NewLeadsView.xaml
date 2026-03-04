@@ -67,6 +67,7 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
                                 </DataTemplate>
                             </MenuItem.ItemTemplate>
                         </MenuItem>
+                        <MenuItem Header="Reset" Margin="5,0" Height="35" Command="{Binding ResetColumnsCommand}" Foreground="Red" />
                     </Menu>
                 </StackPanel>
             </StackPanel>
