@@ -1,13 +1,16 @@
 ﻿using BahiKitab.Core;
 using BahiKitab.Models;
+using BahiKitab.Models.Common;
 using BahiKitab.Services;
 using BahiKitab.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -68,6 +71,18 @@ namespace BahiKitab.ViewModels
         public RelayCommand ImportLeadsCommand { get; private set; }
         public RelayCommand WhatsappCommand { get; private set; }
 
+        public Dictionary<string, ColumnItemModel> Columns { get; } = new()
+    {
+        { "NAME", new ColumnItemModel { Header = "NAME" } },
+        { "CONTACT", new ColumnItemModel { Header = "CONTACT" } },
+        { "LEADINFO", new ColumnItemModel { Header = "LEAD INFO" } },
+        { "FOLLOWUP", new ColumnItemModel { Header = "FOLLOW UP" } },
+        { "LEADHOLDER", new ColumnItemModel { Header = "LEAD HOLDER" } }
+    };
+
+        // 3. Helper for the UI Checkbox list
+        public IEnumerable<ColumnItemModel> ColumnList => Columns.Values;
+
         public DeadLeadsViewModel()
         {
             // Initialize service and data collections
@@ -86,6 +101,35 @@ namespace BahiKitab.ViewModels
 
             // Load data immediately upon initialization
             LoadLeadsCommand.Execute(null);
+            LoadColumnSettings();
+        }
+
+        public void SaveColumnSettings()
+        {
+            // Extract only the header and visibility status
+            var settings = Columns.ToDictionary(k => k.Key, v => v.Value.IsVisible);
+            string json = JsonSerializer.Serialize(settings);
+            File.WriteAllText(Helper.Helper.GetSettingsPath("leadsColumnSettings.json"), json);
+        }
+
+        public void LoadColumnSettings()
+        {
+            if (File.Exists(Helper.Helper.GetSettingsPath("leadsColumnSettings.json")))
+            {
+                string json = File.ReadAllText(Helper.Helper.GetSettingsPath("leadsColumnSettings.json"));
+                var savedData = JsonSerializer.Deserialize<Dictionary<string, bool>>(json);
+
+                if (savedData != null)
+                {
+                    foreach (var item in savedData)
+                    {
+                        if (Columns.ContainsKey(item.Key))
+                        {
+                            Columns[item.Key].IsVisible = item.Value;
+                        }
+                    }
+                }
+            }
         }
 
         private void WhatsappCommandExecute(object obj)

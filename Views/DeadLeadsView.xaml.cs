@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BahiKitab.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,27 @@ namespace BahiKitab.Views
     /// </summary>
     public partial class DeadLeadsView : UserControl
     {
+        private DeadLeadsViewModel viewModel;
+
         public DeadLeadsView()
         {
             InitializeComponent();
+            this.Loaded += DeadLeadsView_Loaded;
+            this.Unloaded += DeadLeadsView_Unloaded;
+        }
+
+        private void DeadLeadsView_Unloaded(object sender, RoutedEventArgs e)
+        {
+            viewModel?.SaveColumnSettings();
+        }
+
+        private void DeadLeadsView_Loaded(object sender, RoutedEventArgs e)
+        {
+            var vm = this.DataContext as DeadLeadsViewModel;
+            if (vm != null)
+            {
+                viewModel = vm;
+            }
         }
     }
 }

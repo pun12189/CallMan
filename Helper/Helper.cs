@@ -15,6 +15,23 @@ namespace BahiKitab.Helper
 {
     public static class Helper
     {
+        public static string GetSettingsPath(string filename)
+        {
+            // Path: C:\Users\<User>\AppData\Roaming\YourAppName
+            string folder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "BahiKitab"
+            );
+
+            // Ensure the folder exists before we try to write to it
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            return Path.Combine(folder, filename);
+        }
+
         public static Brush PickBrush()
         {
             Brush result = Brushes.Transparent;

@@ -10,6 +10,8 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <core:IdToButtonTextConverter x:Key="IdToButtonTextConverter"/>
+        <core:BindingProxy x:Key="Proxy" Data="{Binding}" />
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <Style x:Key="DataGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="Background" Value="#20b2aa" />
@@ -50,6 +52,22 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
+                <StackPanel>
+                    <Menu Background="#20b2aa" Margin="5" Height="35" VerticalContentAlignment="Center" Foreground="White" FontSize="14" FontFamily="Segoe UI" FontWeight="Bold">
+                        <MenuItem Header="Show/Hide Columns" ItemsSource="{Binding ColumnList}" Height="35" VerticalContentAlignment="Center">
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="StaysOpenOnClick" Value="True" />
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                            <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox Content="{Binding Header}" IsChecked="{Binding IsVisible, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                        </MenuItem>
+                    </Menu>
+                </StackPanel>
             </StackPanel>
             <!-- Data Grid to display Leads -->
             <DataGrid ItemsSource="{Binding Leads}" 
@@ -78,8 +96,10 @@
                         </Style.Triggers>
                     </Style>
                 </DataGrid.RowStyle>
-                <DataGrid.Columns>                    
-                    <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}" Visibility="{Binding Data.Columns[NAME].IsVisible, 
+                                 Source={StaticResource Proxy}, 
+                                 Converter={StaticResource BoolToVis}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="10">
@@ -92,7 +112,9 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Contact" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}">
+                    <DataGridTemplateColumn Header="Contact" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}" Visibility="{Binding Data.Columns[CONTACT].IsVisible, 
+                                 Source={StaticResource Proxy}, 
+                                 Converter={StaticResource BoolToVis}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
@@ -140,7 +162,9 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Lead Info" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}">
+                    <DataGridTemplateColumn Header="Lead Info" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}" Visibility="{Binding Data.Columns[LEADINFO].IsVisible, 
+                                 Source={StaticResource Proxy}, 
+                                 Converter={StaticResource BoolToVis}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
@@ -167,7 +191,9 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="FollowUp" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}">
+                    <DataGridTemplateColumn Header="FollowUp" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}" Visibility="{Binding Data.Columns[FOLLOWUP].IsVisible, 
+                                 Source={StaticResource Proxy}, 
+                                 Converter={StaticResource BoolToVis}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
@@ -190,7 +216,9 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Extra Info" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}">
+                    <DataGridTemplateColumn Header="Extra Info" Width="*" IsReadOnly="True" HeaderStyle="{StaticResource DataGridHeaderStyle}" Visibility="{Binding Data.Columns[LEADHOLDER].IsVisible, 
+                                 Source={StaticResource Proxy}, 
+                                 Converter={StaticResource BoolToVis}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">

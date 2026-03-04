@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BahiKitab.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -26,9 +27,27 @@ namespace BahiKitab.Views
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        private LeadsViewModel viewModel;
+
         public LeadsView()
         {
             InitializeComponent();
+            this.Loaded += LeadsView_Loaded;
+            this.Unloaded += LeadsView_Unloaded;            
+        }
+
+        private void LeadsView_Loaded(object sender, RoutedEventArgs e)
+        {
+            var vm = this.DataContext as LeadsViewModel;
+            if (vm != null) 
+            {
+                viewModel = vm;
+            }
+        }
+
+        private void LeadsView_Unloaded(object sender, RoutedEventArgs e)
+        {
+            viewModel?.SaveColumnSettings();            
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
