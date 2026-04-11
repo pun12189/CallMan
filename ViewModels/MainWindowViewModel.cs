@@ -115,6 +115,18 @@ namespace BahiKitab.ViewModels
                     CurrentView = new ProfileViewModel(); // Placeholder for Admin Settings
                     //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
+                case "Purchase":
+                    CurrentView = new PurchaseViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "Smtp":
+                    CurrentView = new EmailSettingsViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "Workflow":
+                    CurrentView = new WorkflowViewModel(); // Placeholder for Admin Settings
+                    //MessageBox.Show("Admin View not fully implemented yet.", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
             }
         }
     }

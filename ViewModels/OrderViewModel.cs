@@ -237,7 +237,19 @@ namespace BahiKitab.ViewModels
 
         private void ImportOrders()
         {
-            var view = new ImportDialog();
+            OpenFileDialog openFile = new OpenFileDialog { Filter = "Excel Files|*.xlsx" };
+            if (openFile.ShowDialog() == true)
+            {
+                // 1. Open the Mapping UI
+                var mapWin = new GenericImportWindow(openFile.FileName, "lead_orders");
+
+                if (mapWin.ShowDialog() == true)
+                {
+                    MessageBox.Show("Import Successful!");
+                }
+            }
+
+            /*var view = new ImportDialog();
             view.DataContext = this;
             var window = new Window();
             window.Title = "Import Order";
@@ -249,7 +261,7 @@ namespace BahiKitab.ViewModels
             if (res is true)
             {
                 MessageBox.Show("Orders will be imported at background when implemented.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            }*/
         }
 
         private async Task UpdateInfoLead()

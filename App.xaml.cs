@@ -18,6 +18,9 @@ namespace BahiKitab
     {
         public static IServiceProvider ServiceProvider { get; private set; }
 
+        // Static instance so any ViewModel can access it
+        public static WorkflowBackgroundWorker BackgroundWorker { get; private set; }
+
         public App()
         {
             var services = new ServiceCollection();
@@ -78,6 +81,9 @@ namespace BahiKitab
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             // 3. Resolve the Login Window from our built ServiceProvider
             var loginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
+
+            // Start the worker once when the app opens
+            BackgroundWorker = new WorkflowBackgroundWorker();
 
             // 4. Show Login and Close Splash
             loginWindow.Show();

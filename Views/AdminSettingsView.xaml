@@ -57,11 +57,11 @@
             <Button Content="Staff" Grid.Column="0" Command="{Binding ElementName=adminView, Path=MainViewCommand, NotifyOnSourceUpdated=True}" CommandParameter="Staff" Grid.Row="0" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Departments" Grid.Column="1" Grid.Row="0" Style="{StaticResource ButtonStyle}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.Departments}"/>
             <Button Content="Order Stages" Grid.Column="2" Grid.Row="0" Style="{StaticResource ButtonStyle}" Command="{Binding NavigateCommand}" CommandParameter="{x:Static helper:ViewsEnum.OrderStages}"/>
-            <Button Content="Connect Whatsapp" Grid.Column="3" Grid.Row="0" Style="{StaticResource ButtonStyle}"/>
-            <Button Content="Connect Email" Grid.Column="0" Grid.Row="2" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Connect Whatsapp" Grid.Column="3" Grid.Row="0" Style="{StaticResource ButtonStyle}" Command="{Binding ElementName=adminView, Path=MainViewCommand, NotifyOnSourceUpdated=True}" CommandParameter="Whatsapp"/>
+            <Button Content="Connect Email" Grid.Column="0" Grid.Row="2" Style="{StaticResource ButtonStyle}" Command="{Binding ElementName=adminView, Path=MainViewCommand, NotifyOnSourceUpdated=True}" CommandParameter="Smtp"/>
             <Button Content="Categories" Command="{Binding ElementName=adminView, Path=MainViewCommand, NotifyOnSourceUpdated=True}" CommandParameter="Category" Grid.Column="1" Grid.Row="2" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Company Profile" Grid.Column="2" Grid.Row="2" Style="{StaticResource ButtonStyle}" Command="{Binding ElementName=adminView, Path=MainViewCommand, NotifyOnSourceUpdated=True}" CommandParameter="Profile"/>
-            <Button Content="Master Formulations" Grid.Column="3" Grid.Row="2" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Workflows" Grid.Column="3" Grid.Row="2" Style="{StaticResource ButtonStyle}" Command="{Binding ElementName=adminView, Path=MainViewCommand, NotifyOnSourceUpdated=True}" CommandParameter="Workflow"/>
         </Grid>
         <Grid Grid.Column="2">            
             <Grid.RowDefinitions>

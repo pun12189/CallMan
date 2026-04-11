@@ -1,0 +1,132 @@
+﻿<UserControl x:Class="BahiKitab.Views.PurchaseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BahiKitab.Views"
+             xmlns:helper="clr-namespace:BahiKitab.Helper"
+             mc:Ignorable="d" Background="#F4F7F9">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <helper:BooleanToVisibilityConverter x:Key="InverseBoolToVis"/>
+    </UserControl.Resources>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="20" BorderBrush="#DCDDE1" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                    <TextBlock Text="VENDOR / SUPPLIER" FontWeight="Bold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox ItemsSource="{Binding Vendors}" SelectedItem="{Binding SelectedVendor}" DisplayMemberPath="Name" Height="35"/>
+
+                        <Button Grid.Column="1" Content="+" Command="{Binding AddVendorCommand}" VerticalContentAlignment="Center" Width="35" Height="35" Margin="5,0,0,0" Background="#3498DB" Foreground="White" FontWeight="Bold"/>
+                    </Grid>
+                    <TextBlock Text="{Binding SelectedVendor.Address}" Foreground="Gray" FontSize="11" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                    <TextBlock Text="INTERNAL INV #" FontWeight="Bold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding InvoiceNo, UpdateSourceTrigger=PropertyChanged}" Height="35" VerticalContentAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                    <TextBlock Text="ORIGINAL BILL #" FontWeight="Bold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding OriginalInvNo, UpdateSourceTrigger=PropertyChanged}" Height="35" VerticalContentAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="3">
+                    <TextBlock Text="BILL DATE" FontWeight="Bold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <DatePicker SelectedDate="{Binding InvoiceDate}" Height="35" VerticalContentAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Background="White" Margin="0,15" CornerRadius="8" BorderBrush="#DCDDE1" BorderThickness="1">
+            <DataGrid ItemsSource="{Binding PurchaseItems}" 
+                      AutoGenerateColumns="False" 
+                      CanUserAddRows="True" 
+                      RowHeight="35"
+                      GridLinesVisibility="Horizontal"
+                      HorizontalGridLinesBrush="#F1F2F6"
+                      BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Item Description" Binding="{Binding ItemName}" Width="*"/>
+                    <DataGridTextColumn Header="HSN" Binding="{Binding HSN}" Width="100"/>
+                    <DataGridTextColumn Header="Qty" Binding="{Binding Qty, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
+                    <DataGridTextColumn Header="Price/Unit" Binding="{Binding PricePerItem, UpdateSourceTrigger=PropertyChanged}" Width="120"/>
+                    <DataGridTextColumn Header="GST %" Binding="{Binding TaxPercent, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
+
+                    <DataGridTextColumn Header="Total (Incl. Tax)" 
+                                        Binding="{Binding TotalLine, StringFormat='N2', Mode=OneWay}" 
+                                        Width="150" IsReadOnly="True" FontWeight="Bold"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="350"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                <Button Content="Add New Item" Command="{Binding AddItemCommand}" Width="120" Height="40" Background="#3498DB" Foreground="White" BorderThickness="0"/>
+                <Button Content="Reset Form" Command="{Binding ClearCommand}" Width="120" Height="40" Margin="10,0" Background="#E74C3C" Foreground="White" BorderThickness="0"/>
+            </StackPanel>
+
+            <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="20" BorderBrush="#DCDDE1" BorderThickness="1">
+                <StackPanel>
+                    <DockPanel Margin="0,5">
+                        <TextBlock Text="Taxable Amount" Foreground="#7F8C8D"/>
+                        <TextBlock Text="{Binding TotalTaxable, StringFormat='₹{0:N2}'}" DockPanel.Dock="Right" HorizontalAlignment="Right" FontWeight="SemiBold"/>
+                    </DockPanel>
+
+                    <DockPanel Margin="0,5" Visibility="{Binding IsInterState, Converter={StaticResource InverseBoolToVis}, ConverterParameter=Inverse}">
+                        <TextBlock Text="CGST"/>
+                        <TextBlock Text="{Binding TotalCGST, StringFormat='₹{0:N2}'}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+                    </DockPanel>
+
+                    <DockPanel Margin="0,5" Visibility="{Binding IsInterState, Converter={StaticResource InverseBoolToVis}, ConverterParameter=Inverse}">
+                        <TextBlock Text="SGST"/>
+                        <TextBlock Text="{Binding TotalSGST, StringFormat='₹{0:N2}'}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+                    </DockPanel>
+
+                    <DockPanel Margin="0,5" Visibility="{Binding IsInterState, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="IGST"/>
+                        <TextBlock Text="{Binding TotalIGST, StringFormat='₹{0:N2}'}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+                    </DockPanel>
+
+                    <Separator Margin="0,10" Background="#F1F2F6"/>
+
+                    <DockPanel>
+                        <TextBlock Text="Grand Total" FontSize="20" FontWeight="Bold" Foreground="#2C3E50"/>
+                        <TextBlock Text="{Binding GrandTotal, StringFormat='₹{0:N2}'}" DockPanel.Dock="Right" HorizontalAlignment="Right" FontSize="24" FontWeight="Bold" Foreground="#27AE60"/>
+                    </DockPanel>
+
+                    <Button Content="POST TO INVENTORY" 
+                            Command="{Binding SaveCommand}" 
+                            Height="50" Margin="0,20,0,0" 
+                            Background="#27AE60" Foreground="White" 
+                            FontSize="16" FontWeight="Bold" BorderThickness="0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

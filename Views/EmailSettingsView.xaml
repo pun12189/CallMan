@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="BahiKitab.Views.EmailSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BahiKitab.Views"
+             mc:Ignorable="d" Background="#F5F5F5"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="InputBox" TargetType="TextBox">
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="BorderBrush" Value="#DDD"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border CornerRadius="4" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="PwdBox" TargetType="PasswordBox">
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="BorderBrush" Value="#DDD"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border CornerRadius="4" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Border Background="White" CornerRadius="8" Margin="20" Padding="20" VerticalAlignment="Top">
+        <StackPanel>
+            <TextBlock Text="Email Server Settings" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,20"/>
+
+            <TextBlock Text="SMTP Host"/>
+            <TextBox Text="{Binding SmtpSettings.Host}" Margin="0,5,0,15" Style="{StaticResource InputBox}"/>
+
+            <TextBlock Text="Port"/>
+            <TextBox Text="{Binding SmtpSettings.Port}" Margin="0,5,0,15" Style="{StaticResource InputBox}"/>
+
+            <TextBlock Text="Sender Email"/>
+            <TextBox Text="{Binding SmtpSettings.SenderEmail}" Margin="0,5,0,15" Style="{StaticResource InputBox}"/>
+
+            <TextBlock Text="App Password"/>
+            <PasswordBox x:Name="SmtpPassword" Margin="0,5,0,15" Style="{StaticResource PwdBox}"/>
+
+            <CheckBox Content="Use SSL/TLS Encryption" IsChecked="{Binding SmtpSettings.EnableSsl}" Margin="0,0,0,20"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Test" Command="{Binding TestCommand}" 
+                        CommandParameter="{Binding ElementName=SmtpPassword}" Width="80" Margin="0,0,10,0"/>
+                <Button Content="Save" Command="{Binding SaveCommand}" 
+                        CommandParameter="{Binding ElementName=SmtpPassword}" Width="100" Background="RoyalBlue" Foreground="White"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

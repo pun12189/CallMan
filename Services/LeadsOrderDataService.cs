@@ -154,6 +154,69 @@ namespace BahiKitab.Services
             return leads;
         }
 
+        public async Task<ObservableCollection<LeadOrderModel>> GetAllOrdersOfCustomerAsync(int custid)
+        {
+            // Simulates an asynchronous database call
+            await Task.Delay(200);
+            // REAL IMPLEMENTATION: Open connection, execute SELECT query, map results to Lead objects, close connection.
+
+            // Return a clone of the collection for mock safety
+            ObservableCollection<LeadOrderModel> leads = new ObservableCollection<LeadOrderModel>();
+            try
+            {
+                using (var connection = GetConnection())
+                using (var command = new MySqlCommand())
+                {
+                    connection.Open();
+                    command.Connection = connection;
+                    command.CommandText = "select * from lead_orders where lead_id=@lead_id";
+                    command.Parameters.Add("@lead_id", MySqlDbType.Int32).Value = custid;
+                    var reader = await command.ExecuteReaderAsync();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var lead = new LeadOrderModel
+                            {
+                                Id = reader.GetInt32(0),
+                                OrderId = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
+                                OrderAmount = reader.IsDBNull(2) ? 0.0 : reader.GetDouble(2),
+                                ReceivedAmount = reader.IsDBNull(3) ? 0.0 : reader.GetDouble(3),
+                                Customer = reader.IsDBNull(4) ? null : LeadsDataService.GetCustomer(reader.GetInt32(4)),
+                                PaymentType = reader.IsDBNull(5) ? PaymentType.Credit : Enum.Parse<PaymentType>(reader.GetString(5)),
+                                PaymentStatus = reader.IsDBNull(6) ? PaymentStatus.Unpaid : Enum.Parse<PaymentStatus>(reader.GetString(6)),
+                                OrderStatus = reader.IsDBNull(7) ? null : JsonSerializer.Deserialize<OrderStageModel>(reader.GetString(7)),
+                                OrderedProducts = reader.IsDBNull(8) ? null : JsonSerializer.Deserialize<ObservableCollection<ProductModel>>(reader.GetString(8)),
+                                NextFollowup = reader.IsDBNull(9) ? DateTime.MinValue : reader.GetDateTime(9),
+                                AcceptedDate = reader.IsDBNull(10) ? DateTime.MinValue : reader.GetDateTime(10),
+                                IsAccepted = reader.IsDBNull(11) ? false : reader.GetBoolean(11),
+                                TakenBy = reader.IsDBNull(12) ? null : JsonSerializer.Deserialize<StaffModel>(reader.GetString(12)),
+                                Discount = reader.IsDBNull(13) ? 0.0 : reader.GetDouble(13),
+                                Balance = reader.IsDBNull(14) ? 0.0 : reader.GetDouble(14),
+                                Priority = reader.IsDBNull(15) ? false : reader.GetBoolean(15),
+                                Created = reader.IsDBNull(16) ? DateTime.MinValue : reader.GetDateTime(16),
+                                Updated = reader.IsDBNull(17) ? DateTime.MinValue : reader.GetDateTime(17),
+                                LastMsg = reader.IsDBNull(18) ? string.Empty : reader.GetString(18),
+                                ReferenceImages = reader.IsDBNull(19) ? null : JsonSerializer.Deserialize<List<int>>(reader.GetString(19)),
+                                Remarks = reader.IsDBNull(20) ? string.Empty : reader.GetString(20),
+                                IsTaskCreated = reader.IsDBNull(21) ? false : reader.GetBoolean(21),
+                            };
+
+                            leads.Add(lead);
+                        }
+
+                        reader.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //Helper.Helper.BugReport(e);
+            }
+
+            return leads;
+        }
+
         public async Task<LeadOrderModel> CreateLeadOrderAsync(LeadOrderModel lead)
         {
             await Task.Delay(100);

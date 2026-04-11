@@ -2,6 +2,7 @@
 using BahiKitab.Models;
 using BahiKitab.Services;
 using BahiKitab.Views;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -130,19 +131,31 @@ namespace BahiKitab.ViewModels
 
         private async Task ImportLeadsCommandAsync()
         {
-            var view = new ImportDialog();
-            view.DataContext = this;
-            var window = new Window();
-            window.Title = "Import Inventory";
-            window.Content = view;
-            window.Width = 600;
-            window.SizeToContent = SizeToContent.Height;
-            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            var res = window.ShowDialog();
-            if (res is true)
+            OpenFileDialog openFile = new OpenFileDialog { Filter = "Excel Files | *.xlsx" };
+            if (openFile.ShowDialog() == true)
             {
-                MessageBox.Show("Inventory will be imported at background when implemented.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                // 1. Open the Mapping UI
+                var mapWin = new GenericImportWindow(openFile.FileName, "inventory");
+
+                if (mapWin.ShowDialog() == true)
+                {                    
+                    MessageBox.Show("Import Successful!");
+                }
             }
+
+            //var view = new ImportDialog();
+            //view.DataContext = this;
+            //var window = new Window();
+            //window.Title = "Import Inventory";
+            //window.Content = view;
+            //window.Width = 600;
+            //window.SizeToContent = SizeToContent.Height;
+            //window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            //var res = window.ShowDialog();
+            //if (res is true)
+            //{
+            //    MessageBox.Show("Inventory will be imported at background when implemented.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            //}
 
             // Create OpenFileDialog 
             /*Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();

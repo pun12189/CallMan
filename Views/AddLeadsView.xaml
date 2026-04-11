@@ -48,9 +48,9 @@
                     <TextBlock Text="Label" Margin="0,5,0,2"/>
                     <ComboBox x:Name="cbLabel" SelectedItem="{Binding CurrentLead.Label, Mode=TwoWay}" Margin="0,0,0,10" SelectedValuePath="Id" DisplayMemberPath="Name"/>
 
-                    <TextBlock Text="Status" Margin="0,5,0,2"/>
+                    <TextBlock Text="Status" Margin="0,5,0,2" Visibility="Collapsed"/>
                     <!-- Hardcoding for simplicity, would bind to a list from Admin Settings in a real app -->
-                    <ComboBox x:Name="cbStatus" SelectedItem="{Binding CurrentLead.Status, Mode=TwoWay}" Margin="0,0,0,20" SelectedValuePath="Id" DisplayMemberPath="Name"/>
+                    <ComboBox x:Name="cbStatus" Visibility="Collapsed" SelectedItem="{Binding CurrentLead.Status, Mode=TwoWay}" Margin="0,0,0,20" SelectedValuePath="Id" DisplayMemberPath="Name"/>
                     
                 </StackPanel>
                 <StackPanel Grid.Row="1" Grid.Column="2">
@@ -76,8 +76,8 @@
                     <TextBlock Text="Lead Holder" Margin="0,5,0,2"/>
                     <ComboBox x:Name="cbLH" SelectedItem="{Binding CurrentLead.LeadHolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Id" DisplayMemberPath="FullName" Margin="0,0,0,10"/>
 
-                    <TextBlock Text="Important Date" Margin="0,5,0,2"/>
-                    <DatePicker SelectedDateFormat="Long" SelectedDate="{Binding CurrentLead.ImpDate}" IsTodayHighlighted="True" FirstDayOfWeek="Monday"/>
+                    <TextBlock Text="Important Date" Margin="0,5,0,2" Visibility="Collapsed"/>
+                    <DatePicker SelectedDateFormat="Long" Visibility="Collapsed" SelectedDate="{Binding CurrentLead.ImpDate}" IsTodayHighlighted="True" FirstDayOfWeek="Monday"/>
 
                 </StackPanel>
                 <!-- CRUD Action Buttons -->

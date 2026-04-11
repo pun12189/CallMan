@@ -3,6 +3,7 @@ using BahiKitab.Models;
 using BahiKitab.Models.Common;
 using BahiKitab.Services;
 using BahiKitab.Views;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -228,8 +229,19 @@ namespace BahiKitab.ViewModels
 
         private async Task ImportLeadsCommandAsync()
         {
+            OpenFileDialog openFile = new OpenFileDialog { Filter = "Excel Files|*.xlsx" };
+            if (openFile.ShowDialog() == true)
+            {
+                // 1. Open the Mapping UI
+                var mapWin = new GenericImportWindow(openFile.FileName, "leads");
+
+                if (mapWin.ShowDialog() == true)
+                {
+                    MessageBox.Show("Import Successful!");
+                }
+            }
             // Create OpenFileDialog 
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            /*Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             // Set filter for file extension and default file extension 
             dlg.DefaultExt = ".csv";
@@ -244,7 +256,7 @@ namespace BahiKitab.ViewModels
                 var dataTable = Helper.Helper.ConvertCsvToDataTable(dlg.FileName);
                 await _dataService.BulkInsertMySQL(dataTable, "leads");
                 await LoadLeadsAsync();
-            }
+            }*/
         }
 
         private async Task UpdateInfoLead()

@@ -34,6 +34,13 @@ namespace BahiKitab.Models
             set => Set(ref _shortCode, value, nameof(ShortCode));
         }
 
+        private string _hsn;
+        public string HSN
+        {
+            get => _hsn;
+            set => Set(ref _hsn, value, nameof(HSN));
+        }
+
         private CategoryModel _category;
         public CategoryModel Category
         {
@@ -121,6 +128,13 @@ namespace BahiKitab.Models
             get => _sellingPrice;
             set => Set(ref _sellingPrice, value, nameof(SellingPrice));
         }
+
+        private double basePrice;
+        public double BasePrice { get => basePrice; set => Set(ref basePrice, value, nameof(BasePrice)); }
+
+        public double GstAmount => (BasePrice * GST / 100) * Stock;
+
+        public double Total => (BasePrice * Stock) + GstAmount;
 
         private DateTime created;        
         public DateTime Created { get => created; set => Set(ref created, value, nameof(Created)); }

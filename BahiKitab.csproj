@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <None Remove="Assets\logo.png" />
+    <None Remove="Assets\opn.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,11 +20,15 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="Dapper" Version="2.1.72" />
     <PackageReference Include="gong-wpf-dragdrop" Version="4.0.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.11" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="6.2.1" />
+    <PackageReference Include="MailKit" Version="4.15.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
+    <PackageReference Include="MimeKit" Version="4.15.1" />
     <PackageReference Include="MySql.Data" Version="9.5.0" />
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
@@ -34,6 +39,9 @@
 
   <ItemGroup>
     <Resource Include="Assets\logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\opn.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\ApplicationStyles.xaml" />

@@ -160,7 +160,7 @@ namespace BahiKitab.Views
                     var nextFDate = this.dtNFollow2.SelectedDateTime;
                     if (nextFDate != null)
                     {
-                        orderModel.NextFollowup = (DateTime)nextFDate;
+                        orderModel.NextFollowup = (DateTime)nextFDate;  
                     }
 
                     if (!string.IsNullOrEmpty(this.tbLMsg.Text) && !string.IsNullOrWhiteSpace(this.tbLMsg.Text))

@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:BahiKitab.ViewModels"
         xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
-        Title="KliKCRM" FontFamily="Segoe UI" Icon="/Assets/logo.png" WindowState="Maximized">
+        Title="CallMan" FontFamily="Segoe UI" Icon="/Assets/opn.png" WindowState="Maximized">
     <Window.Resources>
         <Style x:Key="TopMenuStyle" TargetType="Menu">
             <Setter Property="Background" Value="#20b2aa"/>
@@ -33,13 +33,14 @@
         <icon:FontAwesome Kind="BarsProgressSolid" Height="14" x:Key="stockicon1"/>
         <icon:FontAwesome Kind="MoneyBillSolid" Height="14" x:Key="saleicon"/>
         <icon:FontAwesome Kind="AtomSolid" Height="14" x:Key="batchicon"/>
+        <icon:FontAwesome Kind="StackOverflowBrands" Height="14" x:Key="purchaseicon"/>
     </Window.Resources>
     <Window.DataContext>
         <!-- Set the DataContext to the Main Window ViewModel -->
         <vm:MainWindowViewModel/>
     </Window.DataContext>
     <DockPanel>
-        <Grid DockPanel.Dock="Top">
+        <Grid DockPanel.Dock="Top" Background="#88000000">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -55,7 +56,7 @@
 
                 <MenuItem Header="Dashboard" Icon="{StaticResource dashicon}" Command="{Binding NavigateCommand}" CommandParameter="Dashboard"/>                
 
-                <MenuItem Header="Leads" Icon="{StaticResource leadicon}">
+                <MenuItem Header="Leads" Icon="{StaticResource leadicon}" Visibility="Visible">
                     <MenuItem Header="All Leads" Icon="{StaticResource alleadsicon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Leads"/>
                     <MenuItem Header="All Stats" Icon="{StaticResource allstatsicon}" Background="#20b2aa" Visibility="Collapsed"/>
                     <MenuItem Header="Dead Leads" Icon="{StaticResource deadicon}" Background="#20b2aa" Command="{Binding NavigateCommand}" CommandParameter="Dead"/>
@@ -68,14 +69,15 @@
                 </MenuItem>
 
                 <MenuItem Header="Inventory" Icon="{StaticResource stockicon}" Command="{Binding NavigateCommand}" CommandParameter="Inventory"/>
+                <MenuItem Header="Purchase" Icon="{StaticResource purchaseicon}" Command="{Binding NavigateCommand}" CommandParameter="Purchase"/>
 
                 <MenuItem Header="Tasks" Icon="{StaticResource stockicon1}" Command="{Binding NavigateCommand}" CommandParameter="Tasks"/>
 
                 <MenuItem Header="Admin Settings" Icon="{StaticResource adminicon}" Command="{Binding NavigateCommand}" CommandParameter="Admin"/>
 
-                <MenuItem Header="Sale Orders" Icon="{StaticResource saleicon}" Command="{Binding NavigateCommand}"/>
+                <!--<MenuItem Header="Sale Orders" Icon="{StaticResource saleicon}" Command="{Binding NavigateCommand}"/>
 
-                <MenuItem Header="Batch Orders" Icon="{StaticResource batchicon}" Command="{Binding NavigateCommand}"/>
+                <MenuItem Header="Batch Orders" Icon="{StaticResource batchicon}" Command="{Binding NavigateCommand}"/>-->
 
                 <MenuItem Header="Profile"  HorizontalAlignment="Right" Icon="{StaticResource proficon}">
                     <MenuItem Header="View Profile" Background="#20b2aa" Command="{Binding ViewProfileCommand}"/>
@@ -130,6 +132,15 @@
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:ProfileViewModel}">
                             <views:ProfileView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:PurchaseViewModel}">
+                            <views:PurchaseView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:EmailSettingsViewModel}">
+                            <views:EmailSettingsView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:WorkflowViewModel}">
+                            <views:WorkflowView/>
                         </DataTemplate>
                     </ContentControl.Resources>
                 </ContentControl>

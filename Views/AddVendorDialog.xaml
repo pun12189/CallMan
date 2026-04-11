@@ -1,0 +1,29 @@
+﻿<Window x:Class="BahiKitab.Views.AddVendorDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BahiKitab.Views"
+        mc:Ignorable="d"
+        Title="Add New Vendor" Height="450" Width="450" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <StackPanel Margin="20">
+        <TextBlock Text="Add New Vendor" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"/>
+
+        <Label Content="Vendor Name"/>
+        <TextBox Text="{Binding NewVendor.Name, UpdateSourceTrigger=PropertyChanged}" Height="30" Margin="0,0,0,5"/>
+
+        <Label Content="GSTIN"/>
+        <TextBox Text="{Binding NewVendor.GSTIN, UpdateSourceTrigger=PropertyChanged}" Height="30" Margin="0,0,0,5"/>
+
+        <Label Content="Contact"/>
+        <TextBox Text="{Binding NewVendor.Contact, UpdateSourceTrigger=PropertyChanged}" Height="30" Margin="0,0,0,5"/>
+
+        <Label Content="Address"/>
+        <TextBox Text="{Binding NewVendor.Address, UpdateSourceTrigger=PropertyChanged}" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Save Vendor" Command="{Binding SaveVendorCommand}" Width="100" Height="35" Background="#27AE60" Foreground="White" Margin="0,0,10,0"/>
+            <Button Content="Cancel" Click="Cancel_Click" Width="80" Height="35"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

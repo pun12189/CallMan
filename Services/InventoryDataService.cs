@@ -47,8 +47,9 @@ namespace BahiKitab.Services
                                 GST = reader.IsDBNull(6) ? 0.0 : reader.GetDouble(6),
                                 SellingPrice = reader.IsDBNull(7) ? 0.0 : reader.GetDouble(7),
                                 PurchasePrice = reader.IsDBNull(8) ? 0.0 : reader.GetDouble(8),
-                                Created = reader.IsDBNull(9) ? DateTime.MinValue : reader.GetDateTime(9),
-                                Updated = reader.IsDBNull(10) ? DateTime.MinValue : reader.GetDateTime(10),
+                                BasePrice = reader.IsDBNull(9) ? 0.0 : reader.GetDouble(9),
+                                Created = reader.IsDBNull(10) ? DateTime.MinValue : reader.GetDateTime(10),
+                                Updated = reader.IsDBNull(11) ? DateTime.MinValue : reader.GetDateTime(11),
                             };
                         }
 
@@ -98,8 +99,9 @@ namespace BahiKitab.Services
                                 GST = reader.IsDBNull(6) ? 0.0 : reader.GetDouble(6),
                                 SellingPrice = reader.IsDBNull(7) ? 0.0 : reader.GetDouble(7),
                                 PurchasePrice = reader.IsDBNull(8) ? 0.0 : reader.GetDouble(8),
-                                Created = reader.IsDBNull(9) ? DateTime.MinValue : reader.GetDateTime(9),
-                                Updated = reader.IsDBNull(10) ? DateTime.MinValue : reader.GetDateTime(10),
+                                BasePrice = reader.IsDBNull(9) ? 0.0 : reader.GetDouble(9),
+                                Created = reader.IsDBNull(10) ? DateTime.MinValue : reader.GetDateTime(10),
+                                Updated = reader.IsDBNull(11) ? DateTime.MinValue : reader.GetDateTime(11),
                             };
 
                             leads.Add(lead);
@@ -129,7 +131,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "insert into inventory(name, code, stock, sku, units, gst, saleprice, purchaseprice) values(@name, @code, @stock, @sku, @units, @gst, @saleprice, @purchaseprice)";
+                    command.CommandText = "insert into inventory(name, code, stock, sku, units, gst, saleprice, purchaseprice, baseprice) values(@name, @code, @stock, @sku, @units, @gst, @saleprice, @purchaseprice, @baseprice)";
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
                     command.Parameters.Add("@code", MySqlDbType.VarChar).Value = lead.ShortCode;
                     command.Parameters.Add("@stock", MySqlDbType.Double).Value = lead.Stock;
@@ -137,7 +139,8 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@units", MySqlDbType.VarChar).Value = lead.Units;
                     command.Parameters.Add("@gst", MySqlDbType.Double).Value = lead.GST;
                     command.Parameters.Add("@saleprice", MySqlDbType.Double).Value = lead.SellingPrice;
-                    command.Parameters.Add("@purchaseprice", MySqlDbType.Double).Value = lead.PurchasePrice;                    
+                    command.Parameters.Add("@purchaseprice", MySqlDbType.Double).Value = lead.PurchasePrice;
+                    command.Parameters.Add("@baseprice", MySqlDbType.Double).Value = lead.BasePrice;
                     await command.ExecuteScalarAsync();
                 }
             }
@@ -163,7 +166,7 @@ namespace BahiKitab.Services
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "update inventory set name=@name, code=@code, stock=@stock, sku=@sku, units=@units, gst=@gst, saleprice=@saleprice, purchaseprice=@purchaseprice, updated=@updated where id=@id";
+                    command.CommandText = "update inventory set name=@name, code=@code, stock=@stock, sku=@sku, units=@units, gst=@gst, saleprice=@saleprice, purchaseprice=@purchaseprice, baseprice=@baseprice, updated=@updated where id=@id";
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = lead.Id;
                     command.Parameters.Add("@name", MySqlDbType.VarChar).Value = lead.Name;
                     command.Parameters.Add("@code", MySqlDbType.VarChar).Value = lead.ShortCode;
@@ -173,6 +176,7 @@ namespace BahiKitab.Services
                     command.Parameters.Add("@gst", MySqlDbType.Double).Value = lead.GST;
                     command.Parameters.Add("@saleprice", MySqlDbType.Double).Value = lead.SellingPrice;
                     command.Parameters.Add("@purchaseprice", MySqlDbType.Double).Value = lead.PurchasePrice;
+                    command.Parameters.Add("@baseprice", MySqlDbType.Double).Value = lead.BasePrice;
                     command.Parameters.Add("@updated", MySqlDbType.DateTime).Value = DateTime.Now;
                     await command.ExecuteScalarAsync();
                 }
