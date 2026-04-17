@@ -5,6 +5,7 @@ using BahiKitab.Services;
 using BahiKitab.Views;
 using Microsoft.Win32;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -102,6 +103,8 @@ namespace BahiKitab.ViewModels
         public RelayCommand ImportLeadsCommand { get; private set; }
         public RelayCommand WhatsappCommand { get; private set; }
         public RelayCommand ResetColumnsCommand { get; private set; }
+        public RelayCommand SendBulkEmailCommand { get; private set; }
+        public RelayCommand SelectAllCommand { get; private set; }
 
         public LeadsViewModel()
         {
@@ -121,16 +124,52 @@ namespace BahiKitab.ViewModels
             UpdateInfoCommand = new RelayCommand(_ => UpdateInfoLead());
             ImportLeadsCommand = new RelayCommand(async _ => await ImportLeadsCommandAsync());
             WhatsappCommand = new RelayCommand(WhatsappCommandExecute);
+            SendBulkEmailCommand = new RelayCommand(SendBulkCommandExecute);
             ResetColumnsCommand = new RelayCommand(_ =>
             {
                 foreach (var col in Columns.Values)
                     col.IsVisible = true;
             });
 
+            SelectAllCommand = new RelayCommand(DoSelectAll);
+
             // Load data immediately upon initialization
             LoadLeadsCommand.Execute(null);
 
             LoadColumnSettings();
+        }
+
+        private void SendBulkCommandExecute(object obj)
+        {
+            var selectedObjects = obj as IList;
+            var selectedLeads = selectedObjects.Cast<Lead>().ToList();
+            if (selectedLeads.Count != 0)
+            {
+                var dialog = new SendBulkEmail();
+                var vm = new BulkEmailViewModel();
+                dialog.DataContext = vm;
+
+                if (dialog.ShowDialog() == true)
+                {
+                    // 1. Capture the data before the dialog is fully disposed
+                    string subject = vm.Subject;
+                    string body = vm.Body;
+                    string attachment = vm.AttachmentPath;
+
+                    // 2. Start the background process without 'awaiting' it
+                    // Use a "Discard" (_) to fire and forget
+                    _ = Task.Run(async () =>
+                    {
+                        await Helper.Helper.ProcessBulkEmailsAsync(selectedLeads, subject, body, attachment);
+                    });
+
+                    MessageBox.Show("Email sequence started in the background. You can continue working.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select two or more leads", "Bulk Email", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private bool FilterProducts(object obj)
@@ -146,6 +185,14 @@ namespace BahiKitab.ViewModels
                        product.State.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
             }
             return false;
+        }
+
+        private void DoSelectAll(object isChecked)
+        {
+            foreach (Lead customer in ProductView)
+            {
+                customer.IsSelected = (bool)isChecked;
+            }
         }
 
         public void SaveColumnSettings()
@@ -348,7 +395,12 @@ namespace BahiKitab.ViewModels
             {
                 // CREATE NEW LEAD
                 Lead createdLead = await _dataService.CreateLeadAsync(CurrentLead);
-                Leads.Add(createdLead);                
+                Leads.Add(createdLead);
+                
+                    // 2. Call the background worker
+                    // The UI will NOT wait for the email/whatsapp to be sent.
+                    // It will be handled in the background thread.
+                App.BackgroundWorker.EnqueueWork("OnLeadCreated", createdLead);
                 MessageBox.Show($"Lead {createdLead.Name} created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else

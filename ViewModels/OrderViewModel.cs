@@ -32,6 +32,9 @@ namespace BahiKitab.ViewModels
             set => Set(ref _leads, value, nameof(Leads));
         }
 
+        private CompanyProfile profile;
+        public CompanyProfile Profile { get => profile; set => Set(ref profile, value, nameof(Profile)); }
+
         private LeadOrderModel _selectedLead;
         public LeadOrderModel SelectedLead
         {
@@ -56,7 +59,7 @@ namespace BahiKitab.ViewModels
             }
         }
 
-        private LeadOrderModel _currentLead = new LeadOrderModel();
+        private LeadOrderModel _currentLead = new LeadOrderModel();        
 
         // This is the model used for the data entry form (Create/Update)
         public LeadOrderModel CurrentLead
@@ -140,8 +143,7 @@ namespace BahiKitab.ViewModels
         private async void PdfCommandExecute(object obj)
         {
             var pdf = new PdfForm();
-            var model = obj as LeadOrderModel;
-            var profile = await companyProfileDataService.GetProfileAsync(1);
+            var model = obj as LeadOrderModel;           
 
             if (model != null)
             {
@@ -299,6 +301,7 @@ namespace BahiKitab.ViewModels
         private async Task LoadLeadsAsync()
         {
             Leads = await _dataService.GetAllOrdersAsync();
+            Profile = await companyProfileDataService.GetProfileAsync(1);
         }
 
         private void CreateNewLead()
@@ -353,7 +356,7 @@ namespace BahiKitab.ViewModels
                     CurrentLead.PaymentType = Helper.PaymentType.Credit;
                 }
 
-                CurrentLead.OrderId = "LKY" + DateTime.Now.GetHashCode();
+                CurrentLead.OrderId = Profile.Initials + DateTime.Now.GetHashCode();
                 CurrentLead.IsAccepted = false;
                 CurrentLead.Customer.LeadType = Helper.LeadType.Matured;
 
@@ -362,6 +365,7 @@ namespace BahiKitab.ViewModels
                 await leadsDataService.UpdateLeadAsync(CurrentLead.Customer);
 
                 Leads.Add(createdLead);
+                App.BackgroundWorker.EnqueueWork("OnNewOrder", createdLead.Customer);
                 MessageBox.Show($"Order {createdLead.OrderId} of Customer {createdLead.Customer?.Name} created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else

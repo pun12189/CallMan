@@ -23,10 +23,11 @@ namespace BahiKitab.Services
         {
             using IDbConnection db = GetConnection();
             string sql = @"INSERT INTO WorkflowRules (EventKey, IsActive, SendWhatsApp, SendEmail, MessageTemplate) 
-                       VALUES (@EventKey, @IsActive, @SendWhatsApp, @SendEmail, @MessageTemplate)
+                       VALUES (@EventKey, @IsActive, @SendWhatsApp, @SendEmail, @MessageTemplate, @InactivityDays)
                        ON DUPLICATE KEY UPDATE 
                        IsActive = @IsActive, SendWhatsApp = @SendWhatsApp, 
-                       SendEmail = @SendEmail, MessageTemplate = @MessageTemplate";
+                       SendEmail = @SendEmail, MessageTemplate = @MessageTemplate,
+                   InactivityDays = @InactivityDays";
 
             await db.ExecuteAsync(sql, rule);
         }

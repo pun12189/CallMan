@@ -1,9 +1,13 @@
-﻿using MySqlConnector;
+﻿using BahiKitab.Models;
+using BahiKitab.Services;
+using MySqlConnector;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +19,8 @@ namespace BahiKitab.Helper
 {
     public static class Helper
     {
+        private static readonly EmailSettingsDataService emailSettingsDataService = new EmailSettingsDataService();
+
         public static string GetSettingsPath(string filename)
         {
             // Path: C:\Users\<User>\AppData\Roaming\YourAppName
@@ -204,6 +210,45 @@ namespace BahiKitab.Helper
             }
 
             return tempPath;
+        }
+
+        public static async Task ProcessBulkEmailsAsync(List<Lead> leads, string subject, string body, string filePath)
+        {
+            var settings = emailSettingsDataService.GetEmailSettings(); // MySQL fetch
+
+            foreach (var lead in leads)
+            {
+                if (!string.IsNullOrEmpty(lead.Email) || !string.IsNullOrWhiteSpace(lead.Email))
+                {
+                    try
+                    {
+                        using var mail = new MailMessage();
+                        mail.From = new MailAddress(settings.SenderEmail);
+                        mail.To.Add(lead.Email);
+                        mail.Subject = subject;
+                        mail.Body = body.Replace("[Name]", lead.Name);
+
+                        if (!string.IsNullOrEmpty(filePath))
+                            mail.Attachments.Add(new Attachment(filePath));
+
+                        using var smtp = new SmtpClient(settings.Host, settings.Port)
+                        {
+                            Credentials = new NetworkCredential(settings.SenderEmail, settings.Password),
+                            EnableSsl = settings.EnableSsl
+                        };
+
+                        await smtp.SendMailAsync(mail);
+
+                        // Wait 3 seconds to stay under the "Spam" radar
+                        await Task.Delay(3000);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Since there is no UI, log errors to a file or a "Log" table in MySQL
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                    }
+                }
+            }
         }
     }
 }

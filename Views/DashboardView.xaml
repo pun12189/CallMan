@@ -43,8 +43,10 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="20"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="0" Grid.Row="0" MinHeight="100" MinWidth="130" Margin="5">
+                    <Border BorderThickness="1" CornerRadius="10" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="0" Grid.Row="0" MinHeight="100" MinWidth="130" Margin="5">
                         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -55,7 +57,7 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
                             <TextBlock Text="Total Leads" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
                         </Grid>
                     </Border>
-                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="1" Grid.Row="0" MinHeight="100" MinWidth="130" Margin="5">
+                    <Border BorderThickness="1" CornerRadius="10" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="1" Grid.Row="0" MinHeight="100" MinWidth="130" Margin="5">
                         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -66,7 +68,7 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
                             <TextBlock Text="FollowUp's" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
                         </Grid>
                     </Border>
-                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="2" Grid.Row="0" MinHeight="100" MinWidth="130" Margin="5">
+                    <Border BorderThickness="1" CornerRadius="10" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="2" Grid.Row="0" MinHeight="100" MinWidth="130" Margin="5">
                         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -74,10 +76,10 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <TextBlock Text="{Binding MatureLeads}" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Mature Leads" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Customers" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
                         </Grid>
                     </Border>
-                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="0" Grid.Row="2" MinHeight="100" MinWidth="130" Margin="5">
+                    <Border BorderThickness="1" CornerRadius="10" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="0" Grid.Row="2" MinHeight="100" MinWidth="130" Margin="5">
                         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -88,7 +90,7 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
                             <TextBlock Text="Dead Leads" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
                         </Grid>
                     </Border>
-                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="1" Grid.Row="2" MinHeight="100" MinWidth="130" Margin="5">
+                    <Border BorderThickness="1" CornerRadius="10" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="1" Grid.Row="2" MinHeight="100" MinWidth="130" Margin="5">
                         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -99,7 +101,7 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
                             <TextBlock Text="New Leads" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
                         </Grid>
                     </Border>
-                    <Border BorderThickness="1" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="2" Grid.Row="2" MinHeight="100" MinWidth="130" Margin="5">
+                    <Border BorderThickness="1" CornerRadius="10" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="2" Grid.Row="2" MinHeight="100" MinWidth="130" Margin="5">
                         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -108,6 +110,17 @@ xmlns:helper="clr-namespace:BahiKitab.Helper"
                             </Grid.RowDefinitions>
                             <TextBlock Text="{Binding TotalOrders}" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
                             <TextBlock Text="Total Orders" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <Border BorderThickness="1" CornerRadius="10" BorderBrush="AliceBlue" Background="#20b2aa" Grid.Column="0" Grid.Row="4" MinHeight="100" MinWidth="130" Margin="5">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding NoOrders}" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
+                            <TextBlock Text="No Orders&#x0a;(Since 30 days)" TextAlignment="Center" Grid.Row="2" FontSize="25" FontWeight="Bold" FontFamily="Segoe UI" Foreground="White" HorizontalAlignment="Center"/>
                         </Grid>
                     </Border>
                 </Grid>

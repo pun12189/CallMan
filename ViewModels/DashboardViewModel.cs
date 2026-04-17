@@ -26,6 +26,7 @@ namespace BahiKitab.ViewModels
         private double followUpLeads;
         private double noUpdation;
         private ObservableCollection<LeadOrderModel> _leadOrders;
+        private double noOrders;
 
         public ObservableCollection<Lead> Leads
         {
@@ -49,6 +50,7 @@ namespace BahiKitab.ViewModels
         public double PaymentReceived { get => paymentReceived; set => Set(ref paymentReceived, value, nameof(PaymentReceived)); }
         public double FollowUpLeads { get => followUpLeads; set => Set(ref followUpLeads, value, nameof(FollowUpLeads)); }
         public double NoUpdation { get => noUpdation; set => Set(ref noUpdation, value, nameof(NoUpdation)); }
+        public double NoOrders { get => noOrders; set => Set(ref noOrders, value, nameof(NoOrders)); }
 
         public DashboardViewModel() 
         {
@@ -77,6 +79,8 @@ namespace BahiKitab.ViewModels
             this.MatureLeads = Leads.Count(l => l.LeadType == Helper.LeadType.Matured);
 
             this.TotalOrders = LeadOrders.Count();
+
+            this.NoOrders = LeadOrders.Count(l => (DateTime.Now.Date - l.Created.Date).Days >= 30);
         }
 
     }

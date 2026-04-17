@@ -182,6 +182,9 @@ namespace BahiKitab.Models
             set => Set(ref _leadHolder, value, nameof(LeadHolder));
         }
 
+        private bool isSelected;
+        public bool IsSelected { get => isSelected; set => Set(ref isSelected, value, nameof(IsSelected)); }
+
         public Lead Clone() { return (Lead)this.MemberwiseClone(); }
 
         object ICloneable.Clone() { return Clone(); }

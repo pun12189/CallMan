@@ -26,11 +26,22 @@ namespace BahiKitab.ViewModels
         // UI Bindings
         public ObservableCollection<EventType> EventList { get; set; } = new();
 
+        private bool _isDormantEventSelected;
+        public bool IsDormantEventSelected
+        {
+            get => _isDormantEventSelected;
+            set => Set(ref _isDormantEventSelected, value, nameof(IsDormantEventSelected));
+        }
+
         private EventType _selectedEvent;
         public EventType SelectedEvent
         {
             get => _selectedEvent;
-            set => Set(ref _selectedEvent, value, nameof(SelectedEvent));
+            set 
+            { 
+                Set(ref _selectedEvent, value, nameof(SelectedEvent));
+                IsDormantEventSelected = (value?.EventKey == "OnCustomerDormant");
+            }
         }
 
         public WorkflowRuleModel CurrentRule { get; set; } = new();

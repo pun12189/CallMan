@@ -53,6 +53,14 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
+                <Button Command="{Binding SendBulkEmailCommand}" CommandParameter="{Binding SelectedItems, ElementName=dataGrid1}" Style="{StaticResource KlikButtonStyle}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <icon:PackIconFontAwesome Kind="VoicemailSolid" Height="12" Width="12" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="Send Bulk Email" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
                 <StackPanel>
                     <Menu Background="#20b2aa" Margin="5" Height="35" VerticalContentAlignment="Center" Foreground="White" FontSize="14" FontFamily="Segoe UI" FontWeight="Bold">
                         <MenuItem Header="Show/Hide Columns" ItemsSource="{Binding ColumnList}" Height="35" VerticalContentAlignment="Center">
@@ -78,32 +86,18 @@
                   AutoGenerateColumns="False"
                       CanUserAddRows="False"
                   Height="450"
-                  SelectionMode="Single"
+                  SelectionMode="Extended"
                       SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
                       ScrollViewer.CanContentScroll="True" 
       ScrollViewer.VerticalScrollBarVisibility="Auto"
       ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                <!--<DataGrid.RowStyle>
+                <DataGrid.RowStyle>
                     <Style TargetType="{x:Type DataGridRow}">
-                        <Style.Triggers>-->
-                        <!-- Assuming your data item has a boolean property named IsDeleted --><!--
-                            <DataTrigger Binding="{Binding LeadType}" Value="{x:Static helper:LeadType.Dead}">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LeadType}" Value="{x:Static helper:LeadType.Matured}">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LeadType}" Value="{x:Static helper:LeadType.FollowUp}">
-                                <Setter Property="Background" Value="LightBlue"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding LeadType}" Value="{x:Static helper:LeadType.New}">
-                                <Setter Property="Background" Value="LightGreen"/>
-                            </DataTrigger>
-                        </Style.Triggers>
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </Style>
-                </DataGrid.RowStyle>-->
+                </DataGrid.RowStyle>
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn>
+                    <!--<DataGridTemplateColumn>
                         <DataGridTemplateColumn.Header>
                             <CheckBox x:Name="cbAll" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="cbAll_Checked" Unchecked="cbAll_Unchecked"/>
                         </DataGridTemplateColumn.Header>
@@ -112,8 +106,18 @@
                                 <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}, Path=IsSelected, Mode=OneWay}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True" Visibility="{Binding Data.Columns[NAME].IsVisible, 
+                    </DataGridTemplateColumn>-->
+                    <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridCheckBoxColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <CheckBox Content="Select All" 
+                              Command="{Binding DataContext.SelectAllCommand, 
+                              RelativeSource={RelativeSource AncestorType=local:LeadsView}}" 
+                              CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"/>
+                            </DataTemplate>
+                        </DataGridCheckBoxColumn.HeaderTemplate>
+                    </DataGridCheckBoxColumn>
+                    <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True" Visibility="{Binding Data.Columns[NAME].IsVisible, 
                                  Source={StaticResource Proxy}, 
                                  Converter={StaticResource BoolToVis}}">
                         <DataGridTemplateColumn.CellTemplate>

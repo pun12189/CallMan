@@ -26,10 +26,14 @@ namespace BahiKitab.Core
                 string message = ProcessPlaceholders(rule.MessageTemplate, entityData);
 
                 if (rule.SendWhatsApp)
+                {
                     // await SendWhatsAppNotification(message, entityData);
+                }
 
                 if (rule.SendEmail)
+                {
                     await SendEmailNotification(message, entityData);
+                }
             }
         }
 
